@@ -1,0 +1,10 @@
+# NOT: torch/torchaudio'yu BURADAN kurma — CUDA derlemesi setup betiğiyle ayrı kurulur:
+#   pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
+transformers>=4.44
+datasets>=2.20
+evaluate>=0.4
+jiwer>=3.0
+accelerate>=0.30
+peft>=0.11
+librosa>=0.10
+soundfile>=0.12

@@ -1,0 +1,268 @@
+{
+  "metrics": {
+    "total_words": 19,
+    "words_correct": 14,
+    "accuracy": 0.7368,
+    "total_errors": 6,
+    "wcpm": 22.1,
+    "rate_wpm": 33.2,
+    "miscue_counts": {
+      "correct": 14,
+      "substitution": 1,
+      "mispronunciation": 3,
+      "omission": 1,
+      "insertion": 1,
+      "repetition": 1,
+      "self_correction": 1
+    },
+    "fluency_score": 72.1
+  },
+  "overall_feedback": "Doğruluk: %73.7, WCPM ~ 22.1. Akıcılık skoru: 72.1/100. Değerlendirme: Engellenme düzeyi (yoğun destek gerekli).",
+  "word_feedback": [
+    "\"kırmızı\" telaffuz hatası (ı sesi düştü). Bu sesleri vurgulayarak tekrar ettirin.",
+    "\"balık\" kelimesi \"kuş\" olarak okundu (farklı kelime). Kelimeyi birlikte yeniden okuyun.",
+    "\"derin\" kelimesi atlandı (okunmadı).",
+    "Metinde olmayan \"çok\" kelimesi eklendi.",
+    "\"Annesini\" telaffuz hatası (i sesi düştü, n sesi düştü). Bu sesleri vurgulayarak tekrar ettirin.",
+    "\"mercan\" kelimesi tekrar okundu (duraksama göstergesi).",
+    "\"kayalıklarının\" telaffuz hatası (ı sesi düştü, n sesi düştü). Bu sesleri vurgulayarak tekrar ettirin.",
+    "\"aydınlık\" önce \"aydılık\" denenip kendiliğinden düzeltildi (olumlu — izleme stratejisi çalışıyor)."
+  ],
+  "tokens": [
+    {
+      "status": "correct",
+      "ref": "Küçük",
+      "hyp": "küçük",
+      "ref_idx": 0,
+      "hyp_idx": 0,
+      "detail": {}
+    },
+    {
+      "status": "mispronunciation",
+      "ref": "kırmızı",
+      "hyp": "kırmız",
+      "ref_idx": 1,
+      "hyp_idx": 1,
+      "detail": {
+        "distance": 0.14285714285714285,
+        "changed": [
+          [
+            "I",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "status": "substitution",
+      "ref": "balık",
+      "hyp": "kuş",
+      "ref_idx": 2,
+      "hyp_idx": 2,
+      "detail": {
+        "distance": 0.76,
+        "changed": [
+          [
+            "b",
+            "k"
+          ],
+          [
+            "a",
+            "u"
+          ],
+          [
+            "l",
+            "S"
+          ],
+          [
+            "I",
+            null
+          ],
+          [
+            "k",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "status": "omission",
+      "ref": "derin",
+      "hyp": null,
+      "ref_idx": 3,
+      "hyp_idx": null,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "denizde",
+      "hyp": "denizde",
+      "ref_idx": 4,
+      "hyp_idx": 3,
+      "detail": {}
+    },
+    {
+      "status": "insertion",
+      "ref": null,
+      "hyp": "çok",
+      "ref_idx": null,
+      "hyp_idx": 4,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "yüzüyordu",
+      "hyp": "yüzüyordu",
+      "ref_idx": 5,
+      "hyp_idx": 5,
+      "detail": {}
+    },
+    {
+      "status": "mispronunciation",
+      "ref": "Annesini",
+      "hyp": "annesi",
+      "ref_idx": 6,
+      "hyp_idx": 6,
+      "detail": {
+        "distance": 0.25,
+        "changed": [
+          [
+            "i",
+            null
+          ],
+          [
+            "n",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "status": "correct",
+      "ref": "aramak",
+      "hyp": "aramak",
+      "ref_idx": 7,
+      "hyp_idx": 7,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "için",
+      "hyp": "için",
+      "ref_idx": 8,
+      "hyp_idx": 8,
+      "detail": {}
+    },
+    {
+      "status": "repetition",
+      "ref": null,
+      "hyp": "mercan",
+      "ref_idx": null,
+      "hyp_idx": 9,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "mercan",
+      "hyp": "mercan",
+      "ref_idx": 9,
+      "hyp_idx": 10,
+      "detail": {}
+    },
+    {
+      "status": "mispronunciation",
+      "ref": "kayalıklarının",
+      "hyp": "kayalıkların",
+      "ref_idx": 10,
+      "hyp_idx": 11,
+      "detail": {
+        "distance": 0.14285714285714285,
+        "changed": [
+          [
+            "I",
+            null
+          ],
+          [
+            "n",
+            null
+          ]
+        ]
+      }
+    },
+    {
+      "status": "correct",
+      "ref": "arasında",
+      "hyp": "arasında",
+      "ref_idx": 11,
+      "hyp_idx": 12,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "dolaştı",
+      "hyp": "dolaştı",
+      "ref_idx": 12,
+      "hyp_idx": 13,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "Sonunda",
+      "hyp": "sonunda",
+      "ref_idx": 13,
+      "hyp_idx": 14,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "sıcak",
+      "hyp": "sıcak",
+      "ref_idx": 14,
+      "hyp_idx": 15,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "ve",
+      "hyp": "ve",
+      "ref_idx": 15,
+      "hyp_idx": 16,
+      "detail": {}
+    },
+    {
+      "status": "self_correction",
+      "ref": null,
+      "hyp": "aydılık",
+      "ref_idx": null,
+      "hyp_idx": 17,
+      "detail": {
+        "first_attempt": "aydılık",
+        "corrected_to": "aydınlık"
+      }
+    },
+    {
+      "status": "correct",
+      "ref": "aydınlık",
+      "hyp": "aydınlık",
+      "ref_idx": 16,
+      "hyp_idx": 18,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "sulara",
+      "hyp": "sulara",
+      "ref_idx": 17,
+      "hyp_idx": 19,
+      "detail": {}
+    },
+    {
+      "status": "correct",
+      "ref": "ulaştı",
+      "hyp": "ulaştı",
+      "ref_idx": 18,
+      "hyp_idx": 20,
+      "detail": {}
+    }
+  ]
+}
