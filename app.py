@@ -322,7 +322,8 @@ async def transcribe(audio: UploadFile = File(...), user=Depends(current_user)):
             import torch
             inputs = _processor(waveform, sampling_rate=16000, return_tensors="pt")
             device = next(_model.parameters()).device
-            feats = inputs.input_features.to(device)
+            dtype  = next(_model.parameters()).dtype  # float16 veya float32
+            feats  = inputs.input_features.to(device=device, dtype=dtype)
             with torch.no_grad():
                 ids = _model.generate(feats, language="tr", task="transcribe",
                                       no_repeat_ngram_size=0)
