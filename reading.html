@@ -364,7 +364,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 // ── Auth ───────────────────────────────────────────────────────────────────
 const token = localStorage.getItem('auth_token');
 const me    = JSON.parse(localStorage.getItem('user') || 'null');
-if (!token || !me) location.href = '/login.html';
+if (!token || !me) { location.href = '/login.html'; }
+
+function handleUnauth() {
+  localStorage.clear();
+  location.href = '/login.html';
+}
 
 // ── Theme ──────────────────────────────────────────────────────────────────
 const root = document.documentElement;
@@ -389,6 +394,7 @@ async function apiFetch(url, opts={}) {
 }
 async function apiJSON(url, opts={}) {
   const r = await apiFetch(url, opts);
+  if (r.status === 401) { handleUnauth(); return; }
   if (!r.ok) { const e=await r.json().catch(()=>{}); throw new Error(e?.detail||r.statusText); }
   return r.json();
 }
@@ -842,8 +848,15 @@ function showResults(report, transcript, duration) {
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
-showView('homeView');
-loadTexts();
+// Verify token is still valid before rendering
+(async () => {
+  try {
+    const r = await fetch('/api/me', {headers:{Authorization:`Bearer ${token}`}});
+    if (r.status === 401) { handleUnauth(); return; }
+  } catch { /* network error — continue anyway */ }
+  showView('homeView');
+  loadTexts();
+})();
 </script>
 </body>
 </html>
