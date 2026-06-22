@@ -148,7 +148,9 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .btn:active{transform:scale(.97)}
 .btn-primary{background:var(--primary);color:#fff}
 .btn-primary:hover{opacity:.9}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.4)}
+#analyzeBtn:not(:disabled){animation:readyPulse 2s ease-in-out infinite}
+@keyframes readyPulse{0%,100%{box-shadow:0 4px 16px rgba(30,64,175,.3)}50%{box-shadow:0 6px 24px rgba(30,64,175,.6)}}
 .btn-secondary{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
 .btn-secondary:hover{background:var(--border);color:var(--text)}
 
@@ -295,8 +297,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
         <div class="ctrl-hint" id="ctrlHint">Metni yüksek sesle okuyun</div>
       </div>
       <button class="btn btn-secondary" id="backBtn">← Geri</button>
-      <button class="btn btn-primary" id="analyzeBtn" disabled>Analiz Et →</button>
     </div>
+
+    <!-- Analiz butonu ayrı, tam genişlik, belirgin -->
+    <button class="btn btn-primary" id="analyzeBtn" disabled
+      style="width:100%;padding:16px;font-size:16px;font-weight:800;margin-top:12px;border-radius:14px;letter-spacing:.3px;box-shadow:0 4px 16px rgba(30,64,175,.3)">
+      🔍 Analiz Et — Sonuçları Gör
+    </button>
   </div>
 
   <!-- ── LOADING ── -->
@@ -607,14 +614,18 @@ document.getElementById('micBtn').addEventListener('click', async () => {
     try { stream = await navigator.mediaDevices.getUserMedia({audio:true}); }
     catch { toast('Mikrofon erişimi reddedildi.'); return; }
 
-    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder = new MediaRecorder(stream, {mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm'});
     audioChunks = [];
     mediaRecorder.addEventListener('dataavailable', e => { if(e.data.size>0) audioChunks.push(e.data); });
     mediaRecorder.addEventListener('stop', () => {
-      audioBlob = new Blob(audioChunks, {type:'audio/webm'});
+      audioBlob = new Blob(audioChunks, {type: mediaRecorder.mimeType || 'audio/webm'});
       stream.getTracks().forEach(t=>t.stop());
+      // Blob hazır — analiz butonunu şimdi aç
+      document.getElementById('analyzeBtn').disabled = false;
+      document.getElementById('ctrlLabel').textContent = `Kayıt hazır (${formatDur(timerSec)}) — analiz edebilirsiniz`;
+      document.getElementById('ctrlHint').textContent = 'Aşağıdaki "Analiz Et" butonuna tıklayın';
     });
-    mediaRecorder.start();
+    mediaRecorder.start(500); // Her 500ms'de chunk topla
 
     // Start live speech recognition (real-time coloring)
     startSpeechRecognition();
@@ -628,22 +639,23 @@ document.getElementById('micBtn').addEventListener('click', async () => {
     mb.className='mic-btn rec'; mb.textContent='⏹';
     document.getElementById('recDot').classList.add('on');
     document.getElementById('ctrlLabel').textContent='Kayıt yapılıyor…';
-    document.getElementById('ctrlHint').textContent='Okumayı bitirince durdurun';
+    document.getElementById('ctrlHint').textContent='Okumayı bitirince tekrar tıklayın';
     document.getElementById('liveCaption').classList.add('active');
     document.getElementById('liveDot').classList.add('on');
     document.getElementById('liveText').textContent='Dinleniyor…';
 
   } else {
-    // Stop recording
+    // Stop recording — blob henüz hazır değil, stop event'i bekle
+    const elapsed = document.getElementById('timerEl').textContent;
     stopAll();
 
     const mb = document.getElementById('micBtn');
     mb.className='mic-btn done'; mb.textContent='✓'; mb.disabled=true;
     document.getElementById('recDot').classList.remove('on');
     document.getElementById('liveDot').classList.remove('on');
-    document.getElementById('ctrlLabel').textContent=`Kayıt tamamlandı — ${document.getElementById('timerEl').textContent}`;
-    document.getElementById('ctrlHint').textContent='Analiz için "Analiz Et" tuşuna basın';
-    document.getElementById('analyzeBtn').disabled=false;
+    document.getElementById('ctrlLabel').textContent=`Ses hazırlanıyor…`;
+    document.getElementById('ctrlHint').textContent='Lütfen bekleyin';
+    document.getElementById('analyzeBtn').disabled=true; // stop event açacak
     // Color remaining words as omission
     for(let i=wordPointer;i<textWords.length;i++) colorSpan(i,'omission');
   }
