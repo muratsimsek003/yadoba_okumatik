@@ -470,7 +470,7 @@ async function loadHistory() {
   const list = document.getElementById('historyList');
   try {
     const sessions = await apiJSON('/api/sessions');
-    if (!sessions.length) {
+    if (!sessions || !sessions.length) {
       list.innerHTML = `<div class="empty-state"><div class="empty-icon">📖</div><p>Henüz hiç okuma yapmadınız.<br>Bir metin seçin ve başlayın!</p></div>`;
       return;
     }
@@ -777,14 +777,21 @@ async function runAnalysis() {
     });
     if(!r.ok) throw new Error('Analiz başarısız');
     const d=await r.json();
-    showResults(d.report, transcript, duration);
-    // Save session
+    // Save session first (awaited so history is ready when user navigates back)
     const m=d.report.metrics||{};
-    apiFetch('/api/sessions',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text_id:currentText.id,transcript,accuracy:m.accuracy_pct||0,
-        wcpm:m.wcpm||0,fluency_score:m.fluency_score||0,duration_sec:duration,
-        analysis_json:JSON.stringify(d.report)})
-    }).catch(()=>{});
+    document.getElementById('loaderText').textContent='Oturum kaydediliyor…';
+    document.getElementById('loaderStep').textContent='';
+    try {
+      await apiJSON('/api/sessions',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({text_id:currentText.id,transcript,
+          accuracy:m.accuracy_pct||0,wcpm:m.wcpm||0,fluency_score:m.fluency_score||0,
+          duration_sec:duration,analysis_json:JSON.stringify(d.report)})
+      });
+    } catch(saveErr) {
+      console.error('Oturum kaydedilemedi:', saveErr);
+      toast('Sonuçlar gösteriliyor ama oturum kaydedilemedi.');
+    }
+    showResults(d.report, transcript, duration);
   } catch(e) { toast('Analiz hatası: '+e.message); showView('readingView'); }
 }
 
