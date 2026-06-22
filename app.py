@@ -282,19 +282,41 @@ def delete_text(tid: str, user=Depends(require_admin)):
 # ── Transcribe ─────────────────────────────────────────────────────────────
 @app.post("/api/transcribe")
 async def transcribe(audio: UploadFile = File(...), user=Depends(current_user)):
-    import tempfile
+    import tempfile, subprocess
     audio_bytes = await audio.read()
+    if not audio_bytes:
+        raise HTTPException(400, "Ses verisi boş — kayıt düzgün çalışmadı")
+
     suffix = ".webm"
     if audio.filename and "." in audio.filename:
         suffix = "." + audio.filename.rsplit(".", 1)[-1]
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as f:
-        f.write(audio_bytes); tmp = f.name
-
+    tmp = None
+    wav_tmp = None
     try:
-        import librosa
-        waveform, _ = librosa.load(tmp, sr=16000)
-        duration = len(waveform) / 16000
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as f:
+            f.write(audio_bytes)
+            tmp = f.name
+
+        # ffmpeg ile webm → wav dönüşümü (en güvenilir yol)
+        wav_tmp = tmp.replace(suffix, "_converted.wav")
+        result = subprocess.run(
+            ["ffmpeg", "-y", "-i", tmp, "-ar", "16000", "-ac", "1", "-f", "wav", wav_tmp],
+            capture_output=True, timeout=60
+        )
+        if result.returncode != 0:
+            err = result.stderr.decode(errors="replace")[-300:]
+            # ffmpeg başarısız olduysa librosa ile dene
+            try:
+                import librosa
+                waveform, _ = librosa.load(tmp, sr=16000)
+            except Exception as e2:
+                raise HTTPException(500, f"Ses dönüştürülemedi. ffmpeg: {err} | librosa: {e2}")
+        else:
+            import librosa
+            waveform, _ = librosa.load(wav_tmp, sr=16000)
+
+        duration = float(len(waveform)) / 16000.0
 
         if load_whisper():
             import torch
@@ -307,8 +329,16 @@ async def transcribe(audio: UploadFile = File(...), user=Depends(current_user)):
             transcript = _processor.batch_decode(ids, skip_special_tokens=True)[0].strip()
         else:
             transcript = "[Demo mod — Whisper yuklenmedi]"
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(500, f"Transkript hatası: {e}")
     finally:
-        os.unlink(tmp)
+        for f in [tmp, wav_tmp]:
+            if f:
+                try: os.unlink(f)
+                except: pass
 
     return {"transcript": transcript, "duration_sec": round(duration, 2)}
 
