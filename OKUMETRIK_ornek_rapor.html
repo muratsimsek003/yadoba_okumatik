@@ -1,0 +1,34 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<title>OKUMETRİK Raporu</title><style>
+body{font-family:Arial,Helvetica,sans-serif;max-width:900px;margin:24px auto;color:#222;padding:0 16px}
+h1{color:#1F4E79;border-bottom:3px solid #1F4E79;padding-bottom:6px;font-size:22px}
+h2{color:#2E5496;font-size:17px;margin-top:24px}
+.reading{line-height:2.1;font-size:18px;background:#fafafa;border:1px solid #e3e3e3;padding:14px;border-radius:8px}
+.tok{padding:2px 5px;border-radius:5px;margin:1px}
+.correct{color:#1a7f37}
+.substitution{background:#ffd6d6;color:#b30000;text-decoration:line-through}
+.mispronunciation{background:#fff2c2;color:#8a6d00}
+.omission{background:#eee;color:#999;text-decoration:underline dotted}
+.insertion{background:#d6ecff;color:#0057b3;font-style:italic}
+.repetition{background:#e3dbff;color:#5b2bcc}
+.self_correction{background:#e9ffe9;color:#2a8a2a}
+.metrics{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+.card{flex:1;min-width:130px;background:#1F4E79;color:#fff;border-radius:8px;padding:10px 12px}
+.card .v{font-size:22px;font-weight:bold}
+.card .l{font-size:12px;opacity:.85}
+ul{line-height:1.6}
+.legend span{margin-right:12px;font-size:13px}
+.tag{font-size:10px;vertical-align:super;opacity:.7}
+.note{color:#666;font-size:12px;font-style:italic}
+</style></head><body>
+<h1>OKUMETRİK — Okuma Değerlendirme Raporu</h1>
+<p class="note">YADOBA 2.0 çekirdeği (PoC). Tanıma çıktısı bu demoda simüle edilmiştir; üretimde HF-MTM/ASR'den gelir.</p>
+<h2>Genel Değerlendirme</h2><p>Doğruluk: %73.7, WCPM ≈ 22.1. Akıcılık skoru: 72.1/100. Değerlendirme: Engellenme düzeyi (yoğun destek gerekli).</p>
+<div class="metrics"><div class='card'><div class='v'>%74</div><div class='l'>Doğruluk</div></div><div class='card'><div class='v'>22.1</div><div class='l'>WCPM</div></div><div class='card'><div class='v'>72.1</div><div class='l'>Akıcılık</div></div><div class='card'><div class='v'>6</div><div class='l'>Hata</div></div><div class='card'><div class='v'>1.0</div><div class='l'>Miscue F1</div></div></div>
+<h2>Hizalanmış Okuma</h2><div class='legend'><span class='correct'>■ doğru</span><span style='color:#b30000'>■ değiştirme</span><span style='color:#8a6d00'>■ telaffuz</span><span style='color:#999'>■ atlama</span><span style='color:#0057b3'>■ ekleme</span><span style='color:#5b2bcc'>■ tekrar</span><span style='color:#2a8a2a'>■ kendi kendine düzeltme</span></div>
+<div class="reading"><span class='tok correct'>küçük</span> <span class='tok mispronunciation'>kırmız<span class='tag'>misp</span></span> <span class='tok substitution'>kuş<span class='tag'>subs</span></span> <span class='tok omission'>derin<span class='tag'>omis</span></span> <span class='tok correct'>denizde</span> <span class='tok insertion'>çok<span class='tag'>inse</span></span> <span class='tok correct'>yüzüyordu</span> <span class='tok mispronunciation'>annesi<span class='tag'>misp</span></span> <span class='tok correct'>aramak</span> <span class='tok correct'>için</span> <span class='tok repetition'>mercan<span class='tag'>repe</span></span> <span class='tok correct'>mercan</span> <span class='tok mispronunciation'>kayalıkların<span class='tag'>misp</span></span> <span class='tok correct'>arasında</span> <span class='tok correct'>dolaştı</span> <span class='tok correct'>sonunda</span> <span class='tok correct'>sıcak</span> <span class='tok correct'>ve</span> <span class='tok self_correction'>aydılık<span class='tag'>self</span></span> <span class='tok correct'>aydınlık</span> <span class='tok correct'>sulara</span> <span class='tok correct'>ulaştı</span></div>
+<h2>Kelime Bazında Geri Bildirim</h2><ul><li>“kırmızı” telaffuz hatası (ı sesi düştü). Bu sesleri vurgulayarak tekrar ettirin.</li><li>“balık” kelimesi “kuş” olarak okundu (farklı kelime). Kelimeyi birlikte yeniden okuyun.</li><li>“derin” kelimesi atlandı (okunmadı).</li><li>Metinde olmayan “çok” kelimesi eklendi.</li><li>“Annesini” telaffuz hatası (i sesi düştü, n sesi düştü). Bu sesleri vurgulayarak tekrar ettirin.</li><li>“mercan” kelimesi tekrar okundu (duraksama göstergesi).</li><li>“kayalıklarının” telaffuz hatası (ı sesi düştü, n sesi düştü). Bu sesleri vurgulayarak tekrar ettirin.</li><li>“aydınlık” önce “aydılık” denenip kendiliğinden düzeltildi (olumlu — izleme stratejisi çalışıyor).</li></ul>
+<h2>Ölçüt 1 — Uzman Etikete Karşı Doğrulama</h2>
+<p>precision = 1.0 &nbsp; recall = 1.0 &nbsp; <b>F1 = 1.0</b>
+(tp=5, fp=0, fn=0)</p>
+</body></html>

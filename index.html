@@ -1,0 +1,1160 @@
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OKUMETRİK — Okuma Değerlendirme Motoru</title>
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Light Mode Palette */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --border-color: #e2e8f0;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            
+            --primary: #1e40af;
+            --primary-light: #3b82f6;
+            --primary-bg: #eff6ff;
+            
+            --success: #15803d;
+            --success-bg: #f0fdf4;
+            --success-border: #bbf7d0;
+            
+            --error: #b91c1c;
+            --error-bg: #fef2f2;
+            --error-border: #fecaca;
+            
+            --warning: #a16207;
+            --warning-bg: #fefce8;
+            --warning-border: #fef08a;
+            
+            --info: #0369a1;
+            --info-bg: #f0f9ff;
+            --info-border: #bae6fd;
+            
+            --purple: #6d28d9;
+            --purple-bg: #f5f3ff;
+            --purple-border: #ddd6fe;
+
+            --gray-bg: #f1f5f9;
+            --gray-border: #cbd5e1;
+
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --card-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+            --transition-speed: 0.25s;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode Palette */
+            --bg-primary: #090d16;
+            --bg-secondary: #111827;
+            --border-color: #1f2937;
+            
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-muted: #6b7280;
+            
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-bg: #1e3a8a;
+            
+            --success: #22c55e;
+            --success-bg: #052e16;
+            --success-border: #15803d;
+            
+            --error: #ef4444;
+            --error-bg: #450a0a;
+            --error-border: #991b1b;
+            
+            --warning: #eab308;
+            --warning-bg: #422006;
+            --warning-border: #854d0e;
+            
+            --info: #0ea5e9;
+            --info-bg: #0c4a6e;
+            --info-border: #0369a1;
+            
+            --purple: #a855f7;
+            --purple-bg: #3b0764;
+            --purple-border: #6d28d9;
+
+            --gray-bg: #1f2937;
+            --gray-border: #374151;
+
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+            --card-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.4);
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, var(--text-primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme-toggle-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--bg-primary);
+            border-color: var(--text-muted);
+        }
+
+        /* Container & Layout */
+        .app-container {
+            max-width: 1280px;
+            width: 100%;
+            margin: 24px auto;
+            padding: 0 24px;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 1024px) {
+            .app-container {
+                grid-template-columns: 420px 1fr;
+            }
+        }
+
+        /* Cards & Panels */
+        .panel {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Inputs & Forms */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        textarea, input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        textarea:focus, input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.5;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        /* Preset Scenarios */
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .scenario-card {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--primary-light);
+            background-color: var(--primary-bg);
+        }
+
+        .scenario-card.active {
+            border-color: var(--primary);
+            background-color: var(--primary-bg);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .scenario-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .scenario-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Metrics Display */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .metrics-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .metric-card {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .metric-val {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-light);
+            margin-bottom: 4px;
+        }
+
+        .metric-lbl {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Aligned Text Panel */
+        .reading-area {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            line-height: 2.3;
+            font-size: 18px;
+            min-height: 100px;
+            transition: all var(--transition-speed);
+        }
+
+        /* Tokens styling */
+        .token {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 2px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .token:hover {
+            filter: brightness(0.95);
+            transform: scale(1.03);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .token.correct {
+            color: var(--success);
+            background-color: var(--success-bg);
+            border: 1px solid var(--success-border);
+        }
+
+        .token.substitution {
+            color: var(--error);
+            background-color: var(--error-bg);
+            border: 1px solid var(--error-border);
+            text-decoration: line-through;
+        }
+
+        .token.mispronunciation {
+            color: var(--warning);
+            background-color: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+        }
+
+        .token.omission {
+            color: var(--text-muted);
+            background-color: var(--gray-bg);
+            border: 1px solid var(--gray-border);
+            text-decoration: underline dotted;
+        }
+
+        .token.insertion {
+            color: var(--info);
+            background-color: var(--info-bg);
+            border: 1px solid var(--info-border);
+            font-style: italic;
+        }
+
+        .token.repetition {
+            color: var(--purple);
+            background-color: var(--purple-bg);
+            border: 1px solid var(--purple-border);
+        }
+
+        .token.self_correction {
+            color: var(--success);
+            background-color: #f0fdf4;
+            border: 1px dashed var(--success);
+        }
+
+        .token-tag {
+            font-size: 9px;
+            vertical-align: super;
+            margin-left: 2px;
+            opacity: 0.8;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* G2P Detail Visualizer */
+        .detail-panel {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .detail-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .phoneme-comparison {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 12px 0;
+            background-color: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .phoneme-word {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .phoneme-word span.word-lbl {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .phoneme-word span.word-txt {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .phoneme-seq {
+            display: flex;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .ph-node {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .ph-arrow {
+            font-size: 20px;
+            color: var(--text-muted);
+        }
+
+        /* G2P operations colors */
+        .ph-node.del {
+            background-color: var(--error-bg);
+            border-color: var(--error-border);
+            color: var(--error);
+        }
+        .ph-node.ins {
+            background-color: var(--info-bg);
+            border-color: var(--info-border);
+            color: var(--info);
+        }
+        .ph-node.sub {
+            background-color: var(--warning-bg);
+            border-color: var(--warning-border);
+            color: var(--warning);
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-muted);
+            font-size: 12px;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            margin-top: auto;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        /* Loading */
+        .spinner {
+            border: 3px solid rgba(0,0,0,0.1);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border-left-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">O</div>
+            <div class="logo-text">
+                <h1>OKUMETRİK</h1>
+                <p>YADOBA 2.0 Okuma Değerlendirme Motoru</p>
+            </div>
+        </div>
+        <div class="header-controls">
+            <button class="theme-toggle-btn" id="themeToggleBtn" title="Koyu/Açık Mod">
+                <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2"></path>
+                    <path d="M12 20v2"></path>
+                    <path d="m4.93 4.93 1.41 1.41"></path>
+                    <path d="m17.66 17.66 1.41 1.41"></path>
+                    <path d="M2 12h2"></path>
+                    <path d="M20 12h2"></path>
+                    <path d="m6.34 17.66-1.41 1.41"></path>
+                    <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="app-container">
+        
+        <!-- Left Panel: Settings and Input -->
+        <div class="panel">
+            <div class="panel-title">
+                <span>Giriş & Parametreler</span>
+            </div>
+            
+            <div class="form-group">
+                <label>Örnek Senaryo Yükle</label>
+                <div class="scenarios-grid">
+                    <div class="scenario-card active" id="scen-fish">
+                        <div class="scenario-title">1. Kırmızı Balık (Mispronunciation / Substitution / Omission)</div>
+                        <div class="scenario-desc">küçük kırmız kuş denizde çok yüzüyordu...</div>
+                    </div>
+                    <div class="scenario-card" id="scen-simple">
+                        <div class="scenario-title">2. Ali Topu At (Kusursuz Okuma)</div>
+                        <div class="scenario-desc">ali topu at</div>
+                    </div>
+                    <div class="scenario-card" id="scen-custom">
+                        <div class="scenario-title">3. Özel Giriş</div>
+                        <div class="scenario-desc">Kendi referans ve konuşma metninizi analiz edin.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="refInput">Referans Metin (Okunması Gereken)</label>
+                <textarea id="refInput" placeholder="Çocuğun okuması gereken orijinal metni yazın..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="hypInput">Tanıma Çıktısı (Çocuğun Okuduğu)</label>
+                <textarea id="hypInput" placeholder="Ses tanıma (ASR) çıktısını veya çocuğun okuduğu kelimeleri yazın..."></textarea>
+            </div>
+
+            <div class="input-row">
+                <div class="form-group">
+                    <label for="durationInput">Okuma Süresi (Saniye)</label>
+                    <input type="number" id="durationInput" min="1" step="0.5" value="38">
+                </div>
+                <div class="form-group">
+                    <label for="gradeSelect">Sınıf Seviyesi</label>
+                    <select id="gradeSelect">
+                        <option value="1">1. Sınıf</option>
+                        <option value="2" selected>2. Sınıf</option>
+                        <option value="3">3. Sınıf</option>
+                        <option value="4">4. Sınıf</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="analyzeBtn">
+                <span>Analiz Et</span>
+            </button>
+        </div>
+
+        <!-- Right Panel: Results -->
+        <div class="panel" id="resultsPanel">
+            <div class="panel-title">
+                <span>Değerlendirme Raporu</span>
+            </div>
+
+            <!-- Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-val" id="metric-accuracy">--</div>
+                    <div class="metric-lbl">Doğruluk</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="metric-wcpm">--</div>
+                    <div class="metric-lbl">WCPM (Okuma Hızı)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="metric-fluency">--</div>
+                    <div class="metric-lbl">Akıcılık Skoru</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" id="metric-errors">--</div>
+                    <div class="metric-lbl">Toplam Hata</div>
+                </div>
+            </div>
+
+            <!-- Aligned Text -->
+            <div class="form-group">
+                <label>Hizalanmış Çocuk Okuması (Detay için kelimelere tıklayın)</label>
+                <div class="reading-area" id="readingArea">
+                    Analiz etmek için soldaki butona tıklayın...
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color correct" style="background-color: var(--success-bg); border: 1px solid var(--success-border)"></div>
+                    <span>Doğru</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color substitution" style="background-color: var(--error-bg); border: 1px solid var(--error-border)"></div>
+                    <span>Değiştirme</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color mispronunciation" style="background-color: var(--warning-bg); border: 1px solid var(--warning-border)"></div>
+                    <span>Telaffuz</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color omission" style="background-color: var(--gray-bg); border: 1px solid var(--gray-border)"></div>
+                    <span>Atlama</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color insertion" style="background-color: var(--info-bg); border: 1px solid var(--info-border)"></div>
+                    <span>Ekleme</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color repetition" style="background-color: var(--purple-bg); border: 1px solid var(--purple-border)"></div>
+                    <span>Tekrar</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color self-corr" style="border: 1px dashed var(--success)"></div>
+                    <span>Kendi Kendine Düzeltme</span>
+                </div>
+            </div>
+
+            <!-- Word-level Detail View -->
+            <div class="detail-panel" id="detailPanel">
+                <div class="detail-header">
+                    <h4 style="font-size: 14px; font-weight: 700;" id="detailWordTitle">Kelime Detayı</h4>
+                    <span class="detail-badge" id="detailStatusBadge">Substitution</span>
+                </div>
+                <div class="phoneme-comparison">
+                    <div class="phoneme-word">
+                        <span class="word-lbl">Hedef (Referans)</span>
+                        <span class="word-txt" id="detailRefWord">balık</span>
+                        <div class="phoneme-seq" id="detailRefPhonemes">
+                            <!-- phonemes will go here -->
+                        </div>
+                    </div>
+                    <div class="ph-arrow">→</div>
+                    <div class="phoneme-word">
+                        <span class="word-lbl">Okunan (ASR)</span>
+                        <span class="word-txt" id="detailHypWord">kuş</span>
+                        <div class="phoneme-seq" id="detailHypPhonemes">
+                            <!-- phonemes will go here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 8px;">
+                    <label>Eğitsel Geri Bildirim ve Yönlendirme</label>
+                    <p style="font-size: 13px; font-weight: 500; color: var(--text-secondary);" id="detailFeedbackText">
+                        Yükleniyor...
+                    </p>
+                </div>
+            </div>
+
+            <!-- Overall Feedback & Report Summary -->
+            <div class="form-group">
+                <label>Genel Okuma Seviyesi Değerlendirmesi</label>
+                <div style="background-color: var(--bg-primary); border: 1px solid var(--border-color); padding: 14px; border-radius: 8px; font-size: 13px; font-weight: 600; line-height: 1.5;" id="overallFeedbackBox">
+                    Değerlendirme çıktısı henüz üretilmedi.
+                </div>
+            </div>
+            
+            <!-- Pedagogical Feedback List -->
+            <div class="form-group">
+                <label>Pedagojik Öneriler ve Hata Analizleri</label>
+                <ul style="padding-left: 20px; font-size: 13px; line-height: 1.6; color: var(--text-secondary);" id="feedbackList">
+                    <li>Analiz yapıldığında burada kelime bazlı eğitsel yönlendirmeler listelenir.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>YADOBA 2.0 © 2026 — OKUMETRİK Türkçe Çocuk Sesli Okuma Değerlendirme Motoru</p>
+        <p style="margin-top: 6px; opacity: 0.75;">TÜBİTAK 1501 PoC Arayüzü</p>
+    </footer>
+
+    <script>
+        // Preset Scenarios
+        const scenarios = {
+            fish: {
+                reference: "Küçük kırmızı balık derin denizde yüzüyordu. Annesini aramak için mercan kayalıklarının arasında dolaştı. Sonunda sıcak ve aydınlık sulara ulaştı.",
+                hypothesis: "küçük kırmız kuş denizde çok yüzüyordu annesi aramak için mercan mercan kayalıkların arasında dolaştı sonunda sıcak ve aydınlık sulara ulaştı",
+                duration: 38
+            },
+            simple: {
+                reference: "Ali topu at. Topu hızlı at. Ayşe topu tut.",
+                hypothesis: "ali topu at topu hızlı at ayşe topu tut",
+                duration: 8
+            },
+            custom: {
+                reference: "",
+                hypothesis: "",
+                duration: 15
+            }
+        };
+
+        // Theme Management
+        const themeToggleBtn = document.getElementById("themeToggleBtn");
+        const themeIcon = document.getElementById("themeIcon");
+        
+        let currentTheme = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-theme", currentTheme);
+        updateThemeIcon();
+
+        themeToggleBtn.addEventListener("click", () => {
+            currentTheme = currentTheme === "light" ? "dark" : "light";
+            document.documentElement.setAttribute("data-theme", currentTheme);
+            localStorage.setItem("theme", currentTheme);
+            updateThemeIcon();
+        });
+
+        function updateThemeIcon() {
+            if (currentTheme === "dark") {
+                themeIcon.innerHTML = `
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                `;
+            } else {
+                themeIcon.innerHTML = `
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2"></path>
+                    <path d="M12 20v2"></path>
+                    <path d="m4.93 4.93 1.41 1.41"></path>
+                    <path d="m17.66 17.66 1.41 1.41"></path>
+                    <path d="M2 12h2"></path>
+                    <path d="M20 12h2"></path>
+                    <path d="m6.34 17.66-1.41 1.41"></path>
+                    <path d="m19.07 4.93-1.41 1.41"></path>
+                `;
+            }
+        }
+
+        // Scenario selection
+        const scenFish = document.getElementById("scen-fish");
+        const scenSimple = document.getElementById("scen-simple");
+        const scenCustom = document.getElementById("scen-custom");
+        
+        const refInput = document.getElementById("refInput");
+        const hypInput = document.getElementById("hypInput");
+        const durationInput = document.getElementById("durationInput");
+
+        function loadScenario(key) {
+            document.querySelectorAll(".scenario-card").forEach(c => c.classList.remove("active"));
+            document.getElementById(`scen-${key}`).classList.add("active");
+            
+            refInput.value = scenarios[key].reference;
+            hypInput.value = scenarios[key].hypothesis;
+            durationInput.value = scenarios[key].duration;
+            
+            if (key === "custom") {
+                refInput.disabled = false;
+                hypInput.disabled = false;
+                refInput.focus();
+            } else {
+                refInput.disabled = false;
+                hypInput.disabled = false;
+            }
+        }
+
+        scenFish.addEventListener("click", () => loadScenario("fish"));
+        scenSimple.addEventListener("click", () => loadScenario("simple"));
+        scenCustom.addEventListener("click", () => loadScenario("custom"));
+
+        // Initial scenario load
+        loadScenario("fish");
+
+        // G2P Simplified Phoneme Labels (for visualizer details)
+        const PH_LABEL = {
+            "a": "a", "E": "e", "I": "ı", "i": "i", "o": "o", "2": "ö", "u": "u", "y": "ü",
+            "b": "b", "dZ": "c", "tS": "ç", "d": "d", "f": "f", "g": "g", "h": "h",
+            "Z": "j", "k": "k", "l": "l", "m": "m", "n": "n", "p": "p", "r": "r",
+            "s": "s", "S": "ş", "t": "t", "v": "v", "j": "y", "z": "z", ":": "(uzun)"
+        };
+
+        // Status mapping to human Turkish label & styling
+        const STATUS_MAP = {
+            "correct": { label: "Doğru", color: "var(--success)" },
+            "substitution": { label: "Kelime Değiştirme", color: "var(--error)" },
+            "mispronunciation": { label: "Telaffuz Hatası", color: "var(--warning)" },
+            "omission": { label: "Atlama", color: "var(--text-muted)" },
+            "insertion": { label: "Ekleme", color: "var(--info)" },
+            "repetition": { label: "Tekrar", color: "var(--purple)" },
+            "self_correction": { label: "Kendi Kendini Düzeltme", color: "var(--success)" }
+        };
+
+        // Global token list state
+        let lastReportTokens = [];
+
+        // Analysis API call
+        const analyzeBtn = document.getElementById("analyzeBtn");
+        const readingArea = document.getElementById("readingArea");
+        
+        const mAccuracy = document.getElementById("metric-accuracy");
+        const mWcpm = document.getElementById("metric-wcpm");
+        const mFluency = document.getElementById("metric-fluency");
+        const mErrors = document.getElementById("metric-errors");
+        const overallBox = document.getElementById("overallFeedbackBox");
+        const feedbackList = document.getElementById("feedbackList");
+        const detailPanel = document.getElementById("detailPanel");
+
+        analyzeBtn.addEventListener("click", async () => {
+            const ref = refInput.value.trim();
+            const hypText = hypInput.value.trim();
+            const duration = parseFloat(durationInput.value) || null;
+
+            if (!ref || !hypText) {
+                alert("Lütfen hem referans metni hem de çocuk okumasını (tanıma çıktısı) girin.");
+                return;
+            }
+
+            // Show loading state
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = `<div class="spinner"></div><span>Analiz Ediliyor...</span>`;
+            readingArea.innerHTML = `<p style="font-size:15px; color:var(--text-secondary);">Sesli okuma hizalanıyor ve fonetik mesafe hesaplanıyor, lütfen bekleyin...</p>`;
+            detailPanel.style.display = "none";
+
+            try {
+                const response = await fetch("/api/analyze", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        reference: ref,
+                        hypothesis: hypText,
+                        audio_duration_sec: duration
+                    })
+                });
+
+                const result = await response.json();
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = `<span>Analiz Et</span>`;
+
+                if (result.success) {
+                    displayReport(result.report);
+                } else {
+                    readingArea.innerHTML = `<p style="color:var(--error); font-size:14px;">Sunucu hatası: ${result.error}</p>`;
+                }
+            } catch (err) {
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = `<span>Analiz Et</span>`;
+                readingArea.innerHTML = `<p style="color:var(--error); font-size:14px;">Bağlantı hatası: Sunucu çalışıyor mu? (Lütfen terminalde server.py'yi çalıştırın)</p>`;
+                console.error(err);
+            }
+        });
+
+        function displayReport(report) {
+            // Metrics
+            const met = report.metrics;
+            mAccuracy.innerText = `%${(met.accuracy * 100).toFixed(0)}`;
+            mWcpm.innerText = met.wcpm !== null ? met.wcpm : "--";
+            mFluency.innerText = `${met.fluency_score}/100`;
+            mErrors.innerText = met.total_errors;
+
+            // Overall Feedback
+            overallBox.innerText = report.overall_feedback;
+
+            // Aligned Tokens
+            readingArea.innerHTML = "";
+            lastReportTokens = report.tokens;
+
+            report.tokens.forEach((tok, index) => {
+                const span = document.createElement("span");
+                span.className = `token ${tok.status}`;
+                span.dataset.index = index;
+                
+                const word = tok.hyp || tok.ref || "?";
+                let tagText = "";
+                if (tok.status !== "correct") {
+                    tagText = `<span class="token-tag">${tok.status.substring(0,4)}</span>`;
+                }
+
+                span.innerHTML = `${word}${tagText}`;
+                readingArea.appendChild(span);
+                
+                // Click handler for token details
+                span.addEventListener("click", () => showTokenDetail(index));
+            });
+
+            // Feedback List
+            feedbackList.innerHTML = "";
+            if (report.word_feedback.length === 0) {
+                feedbackList.innerHTML = `<li>Mükemmel okuma! Herhangi bir okuma hatası veya miscue tespit edilmedi.</li>`;
+            } else {
+                report.word_feedback.forEach(fb => {
+                    const li = document.createElement("li");
+                    li.innerText = fb;
+                    feedbackList.appendChild(li);
+                });
+            }
+        }
+
+        function showTokenDetail(index) {
+            const tok = lastReportTokens[index];
+            if (!tok) return;
+
+            const st = STATUS_MAP[tok.status] || { label: tok.status, color: "var(--text-primary)" };
+            
+            document.getElementById("detailWordTitle").innerText = `"${tok.ref || tok.hyp}" Kelime Analizi`;
+            
+            const badge = document.getElementById("detailStatusBadge");
+            badge.innerText = st.label;
+            badge.style.backgroundColor = st.color + "20"; // Add alpha
+            badge.style.color = st.color;
+            badge.style.border = `1px solid ${st.color}`;
+
+            document.getElementById("detailRefWord").innerText = tok.ref || "- (Ekleme)";
+            document.getElementById("detailHypWord").innerText = tok.hyp || "- (Atlama)";
+
+            // Parse detailed phoneme comparisons if present
+            const refSeq = document.getElementById("detailRefPhonemes");
+            const hypSeq = document.getElementById("detailHypPhonemes");
+            const fbText = document.getElementById("detailFeedbackText");
+
+            refSeq.innerHTML = "";
+            hypSeq.innerHTML = "";
+
+            // Custom pedagogical suggestions based on status
+            let feedback = "";
+            
+            if (tok.status === "correct") {
+                feedback = "Bu kelime çocuk tarafından doğru ve akıcı bir şekilde telaffuz edilmiştir.";
+            } else if (tok.status === "omission") {
+                feedback = `Çocuk "${tok.ref}" kelimesini hiç seslendirmeden atlamıştır. Satır takibi yapmasını kolaylaştırmak için parmakla veya kılavuz kartla okumayı destekleyebilirsiniz.`;
+            } else if (tok.status === "insertion") {
+                feedback = `Metinde olmadığı halde çocuk "${tok.hyp}" kelimesini eklemiştir. Bu durum uydurarak okuma veya tahmin etme stratejisinden kaynaklanabilir.`;
+            } else if (tok.status === "repetition") {
+                feedback = `Çocuk "${tok.hyp}" kelimesini bir veya birden fazla kez tekrarlamıştır. Tekrarlar genellikle tıkanma, kelimeyi tanıma için zaman kazanma veya nefes kontrolü zorluklarına işaret eder.`;
+            } else if (tok.status === "self_correction") {
+                feedback = `Olumlu bir göstergedir! Çocuk önce bir hata yapmış ancak hemen kendi kendini düzeltmiştir (kendi okumasını izleme stratejisinin çalıştığını gösterir). Desteklenmeli ve tebrik edilmelidir.`;
+            } else if (tok.status === "substitution") {
+                feedback = `Çocuk hedef kelime "${tok.ref}" yerine bambaşka bir kelime ("${tok.hyp}") okumuştur. Harf-ses ilişkilerini yeniden gözden geçirin veya bağlamdan anlam çıkarma egzersizleri yapın.`;
+            } else if (tok.status === "mispronunciation") {
+                feedback = `Çocuk hedef kelimeyi kısmen doğru okumuş ancak bazı seslerde hata yapmıştır. `;
+                if (tok.detail && tok.detail.changed && tok.detail.changed.length > 0) {
+                    const changes = tok.detail.changed.map(ch => {
+                        const [a, b] = ch;
+                        if (a && b) return `"${PH_LABEL[a] || a}" sesi yerine "${PH_LABEL[b] || b}" okundu`;
+                        if (a) return `"${PH_LABEL[a] || a}" sesi yutuldu (düştü)`;
+                        if (b) return `"${PH_LABEL[b] || b}" sesi fazladan eklendi`;
+                        return "";
+                    }).filter(x => x).join(", ");
+                    feedback += `Özellikle şu ses hatalarına dikkat edilmelidir: ${changes}.`;
+                }
+            }
+
+            fbText.innerText = feedback;
+
+            // Draw Phoneme Details
+            if (tok.detail && tok.detail.distance !== undefined) {
+                // Approximate G2P visualization
+                const p_ref = tok.detail.ref_phonemes || []; 
+                const p_hyp = tok.detail.hyp_phonemes || [];
+                
+                // Helper to render simple phonemes if engine didn't pass full alignment array
+                if (tok.ref) {
+                    // We can generate simple phoneme lists locally for rendering using a mock/simple G2P helper
+                    const phs = mockG2P(tok.ref);
+                    phs.forEach(p => {
+                        const node = document.createElement("span");
+                        node.className = "ph-node";
+                        node.innerText = PH_LABEL[p] || p;
+                        refSeq.appendChild(node);
+                    });
+                } else {
+                    refSeq.innerHTML = "<span class='note'>Yok</span>";
+                }
+
+                if (tok.hyp) {
+                    const phs = mockG2P(tok.hyp);
+                    phs.forEach(p => {
+                        const node = document.createElement("span");
+                        node.className = "ph-node";
+                        node.innerText = PH_LABEL[p] || p;
+                        hypSeq.appendChild(node);
+                    });
+                } else {
+                    hypSeq.innerHTML = "<span class='note'>Yok</span>";
+                }
+            } else {
+                refSeq.innerHTML = "<span class='note'>Fonem seviyesinde analiz yok</span>";
+                hypSeq.innerHTML = "<span class='note'>Fonem seviyesinde analiz yok</span>";
+            }
+
+            // Slide down detail panel
+            detailPanel.style.display = "block";
+            detailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Simple local G2P fallback for visual mock
+        function mockG2P(word) {
+            const vowels = new Set("aeıioöuüAEIİOÖUÜ");
+            const map = {
+                "a": "a", "e": "E", "ı": "I", "i": "i", "o": "o", "ö": "2", "u": "u", "ü": "y",
+                "b": "b", "c": "dZ", "ç": "tS", "d": "d", "f": "f", "g": "g", "ğ": ":",
+                "h": "h", "j": "Z", "k": "k", "l": "l", "m": "m", "n": "n",
+                "p": "p", "r": "r", "s": "s", "ş": "S", "t": "t", "v": "v",
+                "y": "j", "z": "z"
+            };
+            const cleaned = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").toLowerCase();
+            const res = [];
+            for (let ch of cleaned) {
+                if (map[ch]) res.push(map[ch]);
+            }
+            return res;
+        }
+    </script>
+</body>
+</html>

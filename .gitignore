@@ -41,3 +41,11 @@ desktop.ini
 *.log
 tmp/
 temp/
+
+# Word geçici dosyaları
+~$*
+
+# Yedek / kopyalar (Finder/Explorer "copy" dizinleri)
+* copy/
+* copy.*
+README copy.md
