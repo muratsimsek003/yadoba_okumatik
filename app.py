@@ -85,27 +85,74 @@ def init_db():
     def h(pw): return hashlib.sha256(pw.encode()).hexdigest()
 
     for row in [
-        (str(uuid.uuid4()), 'admin',    h('admin123'),    'Yonetici',       'admin'),
-        (str(uuid.uuid4()), 'ogretmen', h('ogretmen123'), 'Ogretmen Ahmet', 'admin'),
-        (str(uuid.uuid4()), 'ogrenci1', h('ogrenci123'),  'Ahmet Yilmaz',   'student'),
-        (str(uuid.uuid4()), 'ogrenci2', h('ogrenci456'),  'Ayse Kaya',      'student'),
+        (str(uuid.uuid4()), 'admin',    h('admin123'),    'Yönetici',       'admin'),
+        (str(uuid.uuid4()), 'ogretmen', h('ogretmen123'), 'Öğretmen Ahmet', 'admin'),
+        (str(uuid.uuid4()), 'ogrenci1', h('ogrenci123'),  'Ahmet Yılmaz',   'student'),
+        (str(uuid.uuid4()), 'ogrenci2', h('ogrenci456'),  'Ayşe Kaya',      'student'),
         (str(uuid.uuid4()), 'ogrenci3', h('ogrenci789'),  'Mehmet Demir',   'student'),
     ]:
         conn.execute(
             "INSERT OR IGNORE INTO users (id,username,password_hash,full_name,role) VALUES (?,?,?,?,?)", row)
 
     texts = [
-        ("Kucuk Prens", "Bir zamanlar kucuk bir adam vardi. Bu adamin kucuk bir gezegeni vardi. Gezegende tek bir gul cicegi yetisiyordu. Adam bu gulu cok seviyordu. Her sabah suluyor her aksam ortuyordu. Gunler gectikce adam daha da yalniz hissediyordu. Sonunda gulu birakip baska gezegenlere yolculuga cikti.", 1),
-        ("Heidinin Daglari", "Heidi kucuk bir kiz cocuguydu. Buyukbabasiyla dagda yasiyordu. Sabahlari erken kalkip koyunlari otlatmaya gidiyordu. Daglarin havasi temizdi ve cicekler her yerde aciyordu. Heidi bu guzellikleri cok seviyordu. Arkadasi Klara onu ziyarete gelince birlikte oyun oynadilar.", 1),
-        ("Kaplumbaga ve Tavsan", "Bir ormanda kaplumbaga ile tavsan yarisimaya karar verdiler. Tavsan cok hizliydi ve kaplumbagayla yarisimak ona komik geldi. Kosimaya basladilar. Tavsan hemen ileriye gecti ve kaplumbaga cok geride kaldi. Tavsan yorulunca bir agacin altinda uyudu. Kaplumbaga ise durmadan yavas yavas yurudu. Tavsan uyanadiginda kaplumbaga coktan bitisi gecmisti.", 2),
-        ("Pinokyo'nun Maceralari", "Marangoz Geppetto ahsaptan bir kukla yapti. Kuklanin adini Pinokyo koydu. Bir gun Pinokyo canlandi ve konusmaya basladi. Cocuga donusmek icin okula gitmeliydi. Ama Pinokyo yolda oyun parkina gitti. Yalanlar soyleyince burnu uzadi. Sonunda iyi bir cocuk olmaya karar verdi ve ruyasi gercek oldu.", 2),
-        ("Ormanin Sirri", "Ormanin derinliklerinde kucuk bir koy vardi. Bu koyden yasayan cocuklar her gun ormana gidip oynarlardi. Bir gun kucuk Ali ormanda parlayan bir tas buldu. Tasi aldiginda etrafinda garip sesler duymaya basladi. Agaclar sallaniyor kuslar sarki soyleyordu. Ali tasi dikkatle inceledi ve uzerinde eski harfler gordu. Koye dondugunude herkes ona inanmadi ama Ali biliyordu ki ormanin bir sirri vardi.", 3),
-        ("Denizkizi Masali", "Denizin dibinde guzel bir saray vardi. Bu sarayda yasayan denizkizi insanlarin dunyasini merak ediyordu. Her gun dalgalarin uzerine cikip uzaktaki gemileri izliyordu. Bir gun buyuk bir firtina cikti ve denizde bir gemi batti. Denizkizi bogulmakta olan bir prens gordu. Onu kurtarip kiyiya birakti ve denize geri dondu. Prensi hic unutamadi.", 3),
+        ("Küçük Prens",
+         "Bir zamanlar küçük bir adam vardı. Bu adamın küçük bir gezegeni vardı. "
+         "Gezegende tek bir gül çiçeği yetişiyordu. Adam bu gülü çok seviyordu. "
+         "Her sabah sulardı, her akşam üstünü örterdi. Günler geçtikçe adam daha da "
+         "yalnız hissediyordu. Sonunda gülü bırakıp başka gezegenlere yolculuğa çıktı.", 1),
+
+        ("Heidi'nin Dağları",
+         "Heidi küçük bir kız çocuğuydu. Büyükbabasıyla dağda yaşıyordu. "
+         "Sabahları erken kalkıp koyunları otlatmaya gidiyordu. Dağların havası "
+         "temizdi ve çiçekler her yerde açıyordu. Heidi bu güzellikleri çok seviyordu. "
+         "Arkadaşı Klara onu ziyarete gelince birlikte oyun oynadılar.", 1),
+
+        ("Kaplumbağa ve Tavşan",
+         "Bir ormanda kaplumbağa ile tavşan yarışmaya karar verdiler. Tavşan çok "
+         "hızlıydı ve kaplumbağayla yarışmak ona komik geldi. Koşmaya başladılar. "
+         "Tavşan hemen ileriye geçti ve kaplumbağa çok geride kaldı. Tavşan "
+         "yorulunca bir ağacın altında uyudu. Kaplumbağa ise durmadan yavaş yavaş "
+         "yürüdü. Tavşan uyandığında kaplumbağa çoktan bitişi geçmişti.", 2),
+
+        ("Pinokyo'nun Maceraları",
+         "Marangoz Geppetto ahşaptan bir kukla yaptı. Kuklanın adını Pinokyo koydu. "
+         "Bir gün Pinokyo canlandı ve konuşmaya başladı. Çocuğa dönüşmek için okula "
+         "gitmeliydi. Ama Pinokyo yolda oyun parkına gitti. Yalanlar söyleyince burnu "
+         "uzadı. Sonunda iyi bir çocuk olmaya karar verdi ve rüyası gerçek oldu.", 2),
+
+        ("Ormanın Sırrı",
+         "Ormanın derinliklerinde küçük bir köy vardı. Bu köyde yaşayan çocuklar her "
+         "gün ormana gidip oynarlardı. Bir gün küçük Ali ormanda parlayan bir taş "
+         "buldu. Taşı aldığında etrafında garip sesler duymaya başladı. Ağaçlar "
+         "sallanıyor, kuşlar şarkı söylüyordu. Ali taşı dikkatle inceledi ve üzerinde "
+         "eski harfler gördü. Köye döndüğünde herkes ona inanmadı ama Ali biliyordu "
+         "ki ormanın bir sırrı vardı.", 3),
+
+        ("Deniz Kızı Masalı",
+         "Denizin dibinde güzel bir saray vardı. Bu sarayda yaşayan deniz kızı "
+         "insanların dünyasını merak ediyordu. Her gün dalgaların üzerine çıkıp "
+         "uzaktaki gemileri izliyordu. Bir gün büyük bir fırtına çıktı ve denizde "
+         "bir gemi battı. Deniz kızı boğulmakta olan bir prens gördü. Onu kurtarıp "
+         "kıyıya bıraktı ve denize geri döndü. Prensi hiç unutamadı.", 3),
+
+        ("Ağustos Böceği ve Karınca",
+         "Yaz boyunca ağustos böceği şarkı söyleyip dans etti. Karınca ise durmadan "
+         "çalışarak kışa hazırlandı. Sonbahar gelince ağustos böceği karıncadan yiyecek "
+         "istedi. Karınca dedi ki yaz boyunca ne yaptın? Ağustos böceği utandı. "
+         "Bu masaldan şunu öğreniriz çalışmak her zaman gereklidir.", 2),
+
+        ("Çirkin Ördek Yavrusu",
+         "Bir göl kenarında ördek yumurtaları çatlayıp açıldı. Bütün yavrular sarı "
+         "ve güzeldi ama biri farklıydı. O büyük ve gri görünüyordu. Diğer hayvanlar "
+         "onunla alay ettiler. Üzgün yavru yalnız başına yaşamaya başladı. Kış "
+         "geçti, ilkbahar geldi. Yavru suya bakınca gördü ki o artık güzel bir "
+         "kuğuya dönüşmüştü.", 1),
     ]
     for title, content, level in texts:
+        wc = len(content.split())
         conn.execute(
             "INSERT OR IGNORE INTO texts (id,title,content,level,word_count) VALUES (?,?,?,?,?)",
-            (str(uuid.uuid4()), title, content, level, len(content.split())))
+            (str(uuid.uuid4()), title, content, level, wc))
 
     conn.commit()
     conn.close()

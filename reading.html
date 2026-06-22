@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OKUMETRiK — Okuma Testi</title>
+<title>OKUMETRİK — Okuma Testi</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -11,392 +11,317 @@
   --border:#e2e8f0;--primary:#1e40af;--primary-l:#3b82f6;
   --success:#15803d;--success-bg:#f0fdf4;--success-b:#bbf7d0;
   --error:#dc2626;--error-bg:#fef2f2;--error-b:#fecaca;
-  --warn:#a16207;--warn-bg:#fefce8;--warn-b:#fef08a;
-  --purple:#6d28d9;--purple-bg:#f5f3ff;--purple-b:#ddd6fe;
-  --gray:#64748b;--gray-bg:#f1f5f9;--gray-b:#cbd5e1;
-  --shadow:0 4px 6px -1px rgba(0,0,0,.05),0 2px 4px -2px rgba(0,0,0,.05);
-  --shadow-lg:0 10px 20px -4px rgba(0,0,0,.08);
+  --warn:#a16207;--warn-bg:#fefce8;
+  --purple:#6d28d9;--purple-bg:#f5f3ff;
+  --gray-bg:#f1f5f9;--gray-b:#cbd5e1;
+  --shadow:0 2px 8px rgba(0,0,0,.06);--shadow-lg:0 8px 24px rgba(0,0,0,.1);
 }
 [data-theme=dark]{
   --bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--muted:#94a3b8;
   --border:#334155;--primary:#3b82f6;--primary-l:#60a5fa;
   --success:#22c55e;--success-bg:#052e16;--success-b:#15803d;
   --error:#ef4444;--error-bg:#450a0a;--error-b:#991b1b;
-  --warn:#eab308;--warn-bg:#422006;--warn-b:#854d0e;
-  --purple:#a855f7;--purple-bg:#3b0764;--purple-b:#6d28d9;
-  --gray:#94a3b8;--gray-bg:#1f2937;--gray-b:#374151;
+  --warn:#eab308;--warn-bg:#422006;
+  --purple:#a855f7;--purple-bg:#2e1065;
+  --gray-bg:#1f2937;--gray-b:#374151;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .25s,color .25s}
 
 /* Header */
-.header{
-  background:var(--card);border-bottom:1px solid var(--border);
-  padding:0 24px;height:60px;
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:50;
-  box-shadow:var(--shadow);
-}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-icon{
-  width:36px;height:36px;background:linear-gradient(135deg,#1e40af,#3b82f6);
-  border-radius:10px;display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:800;font-size:18px;
-}
-.logo-text{font-size:17px;font-weight:800;letter-spacing:-.4px;color:var(--text)}
+.header{background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:var(--shadow)}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px}
+.logo-text{font-size:17px;font-weight:800;letter-spacing:-.4px}
 .logo-sub{font-size:11px;color:var(--muted);font-weight:500}
-
-.header-right{display:flex;align-items:center;gap:12px}
-.user-badge{
-  display:flex;align-items:center;gap:8px;
-  padding:5px 12px;background:var(--bg);border:1px solid var(--border);
-  border-radius:20px;font-size:13px;font-weight:600;color:var(--text);
-}
-.user-avatar{
-  width:26px;height:26px;background:linear-gradient(135deg,#1e40af,#3b82f6);
-  border-radius:50%;color:#fff;font-size:12px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-}
-.icon-btn{
-  width:36px;height:36px;border:1px solid var(--border);background:var(--bg);
-  color:var(--muted);border-radius:9px;cursor:pointer;font-size:15px;
-  display:flex;align-items:center;justify-content:center;transition:all .15s;
-}
+.header-right{display:flex;align-items:center;gap:10px}
+.user-badge{display:flex;align-items:center;gap:8px;padding:5px 12px;background:var(--bg);border:1px solid var(--border);border-radius:20px;font-size:13px;font-weight:600}
+.user-avatar{width:26px;height:26px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:50%;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.icon-btn{width:36px;height:36px;border:1px solid var(--border);background:var(--bg);color:var(--muted);border-radius:9px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .icon-btn:hover{background:var(--border);color:var(--text)}
 
-/* Main layout */
-.main{max-width:860px;margin:0 auto;padding:32px 20px}
+.main{max-width:860px;margin:0 auto;padding:28px 20px}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:24px;width:fit-content}
+.tab-btn{padding:8px 20px;border-radius:9px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);transition:all .15s}
+.tab-btn.active{background:var(--card);color:var(--text);box-shadow:var(--shadow)}
 
 /* ── HOME: Text cards ── */
-#homeView{}
-.page-title{font-size:24px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
-.page-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
-
-.texts-grid{display:grid;gap:16px;grid-template-columns:1fr}
-@media(min-width:640px){.texts-grid{grid-template-columns:repeat(2,1fr)}}
-
-.text-card{
-  background:var(--card);border:1.5px solid var(--border);border-radius:16px;
-  padding:22px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .15s;
-  box-shadow:var(--shadow);
-}
+.page-title{font-size:22px;font-weight:800;margin-bottom:4px;letter-spacing:-.4px}
+.page-sub{font-size:13px;color:var(--muted);margin-bottom:22px}
+.texts-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:600px){.texts-grid{grid-template-columns:repeat(2,1fr)}}
+.text-card{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:20px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .15s;box-shadow:var(--shadow)}
 .text-card:hover{border-color:var(--primary-l);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
-.text-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
-.text-title{font-size:16px;font-weight:700;color:var(--text)}
-.level-badge{
-  flex-shrink:0;font-size:11px;font-weight:700;padding:3px 9px;
-  border-radius:20px;text-transform:uppercase;letter-spacing:.4px;
-}
-.lv1{background:#dbeafe;color:#1e40af}
-.lv2{background:#dcfce7;color:#166534}
-.lv3{background:#fef9c3;color:#92400e}
-.lv4{background:#ede9fe;color:#5b21b6}
-[data-theme=dark] .lv1{background:#1e3a8a;color:#93c5fd}
-[data-theme=dark] .lv2{background:#052e16;color:#86efac}
-[data-theme=dark] .lv3{background:#451a03;color:#fcd34d}
-[data-theme=dark] .lv4{background:#2e1065;color:#c4b5fd}
-
-.text-preview{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;
-  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.text-meta{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--muted)}
-.text-meta span{display:flex;align-items:center;gap:4px}
-.btn-start{
-  width:100%;margin-top:16px;padding:11px;
-  background:var(--primary);color:#fff;border:none;border-radius:10px;
-  font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;
-  transition:opacity .2s,transform .1s;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-}
+.text-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.text-title{font-size:15px;font-weight:700}
+.level-badge{flex-shrink:0;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:uppercase}
+.lv1{background:#dbeafe;color:#1e40af}.lv2{background:#dcfce7;color:#166534}.lv3{background:#fef9c3;color:#92400e}.lv4{background:#ede9fe;color:#5b21b6}
+[data-theme=dark] .lv1{background:#1e3a8a;color:#93c5fd}[data-theme=dark] .lv2{background:#052e16;color:#86efac}[data-theme=dark] .lv3{background:#451a03;color:#fcd34d}[data-theme=dark] .lv4{background:#2e1065;color:#c4b5fd}
+.text-preview{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.text-meta{display:flex;gap:12px;font-size:12px;color:var(--muted)}
+.btn-start{width:100%;margin-top:14px;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s}
 .btn-start:hover{opacity:.9}
-.btn-start:active{transform:scale(.98)}
+
+/* ── History ── */
+.history-list{display:flex;flex-direction:column;gap:12px}
+.history-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;box-shadow:var(--shadow);cursor:pointer;transition:border-color .2s,box-shadow .2s}
+.history-card:hover{border-color:var(--primary-l);box-shadow:var(--shadow-lg)}
+.history-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.history-title{font-size:14px;font-weight:700}
+.history-date{font-size:12px;color:var(--muted)}
+.history-metrics{display:flex;gap:16px;flex-wrap:wrap}
+.h-metric{text-align:center}
+.h-metric-val{font-size:18px;font-weight:800}
+.h-metric-label{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase}
+.col-good{color:var(--success)}.col-ok{color:var(--warn)}.col-bad{color:var(--error)}.col-blue{color:var(--primary-l)}
+.acc-bar-wrap{flex:1;min-width:120px;display:flex;align-items:center;gap:8px}
+.acc-bar{height:5px;flex:1;background:var(--border);border-radius:3px;overflow:hidden}
+.acc-fill{height:100%;border-radius:3px}
+.af-good{background:var(--success)}.af-ok{background:#eab308}.af-bad{background:var(--error)}
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:12px}
 
 /* ── READING VIEW ── */
 #readingView{display:none}
-.reading-header{
-  background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:18px 22px;margin-bottom:20px;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-  box-shadow:var(--shadow);
-}
-.reading-title{font-size:17px;font-weight:700;color:var(--text)}
+.reading-header{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow)}
+.reading-title{font-size:16px;font-weight:700}
 .reading-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.timer-wrap{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--primary)}
+.rec-dot{width:9px;height:9px;background:#ef4444;border-radius:50%;animation:blink 1s ease-in-out infinite;display:none}
+.rec-dot.on{display:block}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 
-.timer-display{
-  display:flex;align-items:center;gap:8px;
-  font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;
-  color:var(--primary);
+/* Live caption */
+.live-caption{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:10px 16px;margin-bottom:14px;min-height:42px;
+  display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);
+  font-size:13px;color:var(--muted);transition:border-color .2s;
 }
-.rec-dot{
-  width:10px;height:10px;background:#ef4444;border-radius:50%;
-  animation:blink 1s ease-in-out infinite;display:none;
-}
-.rec-dot.active{display:block}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.live-caption.active{border-color:var(--primary-l);color:var(--text)}
+.live-dot{width:8px;height:8px;background:var(--primary-l);border-radius:50%;animation:blink 1s ease-in-out infinite;flex-shrink:0;display:none}
+.live-dot.on{display:block}
+.live-text{font-style:italic;flex:1}
 
 /* Text display */
-.text-display{
-  background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:28px 32px;margin-bottom:20px;
-  font-size:22px;line-height:2.1;letter-spacing:.01em;
-  box-shadow:var(--shadow);min-height:200px;
-}
-.word{
-  display:inline-block;padding:2px 4px;margin:2px;
-  border-radius:5px;cursor:default;transition:background .2s,color .2s;
-  position:relative;
-}
+.text-display{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 28px;margin-bottom:16px;font-size:21px;line-height:2.2;letter-spacing:.01em;box-shadow:var(--shadow);min-height:180px}
+
+/* Word states */
+.word{display:inline-block;padding:2px 4px;margin:2px 1px;border-radius:6px;cursor:default;transition:background .25s,color .25s;position:relative}
 .word.pending{color:var(--text)}
-/* After analysis */
+/* Live coloring (during reading) */
+.word.live-correct{color:#2563eb;font-weight:600;background:#eff6ff}
+.word.live-wrong{background:#fee2e2;color:#dc2626}
+.word.live-current{background:#dbeafe;outline:2px solid #3b82f6;font-weight:700;border-radius:6px}
+[data-theme=dark] .word.live-correct{color:#60a5fa;background:#1e3a8a30}
+[data-theme=dark] .word.live-wrong{background:#450a0a;color:#f87171}
+[data-theme=dark] .word.live-current{background:#1e3a8a;outline-color:#60a5fa}
+/* Final analysis coloring */
 .word.correct{color:#2563eb;font-weight:600}
 [data-theme=dark] .word.correct{color:#60a5fa}
-.word.substitution{background:#fef2f2;color:#dc2626;text-decoration:line-through;border-radius:6px}
+.word.substitution{background:#fef2f2;color:#dc2626;text-decoration:line-through}
 [data-theme=dark] .word.substitution{background:#450a0a;color:#f87171}
-.word.mispronunciation{background:#fef9c3;color:#92400e;border-radius:6px}
+.word.mispronunciation{background:#fef9c3;color:#92400e}
 [data-theme=dark] .word.mispronunciation{background:#451a03;color:#fcd34d}
-.word.omission{background:#f1f5f9;color:#94a3b8;text-decoration:underline dotted;border-radius:6px}
+.word.omission{background:var(--gray-bg);color:#94a3b8;text-decoration:underline dotted}
 [data-theme=dark] .word.omission{background:#1f2937;color:#64748b}
-.word.insertion{background:#ede9fe;color:#6d28d9;font-style:italic;border-radius:6px}
-[data-theme=dark] .word.insertion{background:#2e1065;color:#c4b5fd}
-.word.repetition{background:#fef9c3;color:#a16207;border-radius:6px}
-[data-theme=dark] .word.repetition{background:#451a03;color:#fcd34d}
-.word.self_correction{background:#f0fdf4;color:#15803d;border-radius:6px}
-[data-theme=dark] .word.self_correction{background:#052e16;color:#86efac}
+.word.insertion{background:var(--purple-bg);color:var(--purple);font-style:italic}
+.word.repetition{background:#fef9c3;color:#a16207}
+.word.self_correction{background:var(--success-bg);color:var(--success)}
+.word-tag{font-size:9px;vertical-align:super;opacity:.7;margin-left:1px;font-weight:700;font-style:normal}
+.word[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;font-size:11px;font-weight:600;padding:4px 9px;border-radius:7px;white-space:nowrap;pointer-events:none;z-index:20}
 
-.word-tag{
-  font-size:9px;vertical-align:super;opacity:.7;font-style:normal;
-  margin-left:1px;font-weight:600;
-}
-/* Tooltip on hover */
-.word[data-hyp]:hover::after{
-  content:attr(data-hyp);
-  position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
-  background:#0f172a;color:#fff;font-size:11px;font-weight:600;
-  padding:3px 8px;border-radius:6px;white-space:nowrap;
-  margin-bottom:4px;pointer-events:none;z-index:10;
-}
-
-/* Controls bar */
-.controls{
-  background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:20px 24px;box-shadow:var(--shadow);
-  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
-}
-.mic-btn{
-  width:64px;height:64px;border-radius:50%;border:none;cursor:pointer;
-  font-size:26px;display:flex;align-items:center;justify-content:center;
-  transition:all .2s;flex-shrink:0;
-  box-shadow:0 4px 12px rgba(0,0,0,.15);
-}
+/* Controls */
+.controls{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 22px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mic-btn{width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .mic-btn.idle{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff}
-.mic-btn.recording{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;animation:pulse-ring 1.5s ease-in-out infinite}
-@keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 12px rgba(239,68,68,0)}}
+.mic-btn.rec{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;animation:pulse 1.5s ease-in-out infinite}
 .mic-btn.done{background:linear-gradient(135deg,#15803d,#22c55e);color:#fff}
 .mic-btn:disabled{opacity:.5;cursor:not-allowed;animation:none}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 12px rgba(239,68,68,0)}}
+.ctrl-info{flex:1;min-width:0}
+.ctrl-label{font-size:14px;font-weight:700}
+.ctrl-hint{font-size:12px;color:var(--muted);margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:9px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:opacity .15s,transform .1s}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-secondary{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--border);color:var(--text)}
 
-.controls-info{flex:1;min-width:0}
-.controls-label{font-size:14px;font-weight:700;color:var(--text)}
-.controls-hint{font-size:12px;color:var(--muted);margin-top:3px}
-
-.btn-analyze{
-  padding:12px 22px;background:var(--primary);color:#fff;
-  border:none;border-radius:10px;font-family:inherit;
-  font-size:14px;font-weight:700;cursor:pointer;
-  transition:opacity .2s,transform .1s;white-space:nowrap;
-}
-.btn-analyze:hover{opacity:.9}
-.btn-analyze:active{transform:scale(.98)}
-.btn-analyze:disabled{opacity:.4;cursor:not-allowed}
-.btn-back{
-  padding:12px 18px;background:var(--bg);color:var(--muted);
-  border:1px solid var(--border);border-radius:10px;font-family:inherit;
-  font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;
-}
-.btn-back:hover{background:var(--border);color:var(--text)}
+/* Progress bar */
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:14px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#1e40af,#3b82f6);border-radius:2px;transition:width .3s}
 
 /* ── LOADING ── */
 #loadingView{display:none;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:20px}
-.loader-ring{
-  width:60px;height:60px;border:4px solid var(--border);
-  border-top-color:var(--primary);border-radius:50%;
-  animation:spin .8s linear infinite;
-}
+.loader-ring{width:56px;height:56px;border:4px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-text{font-size:16px;font-weight:600;color:var(--muted)}
 .loader-step{font-size:13px;color:var(--muted);opacity:.7}
 
 /* ── RESULTS ── */
 #resultsView{display:none}
-.results-title{font-size:22px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
-.results-sub{font-size:14px;color:var(--muted);margin-bottom:22px}
+.metrics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+@media(min-width:560px){.metrics-grid{grid-template-columns:repeat(4,1fr)}}
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--shadow);text-align:center}
+.metric-val{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.metric-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.section-head{font-size:14px;font-weight:700;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.ld{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.ld-c{background:#2563eb}.ld-s{background:#fef2f2;border:1px solid #fecaca}.ld-m{background:#fef9c3;border:1px solid #fde68a}.ld-o{background:#f1f5f9;border:1px solid #cbd5e1}.ld-i{background:#f5f3ff;border:1px solid #ddd6fe}.ld-r{background:#fef9c3;border:1px solid #fde68a}.ld-sc{background:#f0fdf4;border:1px solid #bbf7d0}
+.result-text{font-size:19px;line-height:2.2}
+.fb-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.fb-item{padding:9px 13px;border-radius:9px;font-size:13px;line-height:1.5;border-left:3px solid transparent}
+.fi-s{background:var(--error-bg);border-color:var(--error);color:var(--error)}
+.fi-m{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.fi-o{background:var(--gray-bg);border-color:#94a3b8;color:#64748b}
+.fi-i{background:var(--purple-bg);border-color:var(--purple);color:var(--purple)}
+.fi-r{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.fi-sc{background:var(--success-bg);border-color:var(--success);color:var(--success)}
+.overall-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:13px;font-size:13px;line-height:1.6}
+.results-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
 
-.metrics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:22px}
-@media(min-width:600px){.metrics-grid{grid-template-columns:repeat(4,1fr)}}
-.metric-card{
-  background:var(--card);border:1px solid var(--border);border-radius:14px;
-  padding:18px;box-shadow:var(--shadow);text-align:center;
-}
-.metric-val{font-size:28px;font-weight:800;letter-spacing:-.5px}
-.metric-val.good{color:var(--success)}
-.metric-val.ok{color:var(--warn)}
-.metric-val.bad{color:var(--error)}
-.metric-val.blue{color:var(--primary-l)}
-.metric-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
-
-.section-card{
-  background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:22px;margin-bottom:16px;box-shadow:var(--shadow);
-}
-.section-head{
-  font-size:14px;font-weight:700;color:var(--text);
-  margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:8px;
-}
-
-/* Legend */
-.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
-.legend-dot{width:12px;height:12px;border-radius:3px}
-.ld-correct{background:#2563eb}
-.ld-sub{background:#fef2f2;border:1px solid #fecaca}
-.ld-misp{background:#fef9c3;border:1px solid #fef08a}
-.ld-omit{background:#f1f5f9;border:1px solid #cbd5e1}
-.ld-ins{background:#ede9fe;border:1px solid #ddd6fe}
-.ld-rep{background:#fef9c3;border:1px solid #fef08a}
-.ld-self{background:#f0fdf4;border:1px solid #bbf7d0}
-
-/* Analyzed text in results */
-.result-text{font-size:20px;line-height:2.2;letter-spacing:.01em}
-
-/* Feedback list */
-.feedback-list{list-style:none;display:flex;flex-direction:column;gap:8px}
-.feedback-item{
-  padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.5;
-  border-left:3px solid transparent;
-}
-.fi-sub{background:var(--error-bg);border-color:var(--error);color:var(--error)}
-.fi-misp{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
-.fi-omit{background:var(--gray-bg);border-color:var(--gray);color:var(--gray)}
-.fi-ins{background:var(--purple-bg);border-color:var(--purple);color:var(--purple)}
-.fi-rep{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
-.fi-self{background:var(--success-bg);border-color:var(--success);color:var(--success)}
-
-/* Overall feedback */
-.overall-box{
-  background:var(--bg);border:1px solid var(--border);border-radius:12px;
-  padding:14px 16px;font-size:13px;color:var(--text);line-height:1.6;
-}
-
-.results-actions{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
-.btn-retry{
-  padding:12px 24px;background:var(--primary);color:#fff;
-  border:none;border-radius:10px;font-family:inherit;
-  font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s;
-}
-.btn-retry:hover{opacity:.9}
-.btn-home{
-  padding:12px 24px;background:var(--bg);color:var(--muted);
-  border:1px solid var(--border);border-radius:10px;font-family:inherit;
-  font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;
-}
-.btn-home:hover{background:var(--border);color:var(--text)}
+/* ── Session detail modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:20px;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,.2)}
+.modal-header{padding:20px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:700}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:20px 22px}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end}
+.s-meta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(min-width:480px){.s-meta-grid{grid-template-columns:repeat(4,1fr)}}
+.s-meta-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px;text-align:center}
+.s-meta-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.s-meta-val{font-size:17px;font-weight:800}
+.colored-text{font-size:15px;line-height:2.1;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:13px;margin-top:10px}
+.w-c{color:#2563eb;font-weight:600}[data-theme=dark] .w-c{color:#60a5fa}
+.w-s{background:#fef2f2;color:#dc2626;text-decoration:line-through;border-radius:4px;padding:0 3px}
+.w-m{background:#fef9c3;color:#92400e;border-radius:4px;padding:0 3px}
+.w-o{background:#f1f5f9;color:#94a3b8;text-decoration:underline dotted;border-radius:4px;padding:0 3px}
+.w-i{background:#f5f3ff;color:#6d28d9;font-style:italic;border-radius:4px;padding:0 3px}
+.w-r{background:#fef9c3;color:#a16207;border-radius:4px;padding:0 3px}
+.w-sc{background:#f0fdf4;color:#15803d;border-radius:4px;padding:0 3px}
 
 /* Toast */
-.toast{
-  position:fixed;bottom:24px;right:24px;z-index:999;
-  background:#0f172a;color:#fff;border-radius:12px;
-  padding:12px 18px;font-size:13px;font-weight:600;
-  box-shadow:0 8px 24px rgba(0,0,0,.25);
-  transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;
-}
+.toast{position:fixed;bottom:24px;right:24px;z-index:999;background:#0f172a;color:#fff;border-radius:12px;padding:11px 16px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);transform:translateY(70px);opacity:0;transition:all .3s}
 .toast.show{transform:translateY(0);opacity:1}
-
-/* Spinner small */
-.spin-sm{
-  display:inline-block;width:14px;height:14px;
-  border:2px solid rgba(255,255,255,.4);border-top-color:#fff;
-  border-radius:50%;animation:spin .7s linear infinite;
-}
+.spin-sm{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 </style>
 </head>
 <body>
+
 <header class="header">
-  <a class="logo" href="#">
+  <div class="logo" onclick="goHome()">
     <div class="logo-icon">O</div>
     <div>
       <div class="logo-text">OKUMETRİK</div>
       <div class="logo-sub">Okuma Değerlendirme</div>
     </div>
-  </a>
+  </div>
   <div class="header-right">
     <div class="user-badge">
       <div class="user-avatar" id="userAvatar">?</div>
-      <span id="userName">Kullanıcı</span>
+      <span id="userName">—</span>
     </div>
-    <button class="icon-btn" id="themeBtn" title="Tema">🌙</button>
+    <button class="icon-btn" id="themeBtn">🌙</button>
     <button class="icon-btn" id="logoutBtn" title="Çıkış">🚪</button>
   </div>
 </header>
 
 <main class="main">
 
-  <!-- HOME: Metin Listesi -->
+  <!-- ── HOME ── -->
   <div id="homeView">
-    <div class="page-title">Okuma Testleri</div>
-    <div class="page-sub" id="welcomeMsg">Bir metin seçin ve okumaya başlayın.</div>
-    <div class="texts-grid" id="textsGrid">
-      <div style="color:var(--muted);font-size:14px">Metinler yükleniyor…</div>
+    <div class="page-title" id="welcomeTitle">Merhaba!</div>
+    <div class="page-sub">Bir metin seçerek okumaya başlayın veya geçmiş sonuçlarınıza bakın.</div>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tabTexts" onclick="switchTab('texts')">📚 Metinler</button>
+      <button class="tab-btn" id="tabHistory" onclick="switchTab('history')">📋 Geçmişim</button>
+    </div>
+
+    <!-- Metinler -->
+    <div id="textsTab">
+      <div class="texts-grid" id="textsGrid">
+        <div style="color:var(--muted);font-size:14px;padding:20px">Yükleniyor…</div>
+      </div>
+    </div>
+
+    <!-- Geçmiş -->
+    <div id="historyTab" style="display:none">
+      <div class="history-list" id="historyList">
+        <div style="color:var(--muted);font-size:14px;padding:20px">Yükleniyor…</div>
+      </div>
     </div>
   </div>
 
-  <!-- READING VIEW -->
+  <!-- ── READING ── -->
   <div id="readingView">
     <div class="reading-header">
       <div>
-        <div class="reading-title" id="readingTitle">Metin Adı</div>
+        <div class="reading-title" id="readingTitle">—</div>
         <div class="reading-meta" id="readingMeta"></div>
       </div>
-      <div class="timer-display">
+      <div class="timer-wrap">
         <div class="rec-dot" id="recDot"></div>
         <span id="timerEl">00:00</span>
       </div>
     </div>
 
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+    <!-- Anlık transkript -->
+    <div class="live-caption" id="liveCaption">
+      <div class="live-dot" id="liveDot"></div>
+      <span class="live-text" id="liveText">Kayıt başladığında konuşmanız burada görünecek…</span>
+    </div>
+
     <div class="text-display" id="textDisplay"></div>
 
     <div class="controls">
-      <button class="mic-btn idle" id="micBtn" title="Kaydı Başlat / Durdur">🎙</button>
-      <div class="controls-info">
-        <div class="controls-label" id="ctrlLabel">Kayıt için mikrofona tıklayın</div>
-        <div class="controls-hint" id="ctrlHint">Metni okuyun, bitince durdurun</div>
+      <button class="mic-btn idle" id="micBtn">🎙</button>
+      <div class="ctrl-info">
+        <div class="ctrl-label" id="ctrlLabel">Kayıt için mikrofona tıklayın</div>
+        <div class="ctrl-hint" id="ctrlHint">Metni yüksek sesle okuyun</div>
       </div>
-      <button class="btn-back" id="backBtn">← Geri</button>
-      <button class="btn-analyze" id="analyzeBtn" disabled>Analiz Et</button>
+      <button class="btn btn-secondary" id="backBtn">← Geri</button>
+      <button class="btn btn-primary" id="analyzeBtn" disabled>Analiz Et →</button>
     </div>
   </div>
 
-  <!-- LOADING -->
+  <!-- ── LOADING ── -->
   <div id="loadingView">
     <div class="loader-ring"></div>
     <div class="loader-text" id="loaderText">Ses transkripte dönüştürülüyor…</div>
     <div class="loader-step" id="loaderStep">Whisper large-v3 çalışıyor</div>
   </div>
 
-  <!-- RESULTS -->
+  <!-- ── RESULTS ── -->
   <div id="resultsView">
-    <div class="results-title">Okuma Analizi</div>
-    <div class="results-sub" id="resultsSub"></div>
+    <div class="page-title" style="margin-bottom:4px">Okuma Analizi</div>
+    <div class="page-sub" id="resultsSub"></div>
 
     <div class="metrics-grid" id="metricsGrid"></div>
 
     <div class="section-card">
       <div class="section-head">📝 Renklendirilmiş Metin</div>
       <div class="legend">
-        <div class="legend-item"><div class="legend-dot ld-correct"></div>Doğru</div>
-        <div class="legend-item"><div class="legend-dot ld-sub"></div>Değiştirme</div>
-        <div class="legend-item"><div class="legend-dot ld-misp"></div>Telaffuz</div>
-        <div class="legend-item"><div class="legend-dot ld-omit"></div>Atlama</div>
-        <div class="legend-item"><div class="legend-dot ld-ins"></div>Ekleme</div>
-        <div class="legend-item"><div class="legend-dot ld-self"></div>Kendi Düzeltme</div>
+        <div class="legend-item"><div class="ld ld-c"></div>Doğru</div>
+        <div class="legend-item"><div class="ld ld-s"></div>Yanlış kelime</div>
+        <div class="legend-item"><div class="ld ld-m"></div>Telaffuz hatası</div>
+        <div class="legend-item"><div class="ld ld-o"></div>Atlandı</div>
+        <div class="legend-item"><div class="ld ld-i"></div>Ekleme</div>
+        <div class="legend-item"><div class="ld ld-sc"></div>Kendi düzeltti</div>
       </div>
       <div class="result-text" id="resultText"></div>
     </div>
@@ -406,415 +331,515 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       <div class="overall-box" id="overallFeedback"></div>
     </div>
 
-    <div class="section-card" id="wordFeedbackCard">
-      <div class="section-head">🔍 Kelime Bazında Geri Bildirim</div>
-      <ul class="feedback-list" id="wordFeedbackList"></ul>
+    <div class="section-card" id="fbCard" style="display:none">
+      <div class="section-head">🔍 Kelime Geri Bildirimi</div>
+      <ul class="fb-list" id="fbList"></ul>
     </div>
 
     <div class="results-actions">
-      <button class="btn-retry" id="retryBtn">🔄 Tekrar Dene</button>
-      <button class="btn-home" id="homeBtn">🏠 Metin Listesi</button>
+      <button class="btn btn-primary" onclick="startReading(currentText)">🔄 Tekrar Dene</button>
+      <button class="btn btn-secondary" onclick="goHome()">🏠 Metin Listesi</button>
     </div>
   </div>
 
 </main>
 
+<!-- Session detail modal -->
+<div class="modal-overlay" id="sessionModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="sessionModalTitle">Oturum Detayı</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="sessionModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Kapat</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Auth guard ─────────────────────────────────────────────────────────────
+// ── Auth ───────────────────────────────────────────────────────────────────
 const token = localStorage.getItem('auth_token');
-const user  = JSON.parse(localStorage.getItem('user') || 'null');
-if (!token || !user) { window.location.href = '/login.html'; }
+const me    = JSON.parse(localStorage.getItem('user') || 'null');
+if (!token || !me) location.href = '/login.html';
 
 // ── Theme ──────────────────────────────────────────────────────────────────
 const root = document.documentElement;
-const th = localStorage.getItem('theme') || 'light';
-root.setAttribute('data-theme', th);
-const themeBtn = document.getElementById('themeBtn');
-themeBtn.textContent = th === 'dark' ? '☀️' : '🌙';
-themeBtn.addEventListener('click', () => {
-  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  root.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-  themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
-});
+const applyTheme = t => { root.setAttribute('data-theme', t); localStorage.setItem('theme', t); document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙'; };
+applyTheme(localStorage.getItem('theme') || 'light');
+document.getElementById('themeBtn').addEventListener('click', () => applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
 
-// ── User info ──────────────────────────────────────────────────────────────
-document.getElementById('userName').textContent = user.full_name || user.username;
-document.getElementById('userAvatar').textContent = (user.full_name || user.username)[0].toUpperCase();
-document.getElementById('welcomeMsg').textContent =
-  `Merhaba ${user.full_name || user.username}, bir metin seçin ve okumaya başlayın.`;
+// ── User ───────────────────────────────────────────────────────────────────
+document.getElementById('userName').textContent = me.full_name || me.username;
+document.getElementById('userAvatar').textContent = (me.full_name || me.username)[0].toUpperCase();
+document.getElementById('welcomeTitle').textContent = `Merhaba, ${(me.full_name || me.username).split(' ')[0]}!`;
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
-  await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
-  localStorage.clear();
-  window.location.href = '/login.html';
+  await apiFetch('/api/auth/logout', {method:'POST'}).catch(()=>{});
+  localStorage.clear(); location.href = '/login.html';
 });
 
-// ── API helper ─────────────────────────────────────────────────────────────
-async function apiFetch(url, opts = {}) {
-  opts.headers = { ...(opts.headers || {}), 'Authorization': `Bearer ${token}` };
+// ── Helpers ────────────────────────────────────────────────────────────────
+async function apiFetch(url, opts={}) {
+  opts.headers = {...(opts.headers||{}), Authorization:`Bearer ${token}`};
   return fetch(url, opts);
 }
-
-// ── Toast ──────────────────────────────────────────────────────────────────
-function toast(msg, dur = 3000) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), dur);
+async function apiJSON(url, opts={}) {
+  const r = await apiFetch(url, opts);
+  if (!r.ok) { const e=await r.json().catch(()=>{}); throw new Error(e?.detail||r.statusText); }
+  return r.json();
 }
-
-// ── Views ──────────────────────────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 3000);
+}
 function showView(id) {
   ['homeView','readingView','loadingView','resultsView'].forEach(v => {
-    const el = document.getElementById(v);
-    el.style.display = 'none';
+    document.getElementById(v).style.display = 'none';
   });
-  const target = document.getElementById(id);
-  target.style.display = id === 'loadingView' ? 'flex' : 'block';
+  document.getElementById(id).style.display = id === 'loadingView' ? 'flex' : 'block';
 }
+function goHome() {
+  stopAll();
+  showView('homeView');
+  loadHistory(); // refresh
+}
+function formatDur(s) {
+  if (!s) return '–';
+  const m=Math.floor(s/60), sc=Math.round(s%60);
+  return m>0 ? `${m}:${sc.toString().padStart(2,'0')}` : `${sc}sn`;
+}
+function fmtDate(dt) {
+  if (!dt) return '–';
+  const d = new Date(dt);
+  return `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}.${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+}
+function qualClass(v,g,ok){ return v>=g?'col-good':v>=ok?'col-ok':'col-bad'; }
 
-// ── State ──────────────────────────────────────────────────────────────────
-let currentText = null;
-let mediaRecorder = null;
-let audioChunks = [];
-let timerInterval = null;
-let timerSec = 0;
-let recording = false;
-let audioBlob = null;
+// ── Tabs ───────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('textsTab').style.display = tab==='texts' ? '' : 'none';
+  document.getElementById('historyTab').style.display = tab==='history' ? '' : 'none';
+  document.getElementById('tabTexts').classList.toggle('active', tab==='texts');
+  document.getElementById('tabHistory').classList.toggle('active', tab==='history');
+  if (tab==='history') loadHistory();
+}
 
 // ── Load texts ─────────────────────────────────────────────────────────────
 async function loadTexts() {
-  const res = await apiFetch('/api/texts');
-  if (!res.ok) { toast('Metinler yüklenemedi'); return; }
-  const texts = await res.json();
   const grid = document.getElementById('textsGrid');
-  grid.innerHTML = '';
-  const levels = { 1: 'Seviye 1', 2: 'Seviye 2', 3: 'Seviye 3', 4: 'Seviye 4' };
-  const levelCls = { 1: 'lv1', 2: 'lv2', 3: 'lv3', 4: 'lv4' };
-  const timeEst = wc => Math.ceil(wc / 70) + ' dk'; // ~70 wpm for children
-
-  texts.forEach(t => {
-    const card = document.createElement('div');
-    card.className = 'text-card';
-    card.innerHTML = `
-      <div class="text-card-head">
-        <div class="text-title">${t.title}</div>
-        <span class="level-badge ${levelCls[t.level] || 'lv1'}">${levels[t.level] || `Seviye ${t.level}`}</span>
-      </div>
-      <div class="text-preview">${t.content}</div>
-      <div class="text-meta">
-        <span>📝 ${t.word_count} kelime</span>
-        <span>⏱ ~${timeEst(t.word_count)}</span>
-      </div>
-      <button class="btn-start">▶ Okumaya Başla</button>
-    `;
-    card.querySelector('.btn-start').addEventListener('click', () => startReading(t));
-    grid.appendChild(card);
-  });
+  try {
+    const texts = await apiJSON('/api/texts');
+    grid.innerHTML = '';
+    const lvLabel = {1:'Seviye 1',2:'Seviye 2',3:'Seviye 3',4:'Seviye 4'};
+    const lvCls   = {1:'lv1',2:'lv2',3:'lv3',4:'lv4'};
+    texts.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'text-card';
+      const wpm = 70; // children avg
+      const est = Math.max(1, Math.ceil(t.word_count / wpm));
+      card.innerHTML = `
+        <div class="text-card-head">
+          <div class="text-title">${t.title}</div>
+          <span class="level-badge ${lvCls[t.level]||'lv1'}">${lvLabel[t.level]||`Sev.${t.level}`}</span>
+        </div>
+        <div class="text-preview">${t.content}</div>
+        <div class="text-meta">
+          <span>📝 ${t.word_count} kelime</span>
+          <span>⏱ ~${est} dk</span>
+        </div>
+        <button class="btn-start">▶ Okumaya Başla</button>`;
+      card.querySelector('.btn-start').addEventListener('click', () => startReading(t));
+      grid.appendChild(card);
+    });
+  } catch(e) { grid.innerHTML = `<div style="color:var(--error)">Yüklenemedi: ${e.message}</div>`; }
 }
 
-// ── Start reading ──────────────────────────────────────────────────────────
+// ── Load history ───────────────────────────────────────────────────────────
+async function loadHistory() {
+  const list = document.getElementById('historyList');
+  try {
+    const sessions = await apiJSON('/api/sessions');
+    if (!sessions.length) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-icon">📖</div><p>Henüz hiç okuma yapmadınız.<br>Bir metin seçin ve başlayın!</p></div>`;
+      return;
+    }
+    list.innerHTML = '';
+    sessions.forEach(s => {
+      const acc = s.accuracy||0;
+      const accCls = acc>=80?'af-good':acc>=60?'af-ok':'af-bad';
+      const card = document.createElement('div');
+      card.className = 'history-card';
+      card.innerHTML = `
+        <div class="history-head">
+          <div class="history-title">${s.text_title}</div>
+          <div class="history-date">${fmtDate(s.created_at)}</div>
+        </div>
+        <div class="history-metrics">
+          <div class="h-metric">
+            <div class="h-metric-val ${qualClass(acc,80,60)}">${acc.toFixed(1)}%</div>
+            <div class="h-metric-label">Doğruluk</div>
+          </div>
+          <div class="h-metric">
+            <div class="h-metric-val col-blue">${(s.wcpm||0).toFixed(1)}</div>
+            <div class="h-metric-label">WCPM</div>
+          </div>
+          <div class="h-metric">
+            <div class="h-metric-val">${(s.fluency_score||0).toFixed(1)}</div>
+            <div class="h-metric-label">Akıcılık</div>
+          </div>
+          <div class="acc-bar-wrap">
+            <div class="acc-bar"><div class="acc-fill ${accCls}" style="width:${Math.min(100,acc)}%"></div></div>
+            <span style="font-size:11px;font-weight:700;color:var(--muted)">${formatDur(s.duration_sec)}</span>
+          </div>
+        </div>`;
+      card.addEventListener('click', () => viewSession(s.id));
+      list.appendChild(card);
+    });
+  } catch(e) { list.innerHTML = `<div style="color:var(--error);padding:20px">Yüklenemedi: ${e.message}</div>`; }
+}
+
+// ── Session detail ─────────────────────────────────────────────────────────
+async function viewSession(id) {
+  document.getElementById('sessionModalBody').innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted)">Yükleniyor…</div>';
+  document.getElementById('sessionModal').classList.add('show');
+  try {
+    const s = await apiJSON(`/api/sessions/${id}`);
+    document.getElementById('sessionModalTitle').textContent = s.text_title;
+    const acc=s.accuracy||0, analysis=s.analysis||{}, tokens=analysis.tokens||[];
+    const refWords=(s.text_content||'').split(/\s+/);
+    const byRef={};
+    tokens.forEach(t=>{ if(t.ref_idx!=null) byRef[t.ref_idx]=t; });
+    const clsMap={correct:'w-c',substitution:'w-s',mispronunciation:'w-m',omission:'w-o',insertion:'w-i',repetition:'w-r',self_correction:'w-sc'};
+    const coloredHtml = refWords.map((w,i)=>{
+      const tok=byRef[i]; const st=tok?tok.status:'omission';
+      const tip=tok?.hyp&&st!=='correct'?` title="Okunan: ${tok.hyp}"`:'';
+      return `<span class="${clsMap[st]||''}"${tip}>${w}</span>`;
+    }).join(' ');
+
+    document.getElementById('sessionModalBody').innerHTML = `
+      <div class="s-meta-grid">
+        <div class="s-meta-item"><div class="s-meta-label">Doğruluk</div><div class="s-meta-val ${qualClass(acc,80,60)}">${acc.toFixed(1)}%</div></div>
+        <div class="s-meta-item"><div class="s-meta-label">WCPM</div><div class="s-meta-val col-blue">${(s.wcpm||0).toFixed(1)}</div></div>
+        <div class="s-meta-item"><div class="s-meta-label">Akıcılık</div><div class="s-meta-val">${(s.fluency_score||0).toFixed(1)}</div></div>
+        <div class="s-meta-item"><div class="s-meta-label">Süre</div><div class="s-meta-val">${formatDur(s.duration_sec)}</div></div>
+      </div>
+      ${analysis.overall_feedback?`<div class="overall-box" style="margin-bottom:14px">${analysis.overall_feedback}</div>`:''}
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px">Renklendirilmiş Metin</div>
+      <div class="colored-text">${coloredHtml}</div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:14px;margin-bottom:6px">Transkript</div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px;font-family:monospace;color:var(--muted)">${s.transcript||'–'}</div>`;
+  } catch(e) {
+    document.getElementById('sessionModalBody').innerHTML = `<div style="color:var(--error);padding:24px">Yüklenemedi: ${e.message}</div>`;
+  }
+}
+function closeModal() { document.getElementById('sessionModal').classList.remove('show'); }
+document.getElementById('sessionModal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+// ── Reading state ──────────────────────────────────────────────────────────
+let currentText = null;
+let mediaRecorder = null, audioChunks = [];
+let speechRec = null;
+let timerInterval = null, timerSec = 0;
+let recording = false, audioBlob = null;
+let wordPointer = 0, textWords = [];
+
 function startReading(text) {
-  currentText = text;
-  audioBlob = null;
-  audioChunks = [];
-  timerSec = 0;
-  recording = false;
-
+  currentText = text; audioBlob = null; audioChunks = []; timerSec = 0; recording = false; wordPointer = 0;
   document.getElementById('readingTitle').textContent = text.title;
-  const wc = text.word_count;
-  document.getElementById('readingMeta').textContent = `${wc} kelime`;
+  document.getElementById('readingMeta').textContent = `${text.word_count} kelime`;
+  document.getElementById('progressFill').style.width = '0%';
 
-  // Build word spans
-  const words = text.content.split(/\s+/);
+  textWords = text.content.split(/\s+/);
   const display = document.getElementById('textDisplay');
   display.innerHTML = '';
-  words.forEach((w, i) => {
-    const span = document.createElement('span');
-    span.className = 'word pending';
-    span.dataset.idx = i;
-    span.textContent = w;
-    display.appendChild(span);
+  textWords.forEach((w, i) => {
+    const s = document.createElement('span');
+    s.className = 'word pending'; s.dataset.idx = i; s.textContent = w;
+    display.appendChild(s);
     display.appendChild(document.createTextNode(' '));
   });
 
-  // Reset controls
   resetControls();
+  document.getElementById('liveText').textContent = 'Kayıt başladığında konuşmanız burada görünecek…';
+  document.getElementById('liveCaption').classList.remove('active');
+  document.getElementById('liveDot').classList.remove('on');
   showView('readingView');
 }
 
 function resetControls() {
   updateTimer(0);
-  const micBtn = document.getElementById('micBtn');
-  micBtn.className = 'mic-btn idle';
-  micBtn.textContent = '🎙';
-  document.getElementById('ctrlLabel').textContent = 'Kayıt için mikrofona tıklayın';
-  document.getElementById('ctrlHint').textContent = 'Metni okuyun, bitince durdurun';
-  document.getElementById('analyzeBtn').disabled = true;
-  document.getElementById('recDot').classList.remove('active');
+  const mb = document.getElementById('micBtn');
+  mb.className='mic-btn idle'; mb.textContent='🎙'; mb.disabled=false;
+  document.getElementById('ctrlLabel').textContent='Kayıt için mikrofona tıklayın';
+  document.getElementById('ctrlHint').textContent='Metni yüksek sesle okuyun';
+  document.getElementById('analyzeBtn').disabled=true;
+  document.getElementById('recDot').classList.remove('on');
 }
 
-// ── Timer ──────────────────────────────────────────────────────────────────
 function updateTimer(s) {
-  const m = String(Math.floor(s / 60)).padStart(2, '0');
-  const sc = String(s % 60).padStart(2, '0');
-  document.getElementById('timerEl').textContent = `${m}:${sc}`;
+  const m=String(Math.floor(s/60)).padStart(2,'0'), sc=String(s%60).padStart(2,'0');
+  document.getElementById('timerEl').textContent=`${m}:${sc}`;
 }
-function startTimer() {
-  timerSec = 0;
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => { timerSec++; updateTimer(timerSec); }, 1000);
-}
-function stopTimer() { clearInterval(timerInterval); }
 
-// ── Recording ──────────────────────────────────────────────────────────────
+function stopAll() {
+  recording = false;
+  if (mediaRecorder?.state !== 'inactive') { try { mediaRecorder.stop(); } catch{} }
+  if (speechRec) { try { speechRec.stop(); } catch{} speechRec=null; }
+  clearInterval(timerInterval);
+}
+
+// ── Mic button ─────────────────────────────────────────────────────────────
 document.getElementById('micBtn').addEventListener('click', async () => {
   if (!recording) {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder = new MediaRecorder(stream);
-      audioChunks = [];
-      mediaRecorder.addEventListener('dataavailable', e => { if (e.data.size > 0) audioChunks.push(e.data); });
-      mediaRecorder.addEventListener('stop', () => {
-        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-        stream.getTracks().forEach(t => t.stop());
-      });
-      mediaRecorder.start();
-      recording = true;
-      startTimer();
+    // Start recording
+    let stream;
+    try { stream = await navigator.mediaDevices.getUserMedia({audio:true}); }
+    catch { toast('Mikrofon erişimi reddedildi.'); return; }
 
-      const micBtn = document.getElementById('micBtn');
-      micBtn.className = 'mic-btn recording';
-      micBtn.textContent = '⏹';
-      document.getElementById('recDot').classList.add('active');
-      document.getElementById('ctrlLabel').textContent = 'Kayıt yapılıyor…';
-      document.getElementById('ctrlHint').textContent = 'Durdurmak için tekrar tıklayın';
-    } catch (err) {
-      toast('Mikrofon erişimi reddedildi. Lütfen izin verin.');
-    }
-  } else {
-    mediaRecorder.stop();
-    recording = false;
-    stopTimer();
-
-    const micBtn = document.getElementById('micBtn');
-    micBtn.className = 'mic-btn done';
-    micBtn.textContent = '✓';
-    document.getElementById('recDot').classList.remove('active');
-    document.getElementById('ctrlLabel').textContent = `Kayıt tamamlandı — ${document.getElementById('timerEl').textContent}`;
-    document.getElementById('ctrlHint').textContent = 'Analizi başlatmak için "Analiz Et" tuşuna basın';
-    document.getElementById('analyzeBtn').disabled = false;
-    document.getElementById('micBtn').disabled = true;
-  }
-});
-
-// ── Back button ────────────────────────────────────────────────────────────
-document.getElementById('backBtn').addEventListener('click', () => {
-  if (recording && mediaRecorder) { mediaRecorder.stop(); stopTimer(); }
-  resetControls();
-  showView('homeView');
-});
-
-// ── Analyze ────────────────────────────────────────────────────────────────
-document.getElementById('analyzeBtn').addEventListener('click', () => analyzeReading());
-
-async function analyzeReading() {
-  if (!audioBlob || !currentText) return;
-
-  showView('loadingView');
-  document.getElementById('loaderText').textContent = 'Ses transkripte dönüştürülüyor…';
-  document.getElementById('loaderStep').textContent = 'Whisper large-v3 çalışıyor';
-
-  let transcript = '';
-  let duration = timerSec;
-
-  // Step 1: Transcribe
-  try {
-    const fd = new FormData();
-    fd.append('audio', audioBlob, 'recording.webm');
-    const res = await apiFetch('/api/transcribe', { method: 'POST', body: fd });
-    if (!res.ok) throw new Error('Transkript alınamadı');
-    const data = await res.json();
-    transcript = data.transcript;
-    duration = data.duration_sec || timerSec;
-  } catch (e) {
-    toast('Transkript alınamadı: ' + e.message);
-    showView('readingView');
-    return;
-  }
-
-  // Step 2: Analyze
-  document.getElementById('loaderText').textContent = 'Okuma analizi yapılıyor…';
-  document.getElementById('loaderStep').textContent = 'OKUMETRİK motoru çalışıyor';
-
-  try {
-    const res = await apiFetch('/api/analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        reference: currentText.content,
-        hypothesis: transcript,
-        duration_sec: duration
-      })
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+    mediaRecorder.addEventListener('dataavailable', e => { if(e.data.size>0) audioChunks.push(e.data); });
+    mediaRecorder.addEventListener('stop', () => {
+      audioBlob = new Blob(audioChunks, {type:'audio/webm'});
+      stream.getTracks().forEach(t=>t.stop());
     });
-    if (!res.ok) throw new Error('Analiz başarısız');
-    const data = await res.json();
-    showResults(data.report, transcript, duration);
+    mediaRecorder.start();
 
-    // Save session
-    const m = data.report.metrics;
-    await apiFetch('/api/sessions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        text_id: currentText.id,
-        transcript,
-        accuracy: m.accuracy_pct || 0,
-        wcpm: m.wcpm || 0,
-        fluency_score: m.fluency_score || 0,
-        duration_sec: duration,
-        analysis_json: JSON.stringify(data.report)
-      })
-    }).catch(() => {});
-  } catch (e) {
-    toast('Analiz hatası: ' + e.message);
-    showView('readingView');
+    // Start live speech recognition (real-time coloring)
+    startSpeechRecognition();
+
+    recording = true;
+    timerSec = 0;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(()=>{ timerSec++; updateTimer(timerSec); }, 1000);
+
+    const mb = document.getElementById('micBtn');
+    mb.className='mic-btn rec'; mb.textContent='⏹';
+    document.getElementById('recDot').classList.add('on');
+    document.getElementById('ctrlLabel').textContent='Kayıt yapılıyor…';
+    document.getElementById('ctrlHint').textContent='Okumayı bitirince durdurun';
+    document.getElementById('liveCaption').classList.add('active');
+    document.getElementById('liveDot').classList.add('on');
+    document.getElementById('liveText').textContent='Dinleniyor…';
+
+  } else {
+    // Stop recording
+    stopAll();
+
+    const mb = document.getElementById('micBtn');
+    mb.className='mic-btn done'; mb.textContent='✓'; mb.disabled=true;
+    document.getElementById('recDot').classList.remove('on');
+    document.getElementById('liveDot').classList.remove('on');
+    document.getElementById('ctrlLabel').textContent=`Kayıt tamamlandı — ${document.getElementById('timerEl').textContent}`;
+    document.getElementById('ctrlHint').textContent='Analiz için "Analiz Et" tuşuna basın';
+    document.getElementById('analyzeBtn').disabled=false;
+    // Color remaining words as omission
+    for(let i=wordPointer;i<textWords.length;i++) colorSpan(i,'omission');
   }
+});
+
+document.getElementById('backBtn').addEventListener('click', goHome);
+document.getElementById('analyzeBtn').addEventListener('click', runAnalysis);
+
+// ── Live Speech Recognition ────────────────────────────────────────────────
+let liveTranscriptBuffer = '';
+
+function startSpeechRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { console.log('Web Speech API yok — anlık renklendirme devre dışı'); return; }
+
+  speechRec = new SR();
+  speechRec.lang = 'tr-TR';
+  speechRec.continuous = true;
+  speechRec.interimResults = true;
+  speechRec.maxAlternatives = 1;
+  wordPointer = 0;
+  liveTranscriptBuffer = '';
+
+  speechRec.onresult = event => {
+    let interim = '', finalPart = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0].transcript;
+      if (event.results[i].isFinal) finalPart += t + ' ';
+      else interim += t;
+    }
+    // Show live caption
+    document.getElementById('liveText').textContent = (finalPart + interim).trim() || 'Dinleniyor…';
+
+    if (finalPart.trim()) {
+      liveTranscriptBuffer += finalPart;
+      matchLiveWords(finalPart.trim());
+    }
+  };
+
+  speechRec.onerror = e => { if(e.error !== 'no-speech') console.warn('SR error:', e.error); };
+  speechRec.onend = () => { if(recording && speechRec) { try { speechRec.start(); } catch{} } };
+
+  try { speechRec.start(); } catch(e) { console.warn('SR start failed:', e); }
+}
+
+// Normalize text for matching
+function norm(s) {
+  return s.toLowerCase()
+    .replace(/[.,!?;:'"()\-]/g,'')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+// Levenshtein distance
+function lev(a, b) {
+  const m=a.length, n=b.length;
+  const dp=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);
+  for(let j=0;j<=n;j++) dp[0][j]=j;
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+function fuzzy(spoken, textWord) {
+  const s=norm(spoken), t=norm(textWord);
+  if (!s || !t) return false;
+  if (s===t) return true;
+  const maxLen=Math.max(s.length,t.length);
+  if (maxLen===0) return true;
+  return lev(s,t) <= Math.floor(maxLen*0.35);
+}
+
+function matchLiveWords(finalText) {
+  const spoken = finalText.split(/\s+/).filter(w=>w.trim());
+  let si = 0;
+  while (si < spoken.length && wordPointer < textWords.length) {
+    const sw = spoken[si];
+    // Look-ahead window: try to match in next 4 text words
+    let matched = false;
+    for (let ahead = 0; ahead < 4 && (wordPointer+ahead) < textWords.length; ahead++) {
+      if (fuzzy(sw, textWords[wordPointer+ahead])) {
+        // Mark skipped words as omission
+        for (let skip=0; skip<ahead; skip++) colorSpan(wordPointer+skip, 'live-wrong');
+        colorSpan(wordPointer+ahead, 'live-correct');
+        wordPointer = wordPointer + ahead + 1;
+        // Highlight next word as "current"
+        if (wordPointer < textWords.length) colorSpan(wordPointer, 'live-current');
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      // Spoken word doesn't match — could be insertion, skip
+    }
+    si++;
+    // Update progress
+    document.getElementById('progressFill').style.width = `${Math.round(wordPointer/textWords.length*100)}%`;
+  }
+}
+
+function colorSpan(idx, cls) {
+  const span = document.querySelector(`.word[data-idx="${idx}"]`);
+  if (!span) return;
+  span.className = `word ${cls}`;
+}
+
+// ── Run analysis ───────────────────────────────────────────────────────────
+async function runAnalysis() {
+  if (!audioBlob || !currentText) return;
+  showView('loadingView');
+  document.getElementById('loaderText').textContent='Ses transkripte dönüştürülüyor…';
+  document.getElementById('loaderStep').textContent='Whisper large-v3 çalışıyor';
+
+  let transcript='', duration=timerSec;
+  try {
+    const fd=new FormData();
+    fd.append('audio', audioBlob, 'rec.webm');
+    const r = await apiFetch('/api/transcribe', {method:'POST', body:fd});
+    if(!r.ok) throw new Error('Transkript alınamadı');
+    const d=await r.json();
+    transcript=d.transcript; duration=d.duration_sec||timerSec;
+  } catch(e) { toast('Transkript hatası: '+e.message); showView('readingView'); return; }
+
+  document.getElementById('loaderText').textContent='Okuma analizi yapılıyor…';
+  document.getElementById('loaderStep').textContent='OKUMETRİK motoru çalışıyor';
+
+  try {
+    const r=await apiFetch('/api/analyze',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({reference:currentText.content, hypothesis:transcript, duration_sec:duration})
+    });
+    if(!r.ok) throw new Error('Analiz başarısız');
+    const d=await r.json();
+    showResults(d.report, transcript, duration);
+    // Save session
+    const m=d.report.metrics||{};
+    apiFetch('/api/sessions',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text_id:currentText.id,transcript,accuracy:m.accuracy_pct||0,
+        wcpm:m.wcpm||0,fluency_score:m.fluency_score||0,duration_sec:duration,
+        analysis_json:JSON.stringify(d.report)})
+    }).catch(()=>{});
+  } catch(e) { toast('Analiz hatası: '+e.message); showView('readingView'); }
 }
 
 // ── Show results ───────────────────────────────────────────────────────────
 function showResults(report, transcript, duration) {
-  const m = report.metrics || {};
-  const tokens = report.tokens || [];
+  const m=report.metrics||{}, tokens=report.tokens||[];
+  document.getElementById('resultsSub').textContent=`"${currentText.title}" — ${formatDur(duration)}`;
 
-  // Sub text
-  document.getElementById('resultsSub').textContent =
-    `"${currentText.title}" metni için okuma analizi — ${formatDur(duration)}`;
-
-  // Metrics cards
-  const acc = m.accuracy_pct || 0;
-  const wcpm = m.wcpm || 0;
-  const fl = m.fluency_score || 0;
-  const errs = (m.substitutions||0)+(m.deletions||0)+(m.insertions||0);
-
-  function qualClass(v, good, ok) { return v >= good ? 'good' : v >= ok ? 'ok' : 'bad'; }
-
-  document.getElementById('metricsGrid').innerHTML = `
-    <div class="metric-card">
-      <div class="metric-val ${qualClass(acc,90,70)}">%${acc.toFixed(1)}</div>
-      <div class="metric-label">Doğruluk</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-val ${qualClass(wcpm,60,40)} blue">${wcpm.toFixed(1)}</div>
-      <div class="metric-label">WCPM</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-val ${qualClass(fl,80,60)}">${fl.toFixed(1)}</div>
-      <div class="metric-label">Akıcılık</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-val ${errs === 0 ? 'good' : errs < 5 ? 'ok' : 'bad'}">${errs}</div>
-      <div class="metric-label">Hata Sayısı</div>
-    </div>
-  `;
+  const acc=m.accuracy_pct||0, wcpm=m.wcpm||0, fl=m.fluency_score||0;
+  const errs=(m.substitutions||0)+(m.deletions||0)+(m.insertions||0);
+  document.getElementById('metricsGrid').innerHTML=`
+    <div class="metric-card"><div class="metric-val ${qualClass(acc,90,70)}">%${acc.toFixed(1)}</div><div class="metric-label">Doğruluk</div></div>
+    <div class="metric-card"><div class="metric-val col-blue">${wcpm.toFixed(1)}</div><div class="metric-label">WCPM</div></div>
+    <div class="metric-card"><div class="metric-val ${qualClass(fl,80,60)}">${fl.toFixed(1)}</div><div class="metric-label">Akıcılık</div></div>
+    <div class="metric-card"><div class="metric-val ${errs<3?'col-good':errs<8?'col-ok':'col-bad'}">${errs}</div><div class="metric-label">Hata</div></div>`;
 
   // Colored text
-  const refWords = currentText.content.split(/\s+/);
-  const resultDiv = document.getElementById('resultText');
-  resultDiv.innerHTML = '';
+  const refWords=currentText.content.split(/\s+/);
+  const byRef={};
+  tokens.forEach(t=>{ if(t.ref_idx!=null) byRef[t.ref_idx]=t; });
+  const insertions=tokens.filter(t=>t.status==='insertion');
 
-  // Build ref-indexed map from tokens
-  const tokenByRef = {};
-  tokens.forEach(t => {
-    if (t.ref_idx !== null && t.ref_idx !== undefined) tokenByRef[t.ref_idx] = t;
+  const resultDiv=document.getElementById('resultText');
+  resultDiv.innerHTML='';
+  const statusMap={correct:'correct',substitution:'substitution',mispronunciation:'mispronunciation',omission:'omission',insertion:'insertion',repetition:'repetition',self_correction:'self_correction'};
+  const tagMap={substitution:'subs',mispronunciation:'telaffuz',omission:'atlandı',insertion:'ekleme',repetition:'tekrar',self_correction:'düzeltti'};
+
+  refWords.forEach((w,i)=>{
+    const tok=byRef[i]; const st=tok?tok.status:'omission';
+    const span=document.createElement('span');
+    span.className=`word ${statusMap[st]||st}`;
+    span.textContent=w;
+    if(tagMap[st]) span.innerHTML+=`<span class="word-tag">${tagMap[st]}</span>`;
+    if(tok?.hyp&&st!=='correct') span.dataset.tip=`Okunan: "${tok.hyp}"`;
+    resultDiv.appendChild(span);
+    resultDiv.appendChild(document.createTextNode(' '));
   });
-  // Also add insertions (no ref_idx but appear in result)
-  const insertions = tokens.filter(t => t.status === 'insertion');
-
-  refWords.forEach((w, i) => {
-    const tok = tokenByRef[i];
-    const span = document.createElement('span');
-    span.className = 'word';
-    const status = tok ? tok.status : 'omission';
-    span.classList.add(status);
-
-    if (status === 'substitution') {
-      span.textContent = w;
-      span.innerHTML += `<span class="word-tag">${tok.hyp || ''}</span>`;
-      span.dataset.hyp = `Okunan: "${tok.hyp}"`;
-    } else if (status === 'mispronunciation') {
-      span.textContent = w;
-      span.innerHTML += '<span class="word-tag">telaffuz</span>';
-      if (tok.hyp) span.dataset.hyp = `Okunan: "${tok.hyp}"`;
-    } else if (status === 'repetition') {
-      span.textContent = w;
-      span.innerHTML += '<span class="word-tag">tekrar</span>';
-    } else if (status === 'self_correction') {
-      span.textContent = w;
-      span.innerHTML += '<span class="word-tag">düzeltti</span>';
-    } else if (status === 'omission') {
-      span.textContent = w;
-      span.innerHTML += '<span class="word-tag">atlandı</span>';
-    } else {
-      span.textContent = w;
-    }
+  insertions.forEach(t=>{
+    const span=document.createElement('span');
+    span.className='word insertion';
+    span.innerHTML=`${t.hyp||''}<span class="word-tag">ekleme</span>`;
     resultDiv.appendChild(span);
     resultDiv.appendChild(document.createTextNode(' '));
   });
 
-  // Add insertions at end
-  insertions.forEach(t => {
-    const span = document.createElement('span');
-    span.className = 'word insertion';
-    span.textContent = t.hyp || '';
-    span.innerHTML += '<span class="word-tag">ekleme</span>';
-    resultDiv.appendChild(span);
-    resultDiv.appendChild(document.createTextNode(' '));
-  });
+  document.getElementById('overallFeedback').textContent=report.overall_feedback||'';
 
-  // Overall feedback
-  document.getElementById('overallFeedback').textContent = report.overall_feedback || '';
-
-  // Word feedback
-  const fbList = document.getElementById('wordFeedbackList');
-  fbList.innerHTML = '';
-  const fbClsMap = {
-    substitution: 'fi-sub', mispronunciation: 'fi-misp',
-    omission: 'fi-omit', insertion: 'fi-ins',
-    repetition: 'fi-rep', self_correction: 'fi-self'
-  };
-  (report.word_feedback || []).forEach(fb => {
-    if (!fb || !fb.trim()) return;
-    const li = document.createElement('li');
-    // Guess class from content
-    let cls = 'fi-sub';
-    if (fb.includes('telaffuz')) cls = 'fi-misp';
-    else if (fb.includes('atlandı') || fb.includes('okunmadı')) cls = 'fi-omit';
-    else if (fb.includes('eklendi') || fb.includes('ekleme')) cls = 'fi-ins';
-    else if (fb.includes('tekrar')) cls = 'fi-rep';
-    else if (fb.includes('düzeltti')) cls = 'fi-self';
-    li.className = `feedback-item ${cls}`;
-    li.textContent = fb;
+  const fbList=document.getElementById('fbList'); fbList.innerHTML='';
+  const fbCls={'değiştirme':'fi-s','ikame':'fi-s','telaffuz':'fi-m','atland':'fi-o','eklend':'fi-i','tekrar':'fi-r','düzeltti':'fi-sc'};
+  (report.word_feedback||[]).filter(f=>f?.trim()).forEach(fb=>{
+    const li=document.createElement('li'); li.className='fb-item';
+    const fbLower=fb.toLowerCase();
+    let cls='fi-s';
+    for(const [k,v] of Object.entries(fbCls)) if(fbLower.includes(k)){cls=v;break;}
+    li.classList.add(cls); li.textContent=fb;
     fbList.appendChild(li);
   });
-  document.getElementById('wordFeedbackCard').style.display =
-    fbList.children.length ? 'block' : 'none';
+  document.getElementById('fbCard').style.display=fbList.children.length?'':'none';
 
   showView('resultsView');
 }
-
-function formatDur(s) {
-  const m = Math.floor(s / 60);
-  const sc = Math.round(s % 60);
-  return m > 0 ? `${m} dk ${sc} sn` : `${sc} saniye`;
-}
-
-// ── Results buttons ────────────────────────────────────────────────────────
-document.getElementById('retryBtn').addEventListener('click', () => startReading(currentText));
-document.getElementById('homeBtn').addEventListener('click', () => showView('homeView'));
 
 // ── Init ───────────────────────────────────────────────────────────────────
 showView('homeView');
