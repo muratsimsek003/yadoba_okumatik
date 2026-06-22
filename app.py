@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OKUMETRiK Web Uygulamasi - FastAPI Backend
+YADOBA Web Uygulamasi - FastAPI Backend
 Kurulum: pip install fastapi uvicorn python-multipart
 Calistir: python app.py
 """
@@ -166,7 +166,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 
-app = FastAPI(title="OKUMETRiK", version="2.0")
+app = FastAPI(title="YADOBA", version="2.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 @app.on_event("startup")

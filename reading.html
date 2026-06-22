@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OKUMETRİK — Okuma Testi</title>
+<title>YADOBA — Okuma Testi</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -224,7 +224,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   <div class="logo" onclick="goHome()">
     <div class="logo-icon">O</div>
     <div>
-      <div class="logo-text">OKUMETRİK</div>
+      <div class="logo-text">YADOBA</div>
       <div class="logo-sub">Okuma Değerlendirme</div>
     </div>
   </div>
@@ -768,7 +768,7 @@ async function runAnalysis() {
   } catch(e) { toast('Transkript hatası: '+e.message); showView('readingView'); return; }
 
   document.getElementById('loaderText').textContent='Okuma analizi yapılıyor…';
-  document.getElementById('loaderStep').textContent='OKUMETRİK motoru çalışıyor';
+  document.getElementById('loaderStep').textContent='YADOBA motoru çalışıyor';
 
   try {
     const r=await apiFetch('/api/analyze',{
