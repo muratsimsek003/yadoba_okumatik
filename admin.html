@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKUMETRiK — Admin Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f4ff;--card:#fff;--text:#0f172a;--muted:#64748b;
+  --border:#e2e8f0;--primary:#1e40af;--primary-l:#3b82f6;
+  --success:#15803d;--success-bg:#f0fdf4;
+  --error:#dc2626;--error-bg:#fef2f2;
+  --warn:#a16207;--warn-bg:#fefce8;
+  --sidebar:#1e293b;--sidebar-text:#cbd5e1;--sidebar-act:#3b82f6;
+  --shadow:0 2px 6px rgba(0,0,0,.06);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.1);
+}
+[data-theme=dark]{
+  --bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--muted:#94a3b8;
+  --border:#334155;--primary:#3b82f6;--primary-l:#60a5fa;
+  --success:#22c55e;--success-bg:#052e16;
+  --error:#ef4444;--error-bg:#450a0a;
+  --warn:#eab308;--warn-bg:#422006;
+  --sidebar:#0f172a;--sidebar-text:#94a3b8;--sidebar-act:#3b82f6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;transition:background .25s,color .25s}
+
+/* Layout */
+.layout{display:flex;flex:1;overflow:hidden}
+.sidebar{
+  width:240px;background:var(--sidebar);flex-shrink:0;
+  display:flex;flex-direction:column;min-height:100vh;
+  position:sticky;top:0;
+}
+.content{flex:1;overflow-y:auto;padding:28px}
+@media(max-width:768px){
+  .sidebar{width:60px}
+  .nav-label,.logo-label,.user-label{display:none}
+}
+
+/* Sidebar */
+.sidebar-logo{
+  padding:20px 18px;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:10px;
+}
+.logo-icon{
+  width:36px;height:36px;background:linear-gradient(135deg,#1e40af,#3b82f6);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:18px;flex-shrink:0;
+}
+.logo-label{color:#f1f5f9;font-weight:800;font-size:15px}
+.logo-sub{color:var(--sidebar-text);font-size:11px;margin-top:1px}
+
+.sidebar-nav{flex:1;padding:12px 8px}
+.nav-section{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  color:rgba(148,163,184,.5);padding:8px 10px 4px;margin-top:8px}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:9px;cursor:pointer;
+  color:var(--sidebar-text);font-size:13.5px;font-weight:500;
+  transition:background .15s,color .15s;margin-bottom:2px;
+}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#f1f5f9}
+.nav-item.active{background:rgba(59,130,246,.2);color:var(--sidebar-act);font-weight:600}
+.nav-icon{font-size:17px;flex-shrink:0;width:22px;text-align:center}
+.nav-badge{
+  margin-left:auto;background:rgba(59,130,246,.3);color:#93c5fd;
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;
+}
+
+.sidebar-user{
+  padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:10px;
+}
+.user-ava{
+  width:32px;height:32px;background:linear-gradient(135deg,#1e40af,#3b82f6);
+  border-radius:50%;color:#fff;font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.user-label{flex:1;min-width:0}
+.user-name{font-size:12px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-role{font-size:11px;color:var(--sidebar-text)}
+.logout-btn{background:none;border:none;cursor:pointer;color:var(--sidebar-text);font-size:16px;padding:4px;transition:color .15s}
+.logout-btn:hover{color:#ef4444}
+
+/* Header */
+.content-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:28px;gap:16px;flex-wrap:wrap;
+}
+.page-title{font-size:22px;font-weight:800;letter-spacing:-.4px}
+.page-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.header-actions{display:flex;align-items:center;gap:10px}
+
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow)}
+
+/* Stat cards */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px}
+@media(min-width:900px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:20px;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:8px;
+}
+.stat-icon{font-size:24px;line-height:1}
+.stat-val{font-size:30px;font-weight:800;letter-spacing:-.5px}
+.stat-label{font-size:12px;color:var(--muted);font-weight:600}
+.stat-sub{font-size:11px;color:var(--muted)}
+
+/* Table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{
+  text-align:left;padding:10px 14px;
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--muted);border-bottom:2px solid var(--border);
+  background:var(--bg);
+}
+td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg)}
+
+/* Badges */
+.badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;display:inline-flex;align-items:center;gap:4px}
+.b-admin{background:#dbeafe;color:#1e40af}
+.b-student{background:#dcfce7;color:#166534}
+.b-lv1{background:#dbeafe;color:#1e40af}
+.b-lv2{background:#dcfce7;color:#166534}
+.b-lv3{background:#fef9c3;color:#92400e}
+.b-lv4{background:#ede9fe;color:#5b21b6}
+[data-theme=dark] .b-admin{background:#1e3a8a;color:#93c5fd}
+[data-theme=dark] .b-student{background:#052e16;color:#86efac}
+[data-theme=dark] .b-lv1{background:#1e3a8a;color:#93c5fd}
+[data-theme=dark] .b-lv2{background:#052e16;color:#86efac}
+[data-theme=dark] .b-lv3{background:#451a03;color:#fcd34d}
+[data-theme=dark] .b-lv4{background:#2e1065;color:#c4b5fd}
+
+/* Accuracy bar */
+.acc-bar-wrap{display:flex;align-items:center;gap:8px;min-width:120px}
+.acc-bar{height:6px;border-radius:3px;flex:1;background:var(--border);overflow:hidden}
+.acc-fill{height:100%;border-radius:3px;transition:width .3s}
+.acc-good{background:var(--success)}
+.acc-ok{background:#eab308}
+.acc-bad{background:var(--error)}
+.acc-val{font-size:12px;font-weight:700;white-space:nowrap}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:9px;font-family:inherit;
+  font-size:13px;font-weight:600;cursor:pointer;border:none;
+  transition:opacity .2s,transform .1s;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(59,130,246,.25)}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--border)}
+.btn-danger{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.btn-danger:hover{background:#fee2e2}
+.btn-sm{padding:5px 11px;font-size:12px;border-radius:7px}
+[data-theme=dark] .btn-danger{background:#450a0a;border-color:#991b1b}
+
+/* Table action buttons */
+.action-btns{display:flex;gap:6px;white-space:nowrap}
+
+/* Modal */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;
+  display:none;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(3px);
+}
+.modal-overlay.show{display:flex}
+.modal{
+  background:var(--card);border-radius:20px;width:100%;max-width:520px;
+  box-shadow:0 24px 48px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto;
+}
+.modal-header{
+  padding:22px 24px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-title{font-size:17px;font-weight:700}
+.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);padding:2px;line-height:1}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+/* Form */
+.form-group{margin-bottom:16px}
+label{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+input[type=text],input[type=password],select,textarea{
+  width:100%;padding:11px 13px;
+  border:1.5px solid var(--border);border-radius:9px;
+  background:var(--bg);color:var(--text);
+  font-family:inherit;font-size:14px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+textarea{min-height:130px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{border-color:var(--primary-l);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+
+/* Session detail modal */
+.session-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.session-meta-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px}
+.session-meta-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px}
+.session-meta-val{font-size:18px;font-weight:800}
+
+.colored-text{font-size:15px;line-height:2;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px}
+.w-correct{color:#2563eb;font-weight:600}
+.w-sub{background:#fef2f2;color:#dc2626;text-decoration:line-through;border-radius:4px;padding:0 3px}
+.w-misp{background:#fef9c3;color:#92400e;border-radius:4px;padding:0 3px}
+.w-omit{background:#f1f5f9;color:#94a3b8;text-decoration:underline dotted;border-radius:4px;padding:0 3px}
+.w-ins{background:#ede9fe;color:#6d28d9;font-style:italic;border-radius:4px;padding:0 3px}
+.w-rep{background:#fef9c3;color:#a16207;border-radius:4px;padding:0 3px}
+.w-self{background:#f0fdf4;color:#15803d;border-radius:4px;padding:0 3px}
+[data-theme=dark] .w-correct{color:#60a5fa}
+
+/* Search bar */
+.search-bar{
+  padding:9px 13px;border:1.5px solid var(--border);border-radius:9px;
+  background:var(--bg);color:var(--text);font-family:inherit;font-size:13px;outline:none;
+  transition:border-color .2s;width:220px;
+}
+.search-bar:focus{border-color:var(--primary-l)}
+
+/* Empty state */
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-state .icon{font-size:40px;margin-bottom:12px}
+.empty-state p{font-size:14px}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:999;
+  background:#0f172a;color:#fff;border-radius:12px;
+  padding:12px 18px;font-size:13px;font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);
+  transform:translateY(80px);opacity:0;transition:all .3s;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:#166534}
+.toast.error{background:#991b1b}
+
+/* Spinner */
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.skeleton{background:var(--border);border-radius:6px;animation:sk 1.2s ease-in-out infinite alternate}
+@keyframes sk{to{opacity:.4}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">O</div>
+      <div class="logo-label">
+        <div style="color:#f1f5f9;font-weight:800;font-size:15px;line-height:1.2">OKUMETRİK</div>
+        <div style="color:#94a3b8;font-size:11px">Admin Paneli</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">Ana Menü</div>
+      <div class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </div>
+      <div class="nav-item" data-page="sessions">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Oturumlar</span>
+        <span class="nav-badge" id="sessionsCount">–</span>
+      </div>
+      <div class="nav-section">Yönetim</div>
+      <div class="nav-item" data-page="users">
+        <span class="nav-icon">👥</span>
+        <span class="nav-label">Kullanıcılar</span>
+      </div>
+      <div class="nav-item" data-page="texts">
+        <span class="nav-icon">📚</span>
+        <span class="nav-label">Metinler</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-ava" id="sideAvatar">A</div>
+      <div class="user-label">
+        <div class="user-name" id="sideName">Yönetici</div>
+        <div class="user-role">Admin</div>
+      </div>
+      <button class="logout-btn" id="logoutBtn" title="Çıkış">🚪</button>
+    </div>
+  </aside>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ── DASHBOARD ── -->
+    <div id="dashboardPage">
+      <div class="content-header">
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-sub">Genel durum ve istatistikler</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="themeBtn">🌙 Tema</button>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="skeleton" style="height:80px"></div></div>
+        <div class="stat-card"><div class="skeleton" style="height:80px"></div></div>
+        <div class="stat-card"><div class="skeleton" style="height:80px"></div></div>
+        <div class="stat-card"><div class="skeleton" style="height:80px"></div></div>
+      </div>
+
+      <div class="card" style="padding:22px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:16px">🕐 Son Oturumlar</div>
+        <div class="table-wrap">
+          <table id="recentTable">
+            <thead><tr>
+              <th>Öğrenci</th><th>Metin</th>
+              <th>Doğruluk</th><th>WCPM</th><th>Tarih</th>
+            </tr></thead>
+            <tbody id="recentBody">
+              <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Yükleniyor…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── USERS ── -->
+    <div id="usersPage" style="display:none">
+      <div class="content-header">
+        <div>
+          <div class="page-title">Kullanıcılar</div>
+          <div class="page-sub">Öğrenci ve öğretmen hesapları</div>
+        </div>
+        <div class="header-actions">
+          <input class="search-bar" id="userSearch" placeholder="🔍 Kullanıcı ara…">
+          <button class="btn btn-primary" id="addUserBtn">+ Kullanıcı Ekle</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Ad Soyad</th><th>Kullanıcı Adı</th>
+              <th>Rol</th><th>Kayıt Tarihi</th><th>İşlem</th>
+            </tr></thead>
+            <tbody id="usersBody">
+              <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Yükleniyor…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TEXTS ── -->
+    <div id="textsPage" style="display:none">
+      <div class="content-header">
+        <div>
+          <div class="page-title">Metinler</div>
+          <div class="page-sub">Okuma testi için kullanılan metinler</div>
+        </div>
+        <div class="header-actions">
+          <input class="search-bar" id="textSearch" placeholder="🔍 Metin ara…">
+          <button class="btn btn-primary" id="addTextBtn">+ Metin Ekle</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Başlık</th><th>Seviye</th><th>Kelime</th>
+              <th>Önizleme</th><th>İşlem</th>
+            </tr></thead>
+            <tbody id="textsBody">
+              <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Yükleniyor…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SESSIONS ── -->
+    <div id="sessionsPage" style="display:none">
+      <div class="content-header">
+        <div>
+          <div class="page-title">Oturumlar</div>
+          <div class="page-sub">Tüm okuma oturumları</div>
+        </div>
+        <div class="header-actions">
+          <input class="search-bar" id="sessionSearch" placeholder="🔍 Öğrenci veya metin ara…">
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Öğrenci</th><th>Metin</th>
+              <th>Doğruluk</th><th>WCPM</th><th>Akıcılık</th>
+              <th>Süre</th><th>Tarih</th><th>Detay</th>
+            </tr></thead>
+            <tbody id="sessionsBody">
+              <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px">Yükleniyor…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /layout -->
+
+<!-- ── USER MODAL ── -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="userModalTitle">Kullanıcı Ekle</div>
+      <button class="modal-close" onclick="closeModal('userModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editUserId">
+      <div class="form-group">
+        <label>Ad Soyad</label>
+        <input type="text" id="uFullName" placeholder="Ahmet Yılmaz">
+      </div>
+      <div class="form-group">
+        <label>Kullanıcı Adı</label>
+        <input type="text" id="uUsername" placeholder="ahmet_yilmaz">
+      </div>
+      <div class="form-group">
+        <label>Şifre <span id="pwHint" style="font-weight:400;text-transform:none">(boş bırakılırsa değişmez)</span></label>
+        <input type="password" id="uPassword" placeholder="••••••••">
+      </div>
+      <div class="form-group">
+        <label>Rol</label>
+        <select id="uRole">
+          <option value="student">Öğrenci</option>
+          <option value="admin">Yönetici / Öğretmen</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('userModal')">İptal</button>
+      <button class="btn btn-primary" id="saveUserBtn">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TEXT MODAL ── -->
+<div class="modal-overlay" id="textModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="textModalTitle">Metin Ekle</div>
+      <button class="modal-close" onclick="closeModal('textModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editTextId">
+      <div class="form-group">
+        <label>Başlık</label>
+        <input type="text" id="tTitle" placeholder="Küçük Prens">
+      </div>
+      <div class="form-group">
+        <label>Seviye</label>
+        <select id="tLevel">
+          <option value="1">Seviye 1 — Kolay (1. sınıf)</option>
+          <option value="2">Seviye 2 — Orta (2. sınıf)</option>
+          <option value="3">Seviye 3 — İleri (3. sınıf)</option>
+          <option value="4">Seviye 4 — Zor (4. sınıf)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Metin İçeriği</label>
+        <textarea id="tContent" placeholder="Metin içeriğini buraya girin…"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('textModal')">İptal</button>
+      <button class="btn btn-primary" id="saveTextBtn">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── SESSION DETAIL MODAL ── -->
+<div class="modal-overlay" id="sessionModal">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-header">
+      <div class="modal-title" id="sessionModalTitle">Oturum Detayı</div>
+      <button class="modal-close" onclick="closeModal('sessionModal')">✕</button>
+    </div>
+    <div class="modal-body" id="sessionModalBody">
+      <div style="text-align:center;padding:32px;color:var(--muted)">Yükleniyor…</div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('sessionModal')">Kapat</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Auth ───────────────────────────────────────────────────────────────────
+const token = localStorage.getItem('auth_token');
+const user  = JSON.parse(localStorage.getItem('user') || 'null');
+if (!token || !user || user.role !== 'admin') { window.location.href = '/login.html'; }
+
+document.getElementById('sideName').textContent = user.full_name || user.username;
+document.getElementById('sideAvatar').textContent = (user.full_name || user.username)[0].toUpperCase();
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+  localStorage.clear();
+  window.location.href = '/login.html';
+});
+
+// ── Theme ──────────────────────────────────────────────────────────────────
+const root = document.documentElement;
+const savedTheme = localStorage.getItem('theme') || 'light';
+root.setAttribute('data-theme', savedTheme);
+document.getElementById('themeBtn').addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+});
+
+// ── API ────────────────────────────────────────────────────────────────────
+async function apiFetch(url, opts = {}) {
+  opts.headers = { ...(opts.headers || {}), Authorization: `Bearer ${token}` };
+  return fetch(url, opts);
+}
+async function apiJSON(url, opts = {}) {
+  const res = await apiFetch(url, opts);
+  if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || res.statusText); }
+  return res.json();
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function toast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.className = `toast show ${type}`;
+  el.textContent = msg;
+  setTimeout(() => el.className = 'toast', 3000);
+}
+
+// ── Nav ────────────────────────────────────────────────────────────────────
+const pages = { dashboard: 'dashboardPage', users: 'usersPage', texts: 'textsPage', sessions: 'sessionsPage' };
+let activePage = 'dashboard';
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => navigate(item.dataset.page));
+});
+
+function navigate(page) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector(`[data-page=${page}]`)?.classList.add('active');
+  Object.values(pages).forEach(id => { document.getElementById(id).style.display = 'none'; });
+  document.getElementById(pages[page]).style.display = 'block';
+  activePage = page;
+  if (page === 'dashboard') loadDashboard();
+  else if (page === 'users') loadUsers();
+  else if (page === 'texts') loadTexts();
+  else if (page === 'sessions') loadSessions();
+}
+
+// ── Modal helpers ──────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('show'); });
+});
+
+// ── DASHBOARD ──────────────────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const s = await apiJSON('/api/stats');
+    document.getElementById('sessionsCount').textContent = s.total_sessions;
+
+    document.getElementById('statsGrid').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-icon">👨‍🎓</div>
+        <div class="stat-val">${s.total_students}</div>
+        <div class="stat-label">Öğrenci</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-val">${s.total_texts}</div>
+        <div class="stat-label">Metin</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-val">${s.total_sessions}</div>
+        <div class="stat-label">Oturum</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-val ${s.avg_accuracy >= 80 ? 'good' : s.avg_accuracy >= 60 ? 'ok' : 'bad'}"
+             style="color:inherit">%${s.avg_accuracy}</div>
+        <div class="stat-label">Ort. Doğruluk</div>
+      </div>
+    `;
+
+    const tbody = document.getElementById('recentBody');
+    if (!s.recent_sessions.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:24px">Henüz oturum yok</td></tr>';
+      return;
+    }
+    tbody.innerHTML = s.recent_sessions.map(r => `
+      <tr>
+        <td><strong>${r.user_name}</strong></td>
+        <td>${r.text_title}</td>
+        <td>${accBar(r.accuracy)}</td>
+        <td>${(r.wcpm || 0).toFixed(1)}</td>
+        <td style="color:var(--muted);font-size:12px">${fmtDate(r.created_at)}</td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    toast('Dashboard yüklenemedi: ' + e.message, 'error');
+  }
+}
+
+// ── USERS ──────────────────────────────────────────────────────────────────
+let allUsers = [];
+async function loadUsers() {
+  try {
+    allUsers = await apiJSON('/api/users');
+    renderUsers(allUsers);
+  } catch (e) { toast('Kullanıcılar yüklenemedi', 'error'); }
+}
+
+function renderUsers(list) {
+  const tbody = document.getElementById('usersBody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px"><div class="empty-state"><div class="icon">👥</div><p>Kullanıcı bulunamadı</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(u => `
+    <tr>
+      <td><strong>${u.full_name}</strong></td>
+      <td style="font-family:monospace;font-size:12px">${u.username}</td>
+      <td><span class="badge ${u.role === 'admin' ? 'b-admin' : 'b-student'}">${u.role === 'admin' ? '🔑 Yönetici' : '🎓 Öğrenci'}</span></td>
+      <td style="color:var(--muted);font-size:12px">${fmtDate(u.created_at)}</td>
+      <td>
+        <div class="action-btns">
+          <button class="btn btn-secondary btn-sm" onclick="editUser('${u.id}')">✏️ Düzenle</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}','${u.full_name}')">🗑</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('userSearch').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  renderUsers(allUsers.filter(u =>
+    u.full_name.toLowerCase().includes(q) || u.username.toLowerCase().includes(q)
+  ));
+});
+
+document.getElementById('addUserBtn').addEventListener('click', () => {
+  document.getElementById('userModalTitle').textContent = 'Kullanıcı Ekle';
+  document.getElementById('editUserId').value = '';
+  document.getElementById('uFullName').value = '';
+  document.getElementById('uUsername').value = '';
+  document.getElementById('uPassword').value = '';
+  document.getElementById('uRole').value = 'student';
+  document.getElementById('pwHint').style.display = 'none';
+  openModal('userModal');
+});
+
+function editUser(id) {
+  const u = allUsers.find(x => x.id === id);
+  if (!u) return;
+  document.getElementById('userModalTitle').textContent = 'Kullanıcı Düzenle';
+  document.getElementById('editUserId').value = id;
+  document.getElementById('uFullName').value = u.full_name;
+  document.getElementById('uUsername').value = u.username;
+  document.getElementById('uPassword').value = '';
+  document.getElementById('uRole').value = u.role;
+  document.getElementById('pwHint').style.display = '';
+  openModal('userModal');
+}
+
+document.getElementById('saveUserBtn').addEventListener('click', async () => {
+  const id = document.getElementById('editUserId').value;
+  const full_name = document.getElementById('uFullName').value.trim();
+  const username = document.getElementById('uUsername').value.trim();
+  const password = document.getElementById('uPassword').value;
+  const role = document.getElementById('uRole').value;
+
+  if (!full_name || !username) { toast('Ad soyad ve kullanıcı adı zorunludur', 'error'); return; }
+  if (!id && !password) { toast('Yeni kullanıcı için şifre zorunludur', 'error'); return; }
+
+  try {
+    if (id) {
+      if (password) await apiJSON(`/api/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+    } else {
+      await apiJSON('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, full_name, role })
+      });
+    }
+    closeModal('userModal');
+    toast(id ? 'Kullanıcı güncellendi' : 'Kullanıcı oluşturuldu', 'success');
+    loadUsers();
+  } catch (e) { toast('Hata: ' + e.message, 'error'); }
+});
+
+async function deleteUser(id, name) {
+  if (!confirm(`"${name}" kullanıcısını silmek istiyor musunuz?`)) return;
+  try {
+    await apiJSON(`/api/users/${id}`, { method: 'DELETE' });
+    toast('Kullanıcı silindi', 'success');
+    loadUsers();
+  } catch (e) { toast('Silinemedi: ' + e.message, 'error'); }
+}
+
+// ── TEXTS ──────────────────────────────────────────────────────────────────
+let allTexts = [];
+const lvLabels = { 1: 'Seviye 1', 2: 'Seviye 2', 3: 'Seviye 3', 4: 'Seviye 4' };
+const lvCls = { 1: 'b-lv1', 2: 'b-lv2', 3: 'b-lv3', 4: 'b-lv4' };
+
+async function loadTexts() {
+  try {
+    allTexts = await apiJSON('/api/texts');
+    renderTexts(allTexts);
+  } catch (e) { toast('Metinler yüklenemedi', 'error'); }
+}
+
+function renderTexts(list) {
+  const tbody = document.getElementById('textsBody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:32px">Metin bulunamadı</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(t => `
+    <tr>
+      <td><strong>${t.title}</strong></td>
+      <td><span class="badge ${lvCls[t.level] || 'b-lv1'}">${lvLabels[t.level] || `Sev.${t.level}`}</span></td>
+      <td>${t.word_count}</td>
+      <td style="color:var(--muted);font-size:12px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+        ${t.content.slice(0, 60)}…
+      </td>
+      <td>
+        <div class="action-btns">
+          <button class="btn btn-secondary btn-sm" onclick="editText('${t.id}')">✏️ Düzenle</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteText('${t.id}','${t.title.replace(/'/g,"\\'")}')">🗑</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('textSearch').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  renderTexts(allTexts.filter(t => t.title.toLowerCase().includes(q) || t.content.toLowerCase().includes(q)));
+});
+
+document.getElementById('addTextBtn').addEventListener('click', () => {
+  document.getElementById('textModalTitle').textContent = 'Metin Ekle';
+  document.getElementById('editTextId').value = '';
+  document.getElementById('tTitle').value = '';
+  document.getElementById('tLevel').value = '1';
+  document.getElementById('tContent').value = '';
+  openModal('textModal');
+});
+
+function editText(id) {
+  const t = allTexts.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('textModalTitle').textContent = 'Metin Düzenle';
+  document.getElementById('editTextId').value = id;
+  document.getElementById('tTitle').value = t.title;
+  document.getElementById('tLevel').value = t.level;
+  document.getElementById('tContent').value = t.content;
+  openModal('textModal');
+}
+
+document.getElementById('saveTextBtn').addEventListener('click', async () => {
+  const id = document.getElementById('editTextId').value;
+  const title = document.getElementById('tTitle').value.trim();
+  const level = parseInt(document.getElementById('tLevel').value);
+  const content = document.getElementById('tContent').value.trim();
+
+  if (!title || !content) { toast('Başlık ve içerik zorunludur', 'error'); return; }
+
+  const body = JSON.stringify({ title, level, content });
+  try {
+    if (id) {
+      await apiJSON(`/api/texts/${id}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body });
+      toast('Metin güncellendi', 'success');
+    } else {
+      await apiJSON('/api/texts', { method: 'POST', headers: {'Content-Type':'application/json'}, body });
+      toast('Metin eklendi', 'success');
+    }
+    closeModal('textModal');
+    loadTexts();
+  } catch (e) { toast('Hata: ' + e.message, 'error'); }
+});
+
+async function deleteText(id, title) {
+  if (!confirm(`"${title}" metnini silmek istiyor musunuz?`)) return;
+  try {
+    await apiJSON(`/api/texts/${id}`, { method: 'DELETE' });
+    toast('Metin silindi', 'success');
+    loadTexts();
+  } catch (e) { toast('Silinemedi: ' + e.message, 'error'); }
+}
+
+// ── SESSIONS ──────────────────────────────────────────────────────────────
+let allSessions = [];
+async function loadSessions() {
+  try {
+    allSessions = await apiJSON('/api/sessions');
+    document.getElementById('sessionsCount').textContent = allSessions.length;
+    renderSessions(allSessions);
+  } catch (e) { toast('Oturumlar yüklenemedi', 'error'); }
+}
+
+function renderSessions(list) {
+  const tbody = document.getElementById('sessionsBody');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:32px">Henüz oturum yok</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(s => `
+    <tr>
+      <td><strong>${s.user_name}</strong></td>
+      <td>${s.text_title}</td>
+      <td>${accBar(s.accuracy)}</td>
+      <td>${(s.wcpm || 0).toFixed(1)}</td>
+      <td>${(s.fluency_score || 0).toFixed(1)}</td>
+      <td style="font-size:12px;color:var(--muted)">${fmtDur(s.duration_sec)}</td>
+      <td style="font-size:12px;color:var(--muted)">${fmtDate(s.created_at)}</td>
+      <td>
+        <button class="btn btn-secondary btn-sm" onclick="viewSession('${s.id}')">👁 Detay</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('sessionSearch').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  renderSessions(allSessions.filter(s =>
+    (s.user_name || '').toLowerCase().includes(q) || (s.text_title || '').toLowerCase().includes(q)
+  ));
+});
+
+async function viewSession(id) {
+  openModal('sessionModal');
+  document.getElementById('sessionModalBody').innerHTML =
+    '<div style="text-align:center;padding:32px;color:var(--muted)">Yükleniyor…</div>';
+  try {
+    const s = await apiJSON(`/api/sessions/${id}`);
+    document.getElementById('sessionModalTitle').textContent =
+      `${s.user_name} — ${s.text_title}`;
+
+    const acc = s.accuracy || 0;
+    const analysis = s.analysis || {};
+    const tokens = analysis.tokens || [];
+    const refWords = (s.text_content || '').split(/\s+/);
+
+    // Build colored text
+    const tokenByRef = {};
+    tokens.forEach(t => { if (t.ref_idx != null) tokenByRef[t.ref_idx] = t; });
+    const coloredHtml = refWords.map((w, i) => {
+      const tok = tokenByRef[i];
+      const st = tok ? tok.status : 'omission';
+      const clsMap = {
+        correct: 'w-correct', substitution: 'w-sub', mispronunciation: 'w-misp',
+        omission: 'w-omit', insertion: 'w-ins', repetition: 'w-rep', self_correction: 'w-self'
+      };
+      const cls = clsMap[st] || '';
+      const extra = st !== 'correct' && st !== 'omission' && tok?.hyp
+        ? ` title="Okunan: ${tok.hyp}"` : '';
+      return `<span class="${cls}"${extra}>${w}</span>`;
+    }).join(' ');
+
+    document.getElementById('sessionModalBody').innerHTML = `
+      <div class="session-meta-grid">
+        <div class="session-meta-item">
+          <div class="session-meta-label">Doğruluk</div>
+          <div class="session-meta-val" style="color:${acc>=80?'var(--success)':acc>=60?'var(--warn)':'var(--error)'}">%${acc.toFixed(1)}</div>
+        </div>
+        <div class="session-meta-item">
+          <div class="session-meta-label">WCPM</div>
+          <div class="session-meta-val" style="color:var(--primary-l)">${(s.wcpm||0).toFixed(1)}</div>
+        </div>
+        <div class="session-meta-item">
+          <div class="session-meta-label">Akıcılık</div>
+          <div class="session-meta-val">${(s.fluency_score||0).toFixed(1)}</div>
+        </div>
+        <div class="session-meta-item">
+          <div class="session-meta-label">Süre</div>
+          <div class="session-meta-val">${fmtDur(s.duration_sec)}</div>
+        </div>
+      </div>
+      ${analysis.overall_feedback ? `<div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:13px;margin-bottom:14px">${analysis.overall_feedback}</div>` : ''}
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Transkript</div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:13px;color:var(--muted);font-family:monospace;margin-bottom:14px">${s.transcript || '–'}</div>
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Renklendirilmiş Metin</div>
+      <div class="colored-text">${coloredHtml}</div>
+    `;
+  } catch (e) {
+    document.getElementById('sessionModalBody').innerHTML =
+      `<div style="text-align:center;padding:32px;color:var(--error)">Hata: ${e.message}</div>`;
+  }
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function accBar(acc) {
+  const cls = acc >= 80 ? 'acc-good' : acc >= 60 ? 'acc-ok' : 'acc-bad';
+  return `<div class="acc-bar-wrap">
+    <div class="acc-bar"><div class="acc-fill ${cls}" style="width:${Math.min(100,acc||0)}%"></div></div>
+    <span class="acc-val">${(acc||0).toFixed(0)}%</span>
+  </div>`;
+}
+
+function fmtDate(dt) {
+  if (!dt) return '–';
+  const d = new Date(dt);
+  return `${d.getDate().toString().padStart(2,'0')}.${(d.getMonth()+1).toString().padStart(2,'0')}.${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+}
+
+function fmtDur(s) {
+  if (!s) return '–';
+  const m = Math.floor(s / 60);
+  const sc = Math.round(s % 60);
+  return m > 0 ? `${m}:${sc.toString().padStart(2,'0')}` : `${sc}sn`;
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+navigate('dashboard');
+</script>
+</body>
+</html>

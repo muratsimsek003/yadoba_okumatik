@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKUMETRiK — Giriş</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f4ff;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --primary: #1e40af;
+  --primary-h: #1d4ed8;
+  --error: #dc2626;
+  --error-bg: #fef2f2;
+  --input-bg: #f8fafc;
+  --demo-bg: #f8fafc;
+}
+[data-theme=dark] {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --border: #334155;
+  --primary: #3b82f6;
+  --primary-h: #60a5fa;
+  --error: #f87171;
+  --error-bg: #450a0a;
+  --input-bg: #0f172a;
+  --demo-bg: #0f172a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:20px;
+  transition:background .25s,color .25s;
+}
+/* Animated background blobs */
+.blobs{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.blob{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;
+  animation:float 8s ease-in-out infinite;
+}
+.blob1{width:400px;height:400px;background:#3b82f6;top:-100px;left:-100px;animation-delay:0s}
+.blob2{width:350px;height:350px;background:#8b5cf6;bottom:-80px;right:-80px;animation-delay:3s}
+.blob3{width:250px;height:250px;background:#06b6d4;top:50%;left:50%;animation-delay:5s;transform:translate(-50%,-50%)}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-20px) scale(1.05)}}
+[data-theme=dark] .blob{opacity:.15}
+
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:24px;padding:40px;width:100%;max-width:420px;
+  box-shadow:0 24px 48px -8px rgba(0,0,0,.12);
+  position:relative;z-index:1;
+}
+.theme-btn{
+  position:absolute;top:16px;right:16px;
+  width:36px;height:36px;border:1px solid var(--border);
+  background:var(--bg);color:var(--muted);border-radius:9px;
+  cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:background .15s,border-color .15s;
+}
+.theme-btn:hover{background:var(--border)}
+
+.logo{display:flex;align-items:center;gap:14px;margin-bottom:32px}
+.logo-icon{
+  width:54px;height:54px;
+  background:linear-gradient(135deg,#1e40af,#3b82f6);
+  border-radius:15px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:26px;
+  box-shadow:0 8px 20px -4px rgba(59,130,246,.45);
+  flex-shrink:0;
+}
+.logo-info h1{font-size:22px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+.logo-info p{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px}
+
+.section-title{
+  font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--muted);margin-bottom:20px;
+}
+.form-group{margin-bottom:16px}
+label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.input-wrap{position:relative}
+input[type=text],input[type=password]{
+  width:100%;padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:10px;
+  background:var(--input-bg);color:var(--text);
+  font-family:inherit;font-size:15px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+
+.eye-btn{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--muted);
+  font-size:16px;padding:4px;
+}
+
+.error-box{
+  display:none;background:var(--error-bg);color:var(--error);
+  font-size:13px;font-weight:500;padding:10px 14px;
+  border-radius:9px;margin-bottom:16px;
+  border:1px solid rgba(220,38,38,.2);
+}
+.error-box.show{display:flex;align-items:center;gap:8px}
+
+.btn-login{
+  width:100%;padding:14px;
+  background:linear-gradient(135deg,#1e40af,#3b82f6);
+  color:#fff;border:none;border-radius:11px;
+  font-family:inherit;font-size:15px;font-weight:700;
+  cursor:pointer;transition:opacity .2s,transform .1s,box-shadow .2s;
+  box-shadow:0 4px 14px rgba(59,130,246,.35);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-login:hover{opacity:.92;box-shadow:0 6px 18px rgba(59,130,246,.45)}
+.btn-login:active{transform:scale(.98)}
+.btn-login:disabled{opacity:.6;cursor:not-allowed}
+
+.divider{border:none;border-top:1px solid var(--border);margin:24px 0}
+
+.demo-box{background:var(--demo-bg);border:1px solid var(--border);border-radius:12px;padding:14px}
+.demo-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px}
+.demo-row{
+  display:flex;align-items:center;gap:10px;
+  padding:7px 9px;border-radius:8px;cursor:pointer;
+  transition:background .15s;
+}
+.demo-row:hover{background:var(--border)}
+.badge{
+  font-size:10px;font-weight:700;padding:2px 8px;
+  border-radius:20px;text-transform:uppercase;white-space:nowrap;
+}
+.b-admin{background:#dbeafe;color:#1e40af}
+.b-student{background:#dcfce7;color:#166534}
+[data-theme=dark] .b-admin{background:#1e3a8a;color:#93c5fd}
+[data-theme=dark] .b-student{background:#052e16;color:#86efac}
+.demo-cred{font-family:monospace;font-size:12.5px;color:var(--muted)}
+
+.spinner{
+  width:16px;height:16px;border:2px solid rgba(255,255,255,.4);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;display:inline-block;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+footer{
+  margin-top:24px;font-size:12px;color:var(--muted);
+  text-align:center;position:relative;z-index:1;
+}
+</style>
+</head>
+<body>
+<div class="blobs">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+
+<div class="card">
+  <button class="theme-btn" id="themeBtn">🌙</button>
+
+  <div class="logo">
+    <div class="logo-icon">O</div>
+    <div class="logo-info">
+      <h1>OKUMETRİK</h1>
+      <p>YADOBA 2.0 — Okuma Değerlendirme Sistemi</p>
+    </div>
+  </div>
+
+  <div class="section-title">Hesabınıza Giriş Yapın</div>
+
+  <form id="loginForm">
+    <div class="form-group">
+      <label for="username">Kullanıcı Adı</label>
+      <input type="text" id="username" placeholder="kullanici_adi" autocomplete="username" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Şifre</label>
+      <div class="input-wrap">
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+        <button type="button" class="eye-btn" id="eyeBtn">👁</button>
+      </div>
+    </div>
+    <div class="error-box" id="errorBox">
+      <span>⚠️</span><span id="errorText"></span>
+    </div>
+    <button type="submit" class="btn-login" id="loginBtn">
+      Giriş Yap
+    </button>
+  </form>
+
+  <hr class="divider">
+
+  <div class="demo-box">
+    <div class="demo-title">Demo Hesapları — tıklayarak giriş yapın</div>
+    <div class="demo-row" onclick="fillDemo('admin','admin123')">
+      <span class="badge b-admin">Yönetici</span>
+      <span class="demo-cred">admin / admin123</span>
+    </div>
+    <div class="demo-row" onclick="fillDemo('ogretmen','ogretmen123')">
+      <span class="badge b-admin">Öğretmen</span>
+      <span class="demo-cred">ogretmen / ogretmen123</span>
+    </div>
+    <div class="demo-row" onclick="fillDemo('ogrenci1','ogrenci123')">
+      <span class="badge b-student">Öğrenci</span>
+      <span class="demo-cred">ogrenci1 / ogrenci123</span>
+    </div>
+  </div>
+</div>
+
+<footer>OKUMETRİK © 2025 — YADOBA 2.0 / TÜBİTAK 1501</footer>
+
+<script>
+// Theme
+const themeBtn = document.getElementById('themeBtn');
+const root = document.documentElement;
+const savedTheme = localStorage.getItem('theme') || 'light';
+root.setAttribute('data-theme', savedTheme);
+themeBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+themeBtn.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+});
+
+// Show/hide password
+document.getElementById('eyeBtn').addEventListener('click', () => {
+  const inp = document.getElementById('password');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+});
+
+function fillDemo(u, p) {
+  document.getElementById('username').value = u;
+  document.getElementById('password').value = p;
+  document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+}
+
+function showError(msg) {
+  document.getElementById('errorText').textContent = msg;
+  document.getElementById('errorBox').classList.add('show');
+}
+function hideError() {
+  document.getElementById('errorBox').classList.remove('show');
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.getElementById('loginBtn');
+  hideError();
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Giriş yapılıyor...';
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    if (res.ok) {
+      const data = await res.json();
+      localStorage.setItem('auth_token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      window.location.href = data.user.role === 'admin' ? '/admin.html' : '/reading.html';
+    } else {
+      const err = await res.json().catch(() => ({}));
+      showError(err.detail || 'Kullanıcı adı veya şifre hatalı.');
+      btn.disabled = false;
+      btn.textContent = 'Giriş Yap';
+    }
+  } catch {
+    showError('Sunucuya bağlanılamadı.');
+    btn.disabled = false;
+    btn.textContent = 'Giriş Yap';
+  }
+});
+
+// Auto-redirect
+const token = localStorage.getItem('auth_token');
+if (token) {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (user.role) window.location.href = user.role === 'admin' ? '/admin.html' : '/reading.html';
+}
+</script>
+</body>
+</html>

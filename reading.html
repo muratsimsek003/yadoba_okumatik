@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKUMETRiK — Okuma Testi</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0f4ff;--card:#fff;--text:#0f172a;--muted:#64748b;
+  --border:#e2e8f0;--primary:#1e40af;--primary-l:#3b82f6;
+  --success:#15803d;--success-bg:#f0fdf4;--success-b:#bbf7d0;
+  --error:#dc2626;--error-bg:#fef2f2;--error-b:#fecaca;
+  --warn:#a16207;--warn-bg:#fefce8;--warn-b:#fef08a;
+  --purple:#6d28d9;--purple-bg:#f5f3ff;--purple-b:#ddd6fe;
+  --gray:#64748b;--gray-bg:#f1f5f9;--gray-b:#cbd5e1;
+  --shadow:0 4px 6px -1px rgba(0,0,0,.05),0 2px 4px -2px rgba(0,0,0,.05);
+  --shadow-lg:0 10px 20px -4px rgba(0,0,0,.08);
+}
+[data-theme=dark]{
+  --bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--muted:#94a3b8;
+  --border:#334155;--primary:#3b82f6;--primary-l:#60a5fa;
+  --success:#22c55e;--success-bg:#052e16;--success-b:#15803d;
+  --error:#ef4444;--error-bg:#450a0a;--error-b:#991b1b;
+  --warn:#eab308;--warn-bg:#422006;--warn-b:#854d0e;
+  --purple:#a855f7;--purple-bg:#3b0764;--purple-b:#6d28d9;
+  --gray:#94a3b8;--gray-bg:#1f2937;--gray-b:#374151;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .25s,color .25s}
+
+/* Header */
+.header{
+  background:var(--card);border-bottom:1px solid var(--border);
+  padding:0 24px;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50;
+  box-shadow:var(--shadow);
+}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{
+  width:36px;height:36px;background:linear-gradient(135deg,#1e40af,#3b82f6);
+  border-radius:10px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:18px;
+}
+.logo-text{font-size:17px;font-weight:800;letter-spacing:-.4px;color:var(--text)}
+.logo-sub{font-size:11px;color:var(--muted);font-weight:500}
+
+.header-right{display:flex;align-items:center;gap:12px}
+.user-badge{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 12px;background:var(--bg);border:1px solid var(--border);
+  border-radius:20px;font-size:13px;font-weight:600;color:var(--text);
+}
+.user-avatar{
+  width:26px;height:26px;background:linear-gradient(135deg,#1e40af,#3b82f6);
+  border-radius:50%;color:#fff;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.icon-btn{
+  width:36px;height:36px;border:1px solid var(--border);background:var(--bg);
+  color:var(--muted);border-radius:9px;cursor:pointer;font-size:15px;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.icon-btn:hover{background:var(--border);color:var(--text)}
+
+/* Main layout */
+.main{max-width:860px;margin:0 auto;padding:32px 20px}
+
+/* ── HOME: Text cards ── */
+#homeView{}
+.page-title{font-size:24px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
+.page-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
+
+.texts-grid{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:640px){.texts-grid{grid-template-columns:repeat(2,1fr)}}
+
+.text-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:16px;
+  padding:22px;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .15s;
+  box-shadow:var(--shadow);
+}
+.text-card:hover{border-color:var(--primary-l);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.text-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.text-title{font-size:16px;font-weight:700;color:var(--text)}
+.level-badge{
+  flex-shrink:0;font-size:11px;font-weight:700;padding:3px 9px;
+  border-radius:20px;text-transform:uppercase;letter-spacing:.4px;
+}
+.lv1{background:#dbeafe;color:#1e40af}
+.lv2{background:#dcfce7;color:#166534}
+.lv3{background:#fef9c3;color:#92400e}
+.lv4{background:#ede9fe;color:#5b21b6}
+[data-theme=dark] .lv1{background:#1e3a8a;color:#93c5fd}
+[data-theme=dark] .lv2{background:#052e16;color:#86efac}
+[data-theme=dark] .lv3{background:#451a03;color:#fcd34d}
+[data-theme=dark] .lv4{background:#2e1065;color:#c4b5fd}
+
+.text-preview{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:14px;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.text-meta{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--muted)}
+.text-meta span{display:flex;align-items:center;gap:4px}
+.btn-start{
+  width:100%;margin-top:16px;padding:11px;
+  background:var(--primary);color:#fff;border:none;border-radius:10px;
+  font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;
+  transition:opacity .2s,transform .1s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.btn-start:hover{opacity:.9}
+.btn-start:active{transform:scale(.98)}
+
+/* ── READING VIEW ── */
+#readingView{display:none}
+.reading-header{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:18px 22px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  box-shadow:var(--shadow);
+}
+.reading-title{font-size:17px;font-weight:700;color:var(--text)}
+.reading-meta{font-size:12px;color:var(--muted);margin-top:2px}
+
+.timer-display{
+  display:flex;align-items:center;gap:8px;
+  font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;
+  color:var(--primary);
+}
+.rec-dot{
+  width:10px;height:10px;background:#ef4444;border-radius:50%;
+  animation:blink 1s ease-in-out infinite;display:none;
+}
+.rec-dot.active{display:block}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* Text display */
+.text-display{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:28px 32px;margin-bottom:20px;
+  font-size:22px;line-height:2.1;letter-spacing:.01em;
+  box-shadow:var(--shadow);min-height:200px;
+}
+.word{
+  display:inline-block;padding:2px 4px;margin:2px;
+  border-radius:5px;cursor:default;transition:background .2s,color .2s;
+  position:relative;
+}
+.word.pending{color:var(--text)}
+/* After analysis */
+.word.correct{color:#2563eb;font-weight:600}
+[data-theme=dark] .word.correct{color:#60a5fa}
+.word.substitution{background:#fef2f2;color:#dc2626;text-decoration:line-through;border-radius:6px}
+[data-theme=dark] .word.substitution{background:#450a0a;color:#f87171}
+.word.mispronunciation{background:#fef9c3;color:#92400e;border-radius:6px}
+[data-theme=dark] .word.mispronunciation{background:#451a03;color:#fcd34d}
+.word.omission{background:#f1f5f9;color:#94a3b8;text-decoration:underline dotted;border-radius:6px}
+[data-theme=dark] .word.omission{background:#1f2937;color:#64748b}
+.word.insertion{background:#ede9fe;color:#6d28d9;font-style:italic;border-radius:6px}
+[data-theme=dark] .word.insertion{background:#2e1065;color:#c4b5fd}
+.word.repetition{background:#fef9c3;color:#a16207;border-radius:6px}
+[data-theme=dark] .word.repetition{background:#451a03;color:#fcd34d}
+.word.self_correction{background:#f0fdf4;color:#15803d;border-radius:6px}
+[data-theme=dark] .word.self_correction{background:#052e16;color:#86efac}
+
+.word-tag{
+  font-size:9px;vertical-align:super;opacity:.7;font-style:normal;
+  margin-left:1px;font-weight:600;
+}
+/* Tooltip on hover */
+.word[data-hyp]:hover::after{
+  content:attr(data-hyp);
+  position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
+  background:#0f172a;color:#fff;font-size:11px;font-weight:600;
+  padding:3px 8px;border-radius:6px;white-space:nowrap;
+  margin-bottom:4px;pointer-events:none;z-index:10;
+}
+
+/* Controls bar */
+.controls{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:20px 24px;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.mic-btn{
+  width:64px;height:64px;border-radius:50%;border:none;cursor:pointer;
+  font-size:26px;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+.mic-btn.idle{background:linear-gradient(135deg,#1e40af,#3b82f6);color:#fff}
+.mic-btn.recording{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;animation:pulse-ring 1.5s ease-in-out infinite}
+@keyframes pulse-ring{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 12px rgba(239,68,68,0)}}
+.mic-btn.done{background:linear-gradient(135deg,#15803d,#22c55e);color:#fff}
+.mic-btn:disabled{opacity:.5;cursor:not-allowed;animation:none}
+
+.controls-info{flex:1;min-width:0}
+.controls-label{font-size:14px;font-weight:700;color:var(--text)}
+.controls-hint{font-size:12px;color:var(--muted);margin-top:3px}
+
+.btn-analyze{
+  padding:12px 22px;background:var(--primary);color:#fff;
+  border:none;border-radius:10px;font-family:inherit;
+  font-size:14px;font-weight:700;cursor:pointer;
+  transition:opacity .2s,transform .1s;white-space:nowrap;
+}
+.btn-analyze:hover{opacity:.9}
+.btn-analyze:active{transform:scale(.98)}
+.btn-analyze:disabled{opacity:.4;cursor:not-allowed}
+.btn-back{
+  padding:12px 18px;background:var(--bg);color:var(--muted);
+  border:1px solid var(--border);border-radius:10px;font-family:inherit;
+  font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;
+}
+.btn-back:hover{background:var(--border);color:var(--text)}
+
+/* ── LOADING ── */
+#loadingView{display:none;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;gap:20px}
+.loader-ring{
+  width:60px;height:60px;border:4px solid var(--border);
+  border-top-color:var(--primary);border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{font-size:16px;font-weight:600;color:var(--muted)}
+.loader-step{font-size:13px;color:var(--muted);opacity:.7}
+
+/* ── RESULTS ── */
+#resultsView{display:none}
+.results-title{font-size:22px;font-weight:800;margin-bottom:6px;letter-spacing:-.4px}
+.results-sub{font-size:14px;color:var(--muted);margin-bottom:22px}
+
+.metrics-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:22px}
+@media(min-width:600px){.metrics-grid{grid-template-columns:repeat(4,1fr)}}
+.metric-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:18px;box-shadow:var(--shadow);text-align:center;
+}
+.metric-val{font-size:28px;font-weight:800;letter-spacing:-.5px}
+.metric-val.good{color:var(--success)}
+.metric-val.ok{color:var(--warn)}
+.metric-val.bad{color:var(--error)}
+.metric-val.blue{color:var(--primary-l)}
+.metric-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+
+.section-card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:22px;margin-bottom:16px;box-shadow:var(--shadow);
+}
+.section-head{
+  font-size:14px;font-weight:700;color:var(--text);
+  margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.legend-dot{width:12px;height:12px;border-radius:3px}
+.ld-correct{background:#2563eb}
+.ld-sub{background:#fef2f2;border:1px solid #fecaca}
+.ld-misp{background:#fef9c3;border:1px solid #fef08a}
+.ld-omit{background:#f1f5f9;border:1px solid #cbd5e1}
+.ld-ins{background:#ede9fe;border:1px solid #ddd6fe}
+.ld-rep{background:#fef9c3;border:1px solid #fef08a}
+.ld-self{background:#f0fdf4;border:1px solid #bbf7d0}
+
+/* Analyzed text in results */
+.result-text{font-size:20px;line-height:2.2;letter-spacing:.01em}
+
+/* Feedback list */
+.feedback-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.feedback-item{
+  padding:10px 14px;border-radius:10px;font-size:13px;line-height:1.5;
+  border-left:3px solid transparent;
+}
+.fi-sub{background:var(--error-bg);border-color:var(--error);color:var(--error)}
+.fi-misp{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.fi-omit{background:var(--gray-bg);border-color:var(--gray);color:var(--gray)}
+.fi-ins{background:var(--purple-bg);border-color:var(--purple);color:var(--purple)}
+.fi-rep{background:var(--warn-bg);border-color:var(--warn);color:var(--warn)}
+.fi-self{background:var(--success-bg);border-color:var(--success);color:var(--success)}
+
+/* Overall feedback */
+.overall-box{
+  background:var(--bg);border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px;font-size:13px;color:var(--text);line-height:1.6;
+}
+
+.results-actions{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+.btn-retry{
+  padding:12px 24px;background:var(--primary);color:#fff;
+  border:none;border-radius:10px;font-family:inherit;
+  font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s;
+}
+.btn-retry:hover{opacity:.9}
+.btn-home{
+  padding:12px 24px;background:var(--bg);color:var(--muted);
+  border:1px solid var(--border);border-radius:10px;font-family:inherit;
+  font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;
+}
+.btn-home:hover{background:var(--border);color:var(--text)}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:999;
+  background:#0f172a;color:#fff;border-radius:12px;
+  padding:12px 18px;font-size:13px;font-weight:600;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);
+  transform:translateY(80px);opacity:0;transition:all .3s;pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* Spinner small */
+.spin-sm{
+  display:inline-block;width:14px;height:14px;
+  border:2px solid rgba(255,255,255,.4);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <a class="logo" href="#">
+    <div class="logo-icon">O</div>
+    <div>
+      <div class="logo-text">OKUMETRİK</div>
+      <div class="logo-sub">Okuma Değerlendirme</div>
+    </div>
+  </a>
+  <div class="header-right">
+    <div class="user-badge">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <span id="userName">Kullanıcı</span>
+    </div>
+    <button class="icon-btn" id="themeBtn" title="Tema">🌙</button>
+    <button class="icon-btn" id="logoutBtn" title="Çıkış">🚪</button>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- HOME: Metin Listesi -->
+  <div id="homeView">
+    <div class="page-title">Okuma Testleri</div>
+    <div class="page-sub" id="welcomeMsg">Bir metin seçin ve okumaya başlayın.</div>
+    <div class="texts-grid" id="textsGrid">
+      <div style="color:var(--muted);font-size:14px">Metinler yükleniyor…</div>
+    </div>
+  </div>
+
+  <!-- READING VIEW -->
+  <div id="readingView">
+    <div class="reading-header">
+      <div>
+        <div class="reading-title" id="readingTitle">Metin Adı</div>
+        <div class="reading-meta" id="readingMeta"></div>
+      </div>
+      <div class="timer-display">
+        <div class="rec-dot" id="recDot"></div>
+        <span id="timerEl">00:00</span>
+      </div>
+    </div>
+
+    <div class="text-display" id="textDisplay"></div>
+
+    <div class="controls">
+      <button class="mic-btn idle" id="micBtn" title="Kaydı Başlat / Durdur">🎙</button>
+      <div class="controls-info">
+        <div class="controls-label" id="ctrlLabel">Kayıt için mikrofona tıklayın</div>
+        <div class="controls-hint" id="ctrlHint">Metni okuyun, bitince durdurun</div>
+      </div>
+      <button class="btn-back" id="backBtn">← Geri</button>
+      <button class="btn-analyze" id="analyzeBtn" disabled>Analiz Et</button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loadingView">
+    <div class="loader-ring"></div>
+    <div class="loader-text" id="loaderText">Ses transkripte dönüştürülüyor…</div>
+    <div class="loader-step" id="loaderStep">Whisper large-v3 çalışıyor</div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="resultsView">
+    <div class="results-title">Okuma Analizi</div>
+    <div class="results-sub" id="resultsSub"></div>
+
+    <div class="metrics-grid" id="metricsGrid"></div>
+
+    <div class="section-card">
+      <div class="section-head">📝 Renklendirilmiş Metin</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot ld-correct"></div>Doğru</div>
+        <div class="legend-item"><div class="legend-dot ld-sub"></div>Değiştirme</div>
+        <div class="legend-item"><div class="legend-dot ld-misp"></div>Telaffuz</div>
+        <div class="legend-item"><div class="legend-dot ld-omit"></div>Atlama</div>
+        <div class="legend-item"><div class="legend-dot ld-ins"></div>Ekleme</div>
+        <div class="legend-item"><div class="legend-dot ld-self"></div>Kendi Düzeltme</div>
+      </div>
+      <div class="result-text" id="resultText"></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-head">💬 Genel Değerlendirme</div>
+      <div class="overall-box" id="overallFeedback"></div>
+    </div>
+
+    <div class="section-card" id="wordFeedbackCard">
+      <div class="section-head">🔍 Kelime Bazında Geri Bildirim</div>
+      <ul class="feedback-list" id="wordFeedbackList"></ul>
+    </div>
+
+    <div class="results-actions">
+      <button class="btn-retry" id="retryBtn">🔄 Tekrar Dene</button>
+      <button class="btn-home" id="homeBtn">🏠 Metin Listesi</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Auth guard ─────────────────────────────────────────────────────────────
+const token = localStorage.getItem('auth_token');
+const user  = JSON.parse(localStorage.getItem('user') || 'null');
+if (!token || !user) { window.location.href = '/login.html'; }
+
+// ── Theme ──────────────────────────────────────────────────────────────────
+const root = document.documentElement;
+const th = localStorage.getItem('theme') || 'light';
+root.setAttribute('data-theme', th);
+const themeBtn = document.getElementById('themeBtn');
+themeBtn.textContent = th === 'dark' ? '☀️' : '🌙';
+themeBtn.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+});
+
+// ── User info ──────────────────────────────────────────────────────────────
+document.getElementById('userName').textContent = user.full_name || user.username;
+document.getElementById('userAvatar').textContent = (user.full_name || user.username)[0].toUpperCase();
+document.getElementById('welcomeMsg').textContent =
+  `Merhaba ${user.full_name || user.username}, bir metin seçin ve okumaya başlayın.`;
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await apiFetch('/api/auth/logout', { method: 'POST' }).catch(() => {});
+  localStorage.clear();
+  window.location.href = '/login.html';
+});
+
+// ── API helper ─────────────────────────────────────────────────────────────
+async function apiFetch(url, opts = {}) {
+  opts.headers = { ...(opts.headers || {}), 'Authorization': `Bearer ${token}` };
+  return fetch(url, opts);
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function toast(msg, dur = 3000) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), dur);
+}
+
+// ── Views ──────────────────────────────────────────────────────────────────
+function showView(id) {
+  ['homeView','readingView','loadingView','resultsView'].forEach(v => {
+    const el = document.getElementById(v);
+    el.style.display = 'none';
+  });
+  const target = document.getElementById(id);
+  target.style.display = id === 'loadingView' ? 'flex' : 'block';
+}
+
+// ── State ──────────────────────────────────────────────────────────────────
+let currentText = null;
+let mediaRecorder = null;
+let audioChunks = [];
+let timerInterval = null;
+let timerSec = 0;
+let recording = false;
+let audioBlob = null;
+
+// ── Load texts ─────────────────────────────────────────────────────────────
+async function loadTexts() {
+  const res = await apiFetch('/api/texts');
+  if (!res.ok) { toast('Metinler yüklenemedi'); return; }
+  const texts = await res.json();
+  const grid = document.getElementById('textsGrid');
+  grid.innerHTML = '';
+  const levels = { 1: 'Seviye 1', 2: 'Seviye 2', 3: 'Seviye 3', 4: 'Seviye 4' };
+  const levelCls = { 1: 'lv1', 2: 'lv2', 3: 'lv3', 4: 'lv4' };
+  const timeEst = wc => Math.ceil(wc / 70) + ' dk'; // ~70 wpm for children
+
+  texts.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'text-card';
+    card.innerHTML = `
+      <div class="text-card-head">
+        <div class="text-title">${t.title}</div>
+        <span class="level-badge ${levelCls[t.level] || 'lv1'}">${levels[t.level] || `Seviye ${t.level}`}</span>
+      </div>
+      <div class="text-preview">${t.content}</div>
+      <div class="text-meta">
+        <span>📝 ${t.word_count} kelime</span>
+        <span>⏱ ~${timeEst(t.word_count)}</span>
+      </div>
+      <button class="btn-start">▶ Okumaya Başla</button>
+    `;
+    card.querySelector('.btn-start').addEventListener('click', () => startReading(t));
+    grid.appendChild(card);
+  });
+}
+
+// ── Start reading ──────────────────────────────────────────────────────────
+function startReading(text) {
+  currentText = text;
+  audioBlob = null;
+  audioChunks = [];
+  timerSec = 0;
+  recording = false;
+
+  document.getElementById('readingTitle').textContent = text.title;
+  const wc = text.word_count;
+  document.getElementById('readingMeta').textContent = `${wc} kelime`;
+
+  // Build word spans
+  const words = text.content.split(/\s+/);
+  const display = document.getElementById('textDisplay');
+  display.innerHTML = '';
+  words.forEach((w, i) => {
+    const span = document.createElement('span');
+    span.className = 'word pending';
+    span.dataset.idx = i;
+    span.textContent = w;
+    display.appendChild(span);
+    display.appendChild(document.createTextNode(' '));
+  });
+
+  // Reset controls
+  resetControls();
+  showView('readingView');
+}
+
+function resetControls() {
+  updateTimer(0);
+  const micBtn = document.getElementById('micBtn');
+  micBtn.className = 'mic-btn idle';
+  micBtn.textContent = '🎙';
+  document.getElementById('ctrlLabel').textContent = 'Kayıt için mikrofona tıklayın';
+  document.getElementById('ctrlHint').textContent = 'Metni okuyun, bitince durdurun';
+  document.getElementById('analyzeBtn').disabled = true;
+  document.getElementById('recDot').classList.remove('active');
+}
+
+// ── Timer ──────────────────────────────────────────────────────────────────
+function updateTimer(s) {
+  const m = String(Math.floor(s / 60)).padStart(2, '0');
+  const sc = String(s % 60).padStart(2, '0');
+  document.getElementById('timerEl').textContent = `${m}:${sc}`;
+}
+function startTimer() {
+  timerSec = 0;
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => { timerSec++; updateTimer(timerSec); }, 1000);
+}
+function stopTimer() { clearInterval(timerInterval); }
+
+// ── Recording ──────────────────────────────────────────────────────────────
+document.getElementById('micBtn').addEventListener('click', async () => {
+  if (!recording) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+      mediaRecorder.addEventListener('dataavailable', e => { if (e.data.size > 0) audioChunks.push(e.data); });
+      mediaRecorder.addEventListener('stop', () => {
+        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+        stream.getTracks().forEach(t => t.stop());
+      });
+      mediaRecorder.start();
+      recording = true;
+      startTimer();
+
+      const micBtn = document.getElementById('micBtn');
+      micBtn.className = 'mic-btn recording';
+      micBtn.textContent = '⏹';
+      document.getElementById('recDot').classList.add('active');
+      document.getElementById('ctrlLabel').textContent = 'Kayıt yapılıyor…';
+      document.getElementById('ctrlHint').textContent = 'Durdurmak için tekrar tıklayın';
+    } catch (err) {
+      toast('Mikrofon erişimi reddedildi. Lütfen izin verin.');
+    }
+  } else {
+    mediaRecorder.stop();
+    recording = false;
+    stopTimer();
+
+    const micBtn = document.getElementById('micBtn');
+    micBtn.className = 'mic-btn done';
+    micBtn.textContent = '✓';
+    document.getElementById('recDot').classList.remove('active');
+    document.getElementById('ctrlLabel').textContent = `Kayıt tamamlandı — ${document.getElementById('timerEl').textContent}`;
+    document.getElementById('ctrlHint').textContent = 'Analizi başlatmak için "Analiz Et" tuşuna basın';
+    document.getElementById('analyzeBtn').disabled = false;
+    document.getElementById('micBtn').disabled = true;
+  }
+});
+
+// ── Back button ────────────────────────────────────────────────────────────
+document.getElementById('backBtn').addEventListener('click', () => {
+  if (recording && mediaRecorder) { mediaRecorder.stop(); stopTimer(); }
+  resetControls();
+  showView('homeView');
+});
+
+// ── Analyze ────────────────────────────────────────────────────────────────
+document.getElementById('analyzeBtn').addEventListener('click', () => analyzeReading());
+
+async function analyzeReading() {
+  if (!audioBlob || !currentText) return;
+
+  showView('loadingView');
+  document.getElementById('loaderText').textContent = 'Ses transkripte dönüştürülüyor…';
+  document.getElementById('loaderStep').textContent = 'Whisper large-v3 çalışıyor';
+
+  let transcript = '';
+  let duration = timerSec;
+
+  // Step 1: Transcribe
+  try {
+    const fd = new FormData();
+    fd.append('audio', audioBlob, 'recording.webm');
+    const res = await apiFetch('/api/transcribe', { method: 'POST', body: fd });
+    if (!res.ok) throw new Error('Transkript alınamadı');
+    const data = await res.json();
+    transcript = data.transcript;
+    duration = data.duration_sec || timerSec;
+  } catch (e) {
+    toast('Transkript alınamadı: ' + e.message);
+    showView('readingView');
+    return;
+  }
+
+  // Step 2: Analyze
+  document.getElementById('loaderText').textContent = 'Okuma analizi yapılıyor…';
+  document.getElementById('loaderStep').textContent = 'OKUMETRİK motoru çalışıyor';
+
+  try {
+    const res = await apiFetch('/api/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        reference: currentText.content,
+        hypothesis: transcript,
+        duration_sec: duration
+      })
+    });
+    if (!res.ok) throw new Error('Analiz başarısız');
+    const data = await res.json();
+    showResults(data.report, transcript, duration);
+
+    // Save session
+    const m = data.report.metrics;
+    await apiFetch('/api/sessions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text_id: currentText.id,
+        transcript,
+        accuracy: m.accuracy_pct || 0,
+        wcpm: m.wcpm || 0,
+        fluency_score: m.fluency_score || 0,
+        duration_sec: duration,
+        analysis_json: JSON.stringify(data.report)
+      })
+    }).catch(() => {});
+  } catch (e) {
+    toast('Analiz hatası: ' + e.message);
+    showView('readingView');
+  }
+}
+
+// ── Show results ───────────────────────────────────────────────────────────
+function showResults(report, transcript, duration) {
+  const m = report.metrics || {};
+  const tokens = report.tokens || [];
+
+  // Sub text
+  document.getElementById('resultsSub').textContent =
+    `"${currentText.title}" metni için okuma analizi — ${formatDur(duration)}`;
+
+  // Metrics cards
+  const acc = m.accuracy_pct || 0;
+  const wcpm = m.wcpm || 0;
+  const fl = m.fluency_score || 0;
+  const errs = (m.substitutions||0)+(m.deletions||0)+(m.insertions||0);
+
+  function qualClass(v, good, ok) { return v >= good ? 'good' : v >= ok ? 'ok' : 'bad'; }
+
+  document.getElementById('metricsGrid').innerHTML = `
+    <div class="metric-card">
+      <div class="metric-val ${qualClass(acc,90,70)}">%${acc.toFixed(1)}</div>
+      <div class="metric-label">Doğruluk</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val ${qualClass(wcpm,60,40)} blue">${wcpm.toFixed(1)}</div>
+      <div class="metric-label">WCPM</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val ${qualClass(fl,80,60)}">${fl.toFixed(1)}</div>
+      <div class="metric-label">Akıcılık</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-val ${errs === 0 ? 'good' : errs < 5 ? 'ok' : 'bad'}">${errs}</div>
+      <div class="metric-label">Hata Sayısı</div>
+    </div>
+  `;
+
+  // Colored text
+  const refWords = currentText.content.split(/\s+/);
+  const resultDiv = document.getElementById('resultText');
+  resultDiv.innerHTML = '';
+
+  // Build ref-indexed map from tokens
+  const tokenByRef = {};
+  tokens.forEach(t => {
+    if (t.ref_idx !== null && t.ref_idx !== undefined) tokenByRef[t.ref_idx] = t;
+  });
+  // Also add insertions (no ref_idx but appear in result)
+  const insertions = tokens.filter(t => t.status === 'insertion');
+
+  refWords.forEach((w, i) => {
+    const tok = tokenByRef[i];
+    const span = document.createElement('span');
+    span.className = 'word';
+    const status = tok ? tok.status : 'omission';
+    span.classList.add(status);
+
+    if (status === 'substitution') {
+      span.textContent = w;
+      span.innerHTML += `<span class="word-tag">${tok.hyp || ''}</span>`;
+      span.dataset.hyp = `Okunan: "${tok.hyp}"`;
+    } else if (status === 'mispronunciation') {
+      span.textContent = w;
+      span.innerHTML += '<span class="word-tag">telaffuz</span>';
+      if (tok.hyp) span.dataset.hyp = `Okunan: "${tok.hyp}"`;
+    } else if (status === 'repetition') {
+      span.textContent = w;
+      span.innerHTML += '<span class="word-tag">tekrar</span>';
+    } else if (status === 'self_correction') {
+      span.textContent = w;
+      span.innerHTML += '<span class="word-tag">düzeltti</span>';
+    } else if (status === 'omission') {
+      span.textContent = w;
+      span.innerHTML += '<span class="word-tag">atlandı</span>';
+    } else {
+      span.textContent = w;
+    }
+    resultDiv.appendChild(span);
+    resultDiv.appendChild(document.createTextNode(' '));
+  });
+
+  // Add insertions at end
+  insertions.forEach(t => {
+    const span = document.createElement('span');
+    span.className = 'word insertion';
+    span.textContent = t.hyp || '';
+    span.innerHTML += '<span class="word-tag">ekleme</span>';
+    resultDiv.appendChild(span);
+    resultDiv.appendChild(document.createTextNode(' '));
+  });
+
+  // Overall feedback
+  document.getElementById('overallFeedback').textContent = report.overall_feedback || '';
+
+  // Word feedback
+  const fbList = document.getElementById('wordFeedbackList');
+  fbList.innerHTML = '';
+  const fbClsMap = {
+    substitution: 'fi-sub', mispronunciation: 'fi-misp',
+    omission: 'fi-omit', insertion: 'fi-ins',
+    repetition: 'fi-rep', self_correction: 'fi-self'
+  };
+  (report.word_feedback || []).forEach(fb => {
+    if (!fb || !fb.trim()) return;
+    const li = document.createElement('li');
+    // Guess class from content
+    let cls = 'fi-sub';
+    if (fb.includes('telaffuz')) cls = 'fi-misp';
+    else if (fb.includes('atlandı') || fb.includes('okunmadı')) cls = 'fi-omit';
+    else if (fb.includes('eklendi') || fb.includes('ekleme')) cls = 'fi-ins';
+    else if (fb.includes('tekrar')) cls = 'fi-rep';
+    else if (fb.includes('düzeltti')) cls = 'fi-self';
+    li.className = `feedback-item ${cls}`;
+    li.textContent = fb;
+    fbList.appendChild(li);
+  });
+  document.getElementById('wordFeedbackCard').style.display =
+    fbList.children.length ? 'block' : 'none';
+
+  showView('resultsView');
+}
+
+function formatDur(s) {
+  const m = Math.floor(s / 60);
+  const sc = Math.round(s % 60);
+  return m > 0 ? `${m} dk ${sc} sn` : `${sc} saniye`;
+}
+
+// ── Results buttons ────────────────────────────────────────────────────────
+document.getElementById('retryBtn').addEventListener('click', () => startReading(currentText));
+document.getElementById('homeBtn').addEventListener('click', () => showView('homeView'));
+
+// ── Init ───────────────────────────────────────────────────────────────────
+showView('homeView');
+loadTexts();
+</script>
+</body>
+</html>
