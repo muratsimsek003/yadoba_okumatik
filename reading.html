@@ -799,7 +799,7 @@ async function runAnalysis() {
     try {
       await apiJSON('/api/sessions',{method:'POST',headers:{'Content-Type':'application/json'},
         body:JSON.stringify({text_id:currentText.id,transcript,
-          accuracy:m.accuracy_pct||0,wcpm:m.wcpm||0,fluency_score:m.fluency_score||0,
+          accuracy:(m.accuracy||0)*100,wcpm:m.wcpm||0,fluency_score:m.fluency_score||0,
           duration_sec:duration,analysis_json:JSON.stringify(d.report)})
       });
     } catch(saveErr) {
@@ -815,8 +815,8 @@ function showResults(report, transcript, duration) {
   const m=report.metrics||{}, tokens=report.tokens||[];
   document.getElementById('resultsSub').textContent=`"${currentText.title}" — ${formatDur(duration)}`;
 
-  const acc=m.accuracy_pct||0, wcpm=m.wcpm||0, fl=m.fluency_score||0;
-  const errs=(m.substitutions||0)+(m.deletions||0)+(m.insertions||0);
+  const acc=(m.accuracy||0)*100, wcpm=m.wcpm||0, fl=m.fluency_score||0;
+  const errs=m.total_errors||0;
   document.getElementById('metricsGrid').innerHTML=`
     <div class="metric-card"><div class="metric-val ${qualClass(acc,90,70)}">%${acc.toFixed(1)}</div><div class="metric-label">Doğruluk</div></div>
     <div class="metric-card"><div class="metric-val col-blue">${wcpm.toFixed(1)}</div><div class="metric-label">WCPM</div></div>
