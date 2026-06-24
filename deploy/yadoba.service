@@ -1,0 +1,18 @@
+[Unit]
+Description=YADOBA Okuma Degerlendirme Sistemi
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/yadoba
+ExecStart=/var/www/yadoba/.venv/bin/python app.py
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+# Whisper modeli için yeterli bellek
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
