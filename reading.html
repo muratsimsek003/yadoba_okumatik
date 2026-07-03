@@ -31,7 +31,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 /* Header */
 .header{background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;box-shadow:var(--shadow)}
 .logo{display:flex;align-items:center;gap:10px;cursor:pointer}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,#1e40af,#3b82f6);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px -2px rgba(59,130,246,.5)}
 .logo-text{font-size:17px;font-weight:800;letter-spacing:-.4px}
 .logo-sub{font-size:11px;color:var(--muted);font-weight:500}
 .header-right{display:flex;align-items:center;gap:10px}
@@ -57,8 +57,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .text-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
 .text-title{font-size:15px;font-weight:700}
 .level-badge{flex-shrink:0;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:uppercase}
-.lv1{background:#dbeafe;color:#1e40af}.lv2{background:#dcfce7;color:#166534}.lv3{background:#fef9c3;color:#92400e}.lv4{background:#ede9fe;color:#5b21b6}
-[data-theme=dark] .lv1{background:#1e3a8a;color:#93c5fd}[data-theme=dark] .lv2{background:#052e16;color:#86efac}[data-theme=dark] .lv3{background:#451a03;color:#fcd34d}[data-theme=dark] .lv4{background:#2e1065;color:#c4b5fd}
+.lv-own{background:#fce7f3;color:#9d174d}.lv1{background:#dbeafe;color:#1e40af}.lv2{background:#dcfce7;color:#166534}.lv3{background:#fef9c3;color:#92400e}.lv4{background:#ede9fe;color:#5b21b6}
+[data-theme=dark] .lv-own{background:#500724;color:#f9a8d4}[data-theme=dark] .lv1{background:#1e3a8a;color:#93c5fd}[data-theme=dark] .lv2{background:#052e16;color:#86efac}[data-theme=dark] .lv3{background:#451a03;color:#fcd34d}[data-theme=dark] .lv4{background:#2e1065;color:#c4b5fd}
 .text-preview{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .text-meta{display:flex;gap:12px;font-size:12px;color:var(--muted)}
 .btn-start{width:100%;margin-top:14px;padding:10px;background:var(--primary);color:#fff;border:none;border-radius:9px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s}
@@ -224,7 +224,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 <header class="header">
   <div class="logo" onclick="goHome()">
-    <div class="logo-icon">O</div>
+    <div class="logo-icon"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 4C10 4 7.5 3.2 5 3.8C4.4 3.9 4 4.4 4 5V16C4 16.6 4.5 17 5.1 16.8C7.5 16.2 10 17 10 17V4Z" fill="white"/><path d="M10 4C10 4 12.5 3.2 15 3.8C15.6 3.9 16 4.4 16 5V16C16 16.6 15.5 17 14.9 16.8C12.5 16.2 10 17 10 17V4Z" fill="rgba(255,255,255,0.6)"/><line x1="5.8" y1="7.2" x2="8.5" y2="7.2" stroke="#1e3a8a" stroke-width="1.2" stroke-linecap="round"/><line x1="5.8" y1="9.5" x2="8.5" y2="9.5" stroke="#1e3a8a" stroke-width="1.2" stroke-linecap="round"/><line x1="5.8" y1="11.8" x2="7.5" y2="11.8" stroke="#1e3a8a" stroke-width="1.2" stroke-linecap="round"/><path d="M12.5 8.5 C12.5 7.7 13.2 7 14 7 C14.8 7 15.5 7.7 15.5 8.5 V10 C15.5 10.8 14.8 11.5 14 11.5 C13.2 11.5 12.5 10.8 12.5 10 Z" fill="rgba(255,255,255,0.85)"/><path d="M12 10.5 C12 11.9 12.9 13 14 13 C15.1 13 16 11.9 16 10.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.1" fill="none" stroke-linecap="round"/><line x1="14" y1="13" x2="14" y2="14.2" stroke="rgba(255,255,255,0.85)" stroke-width="1.1" stroke-linecap="round"/><line x1="12.8" y1="14.2" x2="15.2" y2="14.2" stroke="rgba(255,255,255,0.85)" stroke-width="1.1" stroke-linecap="round"/></svg></div>
     <div>
       <div class="logo-text">YADOBA</div>
       <div class="logo-sub">Okuma Değerlendirme</div>
@@ -248,8 +248,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="page-sub">Bir metin seçerek okumaya başlayın veya geçmiş sonuçlarınıza bakın.</div>
 
     <div class="tabs">
-      <button class="tab-btn active" id="tabTexts" onclick="switchTab('texts')">📚 Metinler</button>
+      <button class="tab-btn active" id="tabTexts" onclick="switchTab('texts')">📚 Hikayeler</button>
       <button class="tab-btn" id="tabHistory" onclick="switchTab('history')">📋 Geçmişim</button>
+      <button class="tab-btn" id="tabStory" onclick="switchTab('story')">✍️ Kendin Yaz</button>
+      <button class="tab-btn" id="tabImage" onclick="switchTab('image')">🖼️ Resimden Hikaye</button>
     </div>
 
     <!-- Metinler -->
@@ -263,6 +265,100 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div id="historyTab" style="display:none">
       <div class="history-list" id="historyList">
         <div style="color:var(--muted);font-size:14px;padding:20px">Yükleniyor…</div>
+      </div>
+    </div>
+
+    <!-- Resimden Hikaye -->
+    <div id="imageTab" style="display:none">
+      <div class="section-card" style="margin-bottom:14px">
+        <div class="section-head">🖼️ Resimden Hikaye</div>
+
+        <!-- Resim yükleme alanı -->
+        <div id="imgDropZone"
+          onclick="document.getElementById('imgFileInput').click()"
+          ondragover="event.preventDefault();this.style.borderColor='var(--primary-l)'"
+          ondragleave="this.style.borderColor='var(--border)'"
+          ondrop="handleImgDrop(event)"
+          style="border:2px dashed var(--border);border-radius:12px;padding:32px 20px;
+                 text-align:center;cursor:pointer;transition:border-color .2s,background .2s;
+                 margin-bottom:16px;background:var(--bg)">
+          <div id="imgPlaceholder">
+            <div style="font-size:36px;margin-bottom:8px">📷</div>
+            <div style="font-size:14px;font-weight:600;color:var(--muted)">Fotoğraf yüklemek için tıkla veya sürükle</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">JPG, PNG, WEBP desteklenir</div>
+          </div>
+          <img id="imgPreview" style="display:none;max-width:100%;max-height:280px;border-radius:10px;object-fit:contain" alt="Yüklenen resim">
+          <input id="imgFileInput" type="file" accept="image/*" style="display:none" onchange="handleImgSelect(event)">
+        </div>
+
+        <!-- Hikaye yazma kutusu -->
+        <div style="margin-bottom:14px">
+          <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">HİKAYENİ YAZ</label>
+          <textarea id="imgStoryContent" rows="8"
+            placeholder="Bu resme bakarak kendi hikayeni yaz… LLM senin hikayeni resimle uyumlu, daha güzel bir hale getirecek."
+            oninput="updateImgCounter()"
+            style="width:100%;padding:14px;border:1.5px solid var(--border);border-radius:10px;
+                   background:var(--bg);color:var(--text);font-family:inherit;font-size:15px;
+                   line-height:1.7;resize:vertical;outline:none;transition:border-color .15s"
+            onfocus="this.style.borderColor='var(--primary-l)'"
+            onblur="this.style.borderColor='var(--border)'"></textarea>
+          <div style="text-align:right;font-size:11px;color:var(--muted);margin-top:4px" id="imgStoryCounter">0 kelime</div>
+        </div>
+
+        <button class="btn btn-primary" id="imgImproveBtn" onclick="improveStoryFromImage()"
+          style="width:100%;padding:14px;font-size:15px;font-weight:700;border-radius:12px">
+          ✨ Hikayemi Geliştir
+        </button>
+      </div>
+
+      <!-- Sonuç kartı -->
+      <div id="imgResultCard" style="display:none">
+        <div class="section-card" style="border:2px solid var(--primary-l);background:var(--bg)">
+          <div class="section-head" style="color:var(--primary)">✨ Geliştirilmiş Hikaye</div>
+          <div id="imgImprovedText"
+            style="font-size:15px;line-height:1.9;white-space:pre-wrap;color:var(--text);margin-bottom:18px"></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" id="imgReadBtn" onclick="readImprovedStory()"
+              style="flex:1;padding:12px;font-size:14px;font-weight:700">
+              🎙 Bu Hikayeyi Oku
+            </button>
+            <button class="btn btn-secondary" onclick="resetImageTab()"
+              style="padding:12px 18px;font-size:14px">
+              🔄 Yeniden Yaz
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hikaye Oluştur -->
+    <div id="storyTab" style="display:none">
+      <div class="section-card" style="margin-bottom:14px">
+        <div class="section-head">✍️ Kendi Hikayen</div>
+        <div style="margin-bottom:12px">
+          <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">BAŞLIK (isteğe bağlı)</label>
+          <input id="storyTitle" type="text" placeholder="Örn: Benim Hikayem"
+            style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;
+                   background:var(--bg);color:var(--text);font-family:inherit;font-size:14px;outline:none;
+                   transition:border-color .15s"
+            onfocus="this.style.borderColor='var(--primary-l)'"
+            onblur="this.style.borderColor='var(--border)'">
+        </div>
+        <div style="margin-bottom:14px">
+          <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">HİKAYEİN</label>
+          <textarea id="storyContent" rows="10" placeholder="Hikayen buraya yaz…"
+            oninput="updateStoryCounter()"
+            style="width:100%;padding:14px;border:1.5px solid var(--border);border-radius:10px;
+                   background:var(--bg);color:var(--text);font-family:inherit;font-size:15px;
+                   line-height:1.7;resize:vertical;outline:none;transition:border-color .15s"
+            onfocus="this.style.borderColor='var(--primary-l)'"
+            onblur="this.style.borderColor='var(--border)'"></textarea>
+          <div style="text-align:right;font-size:11px;color:var(--muted);margin-top:4px" id="storyCounter">0 kelime</div>
+        </div>
+        <button class="btn btn-primary" id="storyStartBtn" onclick="startStory()"
+          style="width:100%;padding:14px;font-size:15px;font-weight:700;border-radius:12px">
+          🎙 Okumaya Başla
+        </button>
       </div>
     </div>
   </div>
@@ -310,7 +406,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   <div id="loadingView">
     <div class="loader-ring"></div>
     <div class="loader-text" id="loaderText">Ses transkripte dönüştürülüyor…</div>
-    <div class="loader-step" id="loaderStep">Whisper large-v3 çalışıyor</div>
+    <div class="loader-step" id="loaderStep">YADOBA ile Türkçeyi Doğru ve Güzel konuşabilirsiniz</div>
   </div>
 
   <!-- ── RESULTS ── -->
@@ -341,6 +437,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="section-card" id="fbCard" style="display:none">
       <div class="section-head">🔍 Kelime Geri Bildirimi</div>
       <ul class="fb-list" id="fbList"></ul>
+    </div>
+
+    <div class="section-card" id="transcriptCard" style="display:none">
+      <div class="section-head">🎙 Sistem Ne Duydu?</div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:15px;line-height:2.0" id="transcriptDisplay"></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">
+        <span style="color:#2563eb;font-weight:700">Mavi</span> = doğru duyulan &nbsp;
+        <span style="background:#fef2f2;color:#dc2626;text-decoration:line-through;padding:0 3px;border-radius:3px">kırmızı</span> = yanlış kelime &nbsp;
+        <span style="background:#fef9c3;color:#92400e;padding:0 3px;border-radius:3px">sarı</span> = telaffuz farkı &nbsp;
+        <span style="background:#f5f3ff;color:#6d28d9;padding:0 3px;border-radius:3px">mor</span> = fazladan kelime
+        <br>Yukarıdaki metinde <span style="background:#f1f5f9;color:#94a3b8;text-decoration:underline dotted;padding:0 3px;border-radius:3px">gri-altı çizgili</span> kelimeler bu transkriptte <strong>hiç söylenmemiş</strong> kelimelerdir.
+      </div>
     </div>
 
     <div class="results-actions">
@@ -435,11 +543,148 @@ function qualClass(v,g,ok){ return v>=g?'col-good':v>=ok?'col-ok':'col-bad'; }
 
 // ── Tabs ───────────────────────────────────────────────────────────────────
 function switchTab(tab) {
-  document.getElementById('textsTab').style.display = tab==='texts' ? '' : 'none';
-  document.getElementById('historyTab').style.display = tab==='history' ? '' : 'none';
-  document.getElementById('tabTexts').classList.toggle('active', tab==='texts');
-  document.getElementById('tabHistory').classList.toggle('active', tab==='history');
+  ['texts','history','story','image'].forEach(t => {
+    document.getElementById(t+'Tab').style.display = tab===t ? '' : 'none';
+    document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active', tab===t);
+  });
   if (tab==='history') loadHistory();
+}
+
+// ── Resimden Hikaye ────────────────────────────────────────────────────────
+let _imgFile = null;
+
+function handleImgSelect(e) {
+  const file = e.target.files[0];
+  if (file) showImgPreview(file);
+}
+
+function handleImgDrop(e) {
+  e.preventDefault();
+  document.getElementById('imgDropZone').style.borderColor = 'var(--border)';
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) showImgPreview(file);
+  else toast('Lütfen bir resim dosyası yükleyin.');
+}
+
+function showImgPreview(file) {
+  _imgFile = file;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const preview = document.getElementById('imgPreview');
+    preview.src = ev.target.result;
+    preview.style.display = 'block';
+    document.getElementById('imgPlaceholder').style.display = 'none';
+    document.getElementById('imgDropZone').style.borderColor = 'var(--primary-l)';
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateImgCounter() {
+  const words = document.getElementById('imgStoryContent').value.trim().split(/\s+/).filter(w=>w).length;
+  document.getElementById('imgStoryCounter').textContent = words + ' kelime';
+}
+
+async function improveStoryFromImage() {
+  if (!_imgFile) { toast('Lütfen önce bir resim yükleyin.'); return; }
+  const story = document.getElementById('imgStoryContent').value.trim();
+  if (!story) { toast('Lütfen hikayeni yaz.'); return; }
+  if (story.split(/\s+/).length < 5) { toast('Hikaye en az 5 kelime olmalı.'); return; }
+
+  const btn = document.getElementById('imgImproveBtn');
+  btn.disabled = true;
+
+  document.getElementById('imgResultCard').style.display = 'none';
+
+  // Geri sayım göstergesi
+  let secs = 0;
+  const ticker = setInterval(() => {
+    secs++;
+    btn.innerHTML = `<span style="display:inline-block;animation:spin .8s linear infinite">⏳</span> YZ hikayeni geliştiriyor… ${secs}s`;
+  }, 1000);
+  btn.innerHTML = '⏳ YZ hikayeni geliştiriyor… 0s';
+
+  // "uzun sürebilir" uyarısı
+  const warn = document.createElement('p');
+  warn.id = 'imgWarnMsg';
+  warn.style.cssText = 'text-align:center;color:#92400e;font-size:13px;margin-top:8px;';
+  warn.textContent = 'Yapay zeka resmi ve hikayeni işliyor — 1-3 dakika sürebilir, lütfen bekleyin.';
+  btn.parentNode.insertBefore(warn, btn.nextSibling);
+
+  try {
+    const fd = new FormData();
+    fd.append('image', _imgFile, _imgFile.name);
+    fd.append('story', story);
+    const data = await apiJSON('/api/story/from-image', { method: 'POST', body: fd });
+    document.getElementById('imgImprovedText').textContent = data.improved;
+    document.getElementById('imgResultCard').style.display = '';
+    document.getElementById('imgResultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch(e) {
+    toast('Hata: ' + e.message);
+  } finally {
+    clearInterval(ticker);
+    btn.disabled = false;
+    btn.innerHTML = '✨ Hikayemi Geliştir';
+    const w = document.getElementById('imgWarnMsg');
+    if (w) w.remove();
+  }
+}
+
+async function readImprovedStory() {
+  const improved = document.getElementById('imgImprovedText').textContent.trim();
+  if (!improved) { toast('Önce hikayeni geliştir.'); return; }
+  const btn = document.getElementById('imgReadBtn');
+  btn.disabled = true; btn.textContent = 'Kaydediliyor…';
+  try {
+    const text = await apiJSON('/api/story/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: 'Resimden Hikayem', content: improved })
+    });
+    loadTexts();
+    startReading(text);
+  } catch(e) {
+    toast('Hata: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.innerHTML = '🎙 Bu Hikayeyi Oku';
+  }
+}
+
+function resetImageTab() {
+  _imgFile = null;
+  document.getElementById('imgPreview').style.display = 'none';
+  document.getElementById('imgPlaceholder').style.display = '';
+  document.getElementById('imgDropZone').style.borderColor = 'var(--border)';
+  document.getElementById('imgFileInput').value = '';
+  document.getElementById('imgStoryContent').value = '';
+  document.getElementById('imgStoryCounter').textContent = '0 kelime';
+  document.getElementById('imgResultCard').style.display = 'none';
+}
+
+function updateStoryCounter() {
+  const words = document.getElementById('storyContent').value.trim().split(/\s+/).filter(w => w).length;
+  document.getElementById('storyCounter').textContent = words + ' kelime';
+}
+
+async function startStory() {
+  const content = document.getElementById('storyContent').value.trim();
+  const title = document.getElementById('storyTitle').value.trim() || 'Kendi Hikayem';
+  if (!content) { toast('Lütfen bir hikaye yaz.'); return; }
+  if (content.split(/\s+/).length < 5) { toast('Hikaye en az 5 kelime olmalı.'); return; }
+  const btn = document.getElementById('storyStartBtn');
+  btn.disabled = true; btn.textContent = 'Kaydediliyor…';
+  try {
+    const text = await apiJSON('/api/story/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, content })
+    });
+    loadTexts(); // Hikayeler sekmesini güncelle
+    startReading(text);
+  } catch(e) {
+    toast('Hata: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '🎙 Okumaya Başla';
+  }
 }
 
 // ── Load texts ─────────────────────────────────────────────────────────────
@@ -448,8 +693,8 @@ async function loadTexts() {
   try {
     const texts = await apiJSON('/api/texts');
     grid.innerHTML = '';
-    const lvLabel = {1:'Seviye 1',2:'Seviye 2',3:'Seviye 3',4:'Seviye 4'};
-    const lvCls   = {1:'lv1',2:'lv2',3:'lv3',4:'lv4'};
+    const lvLabel = {0:'Kendi Hikayen',1:'Seviye 1',2:'Seviye 2',3:'Seviye 3',4:'Seviye 4'};
+    const lvCls   = {0:'lv-own',1:'lv1',2:'lv2',3:'lv3',4:'lv4'};
     texts.forEach(t => {
       const card = document.createElement('div');
       card.className = 'text-card';
@@ -765,14 +1010,17 @@ function colorSpan(idx, cls) {
 // ── Run analysis ───────────────────────────────────────────────────────────
 async function runAnalysis() {
   if (!audioBlob || !currentText) return;
+  // currentText'i şimdi yakala — async işlem sırasında değişmesin
+  const analysisText = currentText;
   showView('loadingView');
   document.getElementById('loaderText').textContent='Ses transkripte dönüştürülüyor…';
-  document.getElementById('loaderStep').textContent='Whisper large-v3 çalışıyor';
+  document.getElementById('loaderStep').textContent='YADOBA ile Türkçeyi Doğru ve Güzel konuşabilirsiniz';
 
   let transcript='', duration=timerSec;
   try {
     const fd=new FormData();
     fd.append('audio', audioBlob, 'rec.webm');
+    fd.append('text_id', analysisText.id); // Whisper'a referans metni ver (doğruluk artışı)
     const r = await apiFetch('/api/transcribe', {method:'POST', body:fd});
     if(!r.ok) {
       const err = await r.json().catch(()=>({}));
@@ -780,6 +1028,7 @@ async function runAnalysis() {
     }
     const d=await r.json();
     transcript=d.transcript; duration=d.duration_sec||timerSec;
+    if (!transcript) throw new Error('Ses tanınamadı — lütfen daha yüksek sesle okuyun');
   } catch(e) { toast('Transkript hatası: '+e.message); showView('readingView'); return; }
 
   document.getElementById('loaderText').textContent='Okuma analizi yapılıyor…';
@@ -788,7 +1037,7 @@ async function runAnalysis() {
   try {
     const r=await apiFetch('/api/analyze',{
       method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({reference:currentText.content, hypothesis:transcript, duration_sec:duration})
+      body:JSON.stringify({reference:analysisText.content, hypothesis:transcript, duration_sec:duration})
     });
     if(!r.ok) throw new Error('Analiz başarısız');
     const d=await r.json();
@@ -798,7 +1047,7 @@ async function runAnalysis() {
     document.getElementById('loaderStep').textContent='';
     try {
       await apiJSON('/api/sessions',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({text_id:currentText.id,transcript,
+        body:JSON.stringify({text_id:analysisText.id,transcript,
           accuracy:(m.accuracy||0)*100,wcpm:m.wcpm||0,fluency_score:m.fluency_score||0,
           duration_sec:duration,analysis_json:JSON.stringify(d.report)})
       });
@@ -806,14 +1055,16 @@ async function runAnalysis() {
       console.error('Oturum kaydedilemedi:', saveErr);
       toast('Sonuçlar gösteriliyor ama oturum kaydedilemedi.');
     }
-    showResults(d.report, transcript, duration);
+    showResults(d.report, transcript, duration, analysisText);
   } catch(e) { toast('Analiz hatası: '+e.message); showView('readingView'); }
 }
 
 // ── Show results ───────────────────────────────────────────────────────────
-function showResults(report, transcript, duration) {
+function showResults(report, transcript, duration, analysisText) {
+  // analysisText parametresi yoksa (eski çağrılar için) currentText kullan
+  const textObj = analysisText || currentText;
   const m=report.metrics||{}, tokens=report.tokens||[];
-  document.getElementById('resultsSub').textContent=`"${currentText.title}" — ${formatDur(duration)}`;
+  document.getElementById('resultsSub').textContent=`"${textObj.title}" — ${formatDur(duration)}`;
 
   const acc=(m.accuracy||0)*100, wcpm=m.wcpm||0, fl=m.fluency_score||0;
   const errs=m.total_errors||0;
@@ -824,7 +1075,7 @@ function showResults(report, transcript, duration) {
     <div class="metric-card"><div class="metric-val ${errs<3?'col-good':errs<8?'col-ok':'col-bad'}">${errs}</div><div class="metric-label">Hata</div></div>`;
 
   // Colored text
-  const refWords=currentText.content.split(/\s+/);
+  const refWords=textObj.content.split(/\s+/);
   const byRef={};
   tokens.forEach(t=>{ if(t.ref_idx!=null) byRef[t.ref_idx]=t; });
   const insertions=tokens.filter(t=>t.status==='insertion');
@@ -865,6 +1116,40 @@ function showResults(report, transcript, duration) {
     fbList.appendChild(li);
   });
   document.getElementById('fbCard').style.display=fbList.children.length?'':'none';
+
+  // Transkripsiyon bölümünü renkli göster
+  const transcriptEl = document.getElementById('transcriptDisplay');
+  const transcriptCard = document.getElementById('transcriptCard');
+  if (transcript && transcript.trim()) {
+    transcriptCard.style.display = '';
+    // Hyp_idx → token eşlemesi
+    const byHyp = {};
+    tokens.forEach(t => { if (t.hyp_idx != null) byHyp[t.hyp_idx] = t; });
+    const hypWords = transcript.split(/\s+/).filter(w => w);
+    transcriptEl.innerHTML = '';
+    // Renk sınıfları
+    const tClsMap = {correct:'w-c', substitution:'w-s', mispronunciation:'w-m',
+                     insertion:'w-i', repetition:'w-r', self_correction:'w-sc'};
+    hypWords.forEach((w, i) => {
+      const tok = byHyp[i];
+      const sp = document.createElement('span');
+      if (tok) {
+        const cls = tClsMap[tok.status] || '';
+        if (cls) sp.className = cls;
+        sp.textContent = w;
+        if (tok.status === 'substitution' || tok.status === 'mispronunciation')
+          sp.title = `Referansta: "${tok.ref}"`;
+        if (tok.status === 'insertion')
+          sp.title = 'Metinde olmayan kelime';
+      } else {
+        sp.textContent = w;
+      }
+      transcriptEl.appendChild(sp);
+      transcriptEl.appendChild(document.createTextNode(' '));
+    });
+  } else {
+    transcriptCard.style.display = 'none';
+  }
 
   showView('resultsView');
 }

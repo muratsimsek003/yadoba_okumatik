@@ -1,0 +1,32 @@
+YADOBA Model Karsilastirmasi — 2026-07-02 10:43
+FLEURS Turkce test (200 ornek)
+============================================================
+
+[BASELINE] Whisper Small (mevcut VPS, baseline)
+  WER:            16.58%
+  CER:            4.01%
+  Word-Precision: 84.59%
+  Word-Recall:    84.56%
+  Word-F1:        84.52%
+
+[ZERO-SHOT] Whisper Medium (zero-shot)
+  WER:            10.65%
+  CER:            2.73%
+  Word-Precision: 90.48%
+  Word-Recall:    90.38%
+  Word-F1:        90.37%
+
+[FINE-TUNED] Whisper Medium (YADOBA fine-tune)
+  WER:            407.5%
+  CER:            160.16%
+  Word-Precision: 6.5%
+  Word-Recall:    2.97%
+  Word-F1:        3.98%
+
+[FINE-TUNED] Whisper Large-v3 (LoRA fine-tune, chk-196)
+  WER:            125.51%
+  CER:            82.05%
+  Word-Precision: 4.39%
+  Word-Recall:    4.69%
+  Word-F1:        4.52%
+

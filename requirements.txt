@@ -8,3 +8,4 @@ accelerate
 torch
 torchaudio
 numpy
+anthropic

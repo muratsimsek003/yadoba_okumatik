@@ -72,7 +72,7 @@ body{
   width:54px;height:54px;
   background:linear-gradient(135deg,#1e40af,#3b82f6);
   border-radius:15px;display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:800;font-size:26px;
+  color:#fff;
   box-shadow:0 8px 20px -4px rgba(59,130,246,.45);
   flex-shrink:0;
 }
@@ -122,6 +122,14 @@ input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(59,130,246,.15
 .btn-login:active{transform:scale(.98)}
 .btn-login:disabled{opacity:.6;cursor:not-allowed}
 
+.toggle-link{
+  text-align:center;margin-top:18px;font-size:13.5px;color:var(--muted);
+}
+.toggle-link a{
+  color:var(--primary);font-weight:600;cursor:pointer;text-decoration:none;
+}
+.toggle-link a:hover{text-decoration:underline}
+
 .divider{border:none;border-top:1px solid var(--border);margin:24px 0}
 
 .demo-box{background:var(--demo-bg);border:1px solid var(--border);border-radius:12px;padding:14px}
@@ -166,51 +174,65 @@ footer{
   <button class="theme-btn" id="themeBtn">🌙</button>
 
   <div class="logo">
-    <div class="logo-icon">O</div>
+    <div class="logo-icon"><svg width="32" height="32" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 4C10 4 7.5 3.2 5 3.8C4.4 3.9 4 4.4 4 5V16C4 16.6 4.5 17 5.1 16.8C7.5 16.2 10 17 10 17V4Z" fill="white"/><path d="M10 4C10 4 12.5 3.2 15 3.8C15.6 3.9 16 4.4 16 5V16C16 16.6 15.5 17 14.9 16.8C12.5 16.2 10 17 10 17V4Z" fill="rgba(255,255,255,0.6)"/><line x1="5.8" y1="7.2" x2="8.5" y2="7.2" stroke="#1e3a8a" stroke-width="1.2" stroke-linecap="round"/><line x1="5.8" y1="9.5" x2="8.5" y2="9.5" stroke="#1e3a8a" stroke-width="1.2" stroke-linecap="round"/><line x1="5.8" y1="11.8" x2="7.5" y2="11.8" stroke="#1e3a8a" stroke-width="1.2" stroke-linecap="round"/><path d="M12.5 8.5 C12.5 7.7 13.2 7 14 7 C14.8 7 15.5 7.7 15.5 8.5 V10 C15.5 10.8 14.8 11.5 14 11.5 C13.2 11.5 12.5 10.8 12.5 10 Z" fill="rgba(255,255,255,0.85)"/><path d="M12 10.5 C12 11.9 12.9 13 14 13 C15.1 13 16 11.9 16 10.5" stroke="rgba(255,255,255,0.85)" stroke-width="1.1" fill="none" stroke-linecap="round"/><line x1="14" y1="13" x2="14" y2="14.2" stroke="rgba(255,255,255,0.85)" stroke-width="1.1" stroke-linecap="round"/><line x1="12.8" y1="14.2" x2="15.2" y2="14.2" stroke="rgba(255,255,255,0.85)" stroke-width="1.1" stroke-linecap="round"/></svg></div>
     <div class="logo-info">
       <h1>YADOBA</h1>
       <p>YADOBA 2.0 — Okuma Değerlendirme Sistemi</p>
     </div>
   </div>
 
-  <div class="section-title">Hesabınıza Giriş Yapın</div>
-
-  <form id="loginForm">
-    <div class="form-group">
-      <label for="username">Kullanıcı Adı</label>
-      <input type="text" id="username" placeholder="kullanici_adi" autocomplete="username" required>
-    </div>
-    <div class="form-group">
-      <label for="password">Şifre</label>
-      <div class="input-wrap">
-        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
-        <button type="button" class="eye-btn" id="eyeBtn">👁</button>
+  <!-- GİRİŞ FORMU -->
+  <div id="loginSection">
+    <div class="section-title">Hesabınıza Giriş Yapın</div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="username">Kullanıcı Adı</label>
+        <input type="text" id="username" placeholder="kullanici_adi" autocomplete="username" required>
       </div>
-    </div>
-    <div class="error-box" id="errorBox">
-      <span>⚠️</span><span id="errorText"></span>
-    </div>
-    <button type="submit" class="btn-login" id="loginBtn">
-      Giriş Yap
-    </button>
-  </form>
+      <div class="form-group">
+        <label for="password">Şifre</label>
+        <div class="input-wrap">
+          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
+          <button type="button" class="eye-btn" id="eyeBtn">👁</button>
+        </div>
+      </div>
+      <div class="error-box" id="errorBox">
+        <span>⚠️</span><span id="errorText"></span>
+      </div>
+      <button type="submit" class="btn-login" id="loginBtn">Giriş Yap</button>
+    </form>
+    <div class="toggle-link">Hesabın yok mu? <a onclick="showRegister()">Kayıt Ol</a></div>
+  </div>
 
-  <hr class="divider">
-
-  <div class="demo-box">
-    <div class="demo-title">Demo Hesapları — tıklayarak giriş yapın</div>
-    <div class="demo-row" onclick="fillDemo('admin','admin123')">
-      <span class="badge b-admin">Yönetici</span>
-      <span class="demo-cred">admin / admin123</span>
-    </div>
-    <div class="demo-row" onclick="fillDemo('ogretmen','ogretmen123')">
-      <span class="badge b-admin">Öğretmen</span>
-      <span class="demo-cred">ogretmen / ogretmen123</span>
-    </div>
-    <div class="demo-row" onclick="fillDemo('ogrenci1','ogrenci123')">
-      <span class="badge b-student">Öğrenci</span>
-      <span class="demo-cred">ogrenci1 / ogrenci123</span>
-    </div>
+  <!-- KAYIT FORMU -->
+  <div id="registerSection" style="display:none">
+    <div class="section-title">Yeni Hesap Oluştur</div>
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="reg_fullname">Ad Soyad</label>
+        <input type="text" id="reg_fullname" placeholder="Adınız Soyadınız" autocomplete="name" required>
+      </div>
+      <div class="form-group">
+        <label for="reg_username">Kullanıcı Adı</label>
+        <input type="text" id="reg_username" placeholder="kullanici_adi (en az 3 karakter)" autocomplete="username" required>
+      </div>
+      <div class="form-group">
+        <label for="reg_password">Şifre</label>
+        <div class="input-wrap">
+          <input type="password" id="reg_password" placeholder="En az 6 karakter" autocomplete="new-password" required>
+          <button type="button" class="eye-btn" id="eyeBtn2">👁</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reg_password2">Şifre Tekrar</label>
+        <input type="password" id="reg_password2" placeholder="Şifreyi tekrar girin" autocomplete="new-password" required>
+      </div>
+      <div class="error-box" id="regErrorBox">
+        <span>⚠️</span><span id="regErrorText"></span>
+      </div>
+      <button type="submit" class="btn-login" id="registerBtn">Kayıt Ol</button>
+    </form>
+    <div class="toggle-link">Zaten hesabın var mı? <a onclick="showLogin()">Giriş Yap</a></div>
   </div>
 </div>
 
@@ -230,26 +252,47 @@ themeBtn.addEventListener('click', () => {
   themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
 });
 
-// Show/hide password
+// Şifre göster/gizle
 document.getElementById('eyeBtn').addEventListener('click', () => {
   const inp = document.getElementById('password');
   inp.type = inp.type === 'password' ? 'text' : 'password';
 });
+document.getElementById('eyeBtn2').addEventListener('click', () => {
+  const inp = document.getElementById('reg_password');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+});
 
-function fillDemo(u, p) {
-  document.getElementById('username').value = u;
-  document.getElementById('password').value = p;
-  document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+// Bölüm değiştirme
+function showLogin() {
+  document.getElementById('loginSection').style.display = '';
+  document.getElementById('registerSection').style.display = 'none';
+  hideRegError();
+}
+function showRegister() {
+  document.getElementById('loginSection').style.display = 'none';
+  document.getElementById('registerSection').style.display = '';
+  hideError();
 }
 
 function showError(msg) {
   document.getElementById('errorText').textContent = msg;
   document.getElementById('errorBox').classList.add('show');
 }
-function hideError() {
-  document.getElementById('errorBox').classList.remove('show');
+function hideError() { document.getElementById('errorBox').classList.remove('show'); }
+
+function showRegError(msg) {
+  document.getElementById('regErrorText').textContent = msg;
+  document.getElementById('regErrorBox').classList.add('show');
+}
+function hideRegError() { document.getElementById('regErrorBox').classList.remove('show'); }
+
+function saveAndRedirect(data) {
+  localStorage.setItem('auth_token', data.token);
+  localStorage.setItem('user', JSON.stringify(data.user));
+  window.location.href = data.user.role === 'admin' ? '/admin.html' : '/reading.html';
 }
 
+// Giriş formu
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const username = document.getElementById('username').value.trim();
@@ -258,7 +301,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   hideError();
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Giriş yapılıyor...';
-
   try {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
@@ -266,10 +308,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
       body: JSON.stringify({username, password})
     });
     if (res.ok) {
-      const data = await res.json();
-      localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      window.location.href = data.user.role === 'admin' ? '/admin.html' : '/reading.html';
+      saveAndRedirect(await res.json());
     } else {
       const err = await res.json().catch(() => ({}));
       showError(err.detail || 'Kullanıcı adı veya şifre hatalı.');
@@ -280,6 +319,43 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     showError('Sunucuya bağlanılamadı.');
     btn.disabled = false;
     btn.textContent = 'Giriş Yap';
+  }
+});
+
+// Kayıt formu
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const full_name = document.getElementById('reg_fullname').value.trim();
+  const username  = document.getElementById('reg_username').value.trim();
+  const password  = document.getElementById('reg_password').value;
+  const password2 = document.getElementById('reg_password2').value;
+  const btn = document.getElementById('registerBtn');
+  hideRegError();
+
+  if (password !== password2) { showRegError('Şifreler eşleşmiyor.'); return; }
+  if (password.length < 6)    { showRegError('Şifre en az 6 karakter olmalı.'); return; }
+  if (username.length < 3)    { showRegError('Kullanıcı adı en az 3 karakter olmalı.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Kaydediliyor...';
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({full_name, username, password})
+    });
+    if (res.ok) {
+      saveAndRedirect(await res.json());
+    } else {
+      const err = await res.json().catch(() => ({}));
+      showRegError(err.detail || 'Kayıt başarısız.');
+      btn.disabled = false;
+      btn.textContent = 'Kayıt Ol';
+    }
+  } catch {
+    showRegError('Sunucuya bağlanılamadı.');
+    btn.disabled = false;
+    btn.textContent = 'Kayıt Ol';
   }
 });
 

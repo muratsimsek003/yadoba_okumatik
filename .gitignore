@@ -19,6 +19,12 @@ hf_cache/
 whisper-tr-poc/
 whisper-child-tr-poc/
 
+# Veritabanı (kullanıcı verisi)
+data/
+
+# Eğitim model çıktıları (çok büyük)
+training/outputs/
+
 # Sentetik veri çıktıları
 data/synth_school/
 *.npy

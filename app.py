@@ -16,27 +16,45 @@ DB_PATH = DATA_DIR / "okumetrik.db"
 # ── Whisper (lazy-load) ────────────────────────────────────────────────────
 _model = None
 _processor = None
+_fw_model = None  # faster-whisper
 MODEL_PATH = str(BASE_DIR / "whisper-child-tr-poc")
+# faster-whisper kullanır (large-v3, int8 — ~2GB RAM, transformers large-v3 kalitesi)
+WHISPER_MODEL_NAME = os.environ.get("WHISPER_MODEL", "large-v3")
 
 def load_whisper():
-    global _model, _processor
-    if _model is not None:
-        return True
+    global _fw_model, _model, _processor
+    if _fw_model is not None:
+        return "faster"
+    # faster-whisper tercih edilir
+    try:
+        from faster_whisper import WhisperModel
+        import torch
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        compute_type = "float16" if device == "cuda" else "int8"
+        path = MODEL_PATH if os.path.exists(MODEL_PATH) else WHISPER_MODEL_NAME
+        _fw_model = WhisperModel(path, device=device, compute_type=compute_type)
+        print(f"[faster-whisper] {path} @ {device} ({compute_type})")
+        return "faster"
+    except Exception as e:
+        print(f"[faster-whisper] Yuklenemedi: {e}, transformers'a geciliyor...")
+    # transformers fallback
     try:
         import torch
         from transformers import WhisperForConditionalGeneration, WhisperProcessor
-        path = MODEL_PATH if os.path.exists(MODEL_PATH) else "openai/whisper-large-v3"
-        _processor = WhisperProcessor.from_pretrained(path)
+        hf_path = (MODEL_PATH if os.path.exists(MODEL_PATH)
+                   else f"openai/whisper-{WHISPER_MODEL_NAME}" if not WHISPER_MODEL_NAME.startswith("openai/")
+                   else WHISPER_MODEL_NAME)
+        _processor = WhisperProcessor.from_pretrained(hf_path)
         dtype = torch.float16 if torch.cuda.is_available() else torch.float32
-        _model = WhisperForConditionalGeneration.from_pretrained(path, torch_dtype=dtype)
+        _model = WhisperForConditionalGeneration.from_pretrained(hf_path, torch_dtype=dtype)
         device = "cuda" if torch.cuda.is_available() else "cpu"
         _model = _model.to(device)
         _model.eval()
-        print(f"[Whisper] {path} @ {device}")
-        return True
+        print(f"[transformers-whisper] {hf_path} @ {device}")
+        return "transformers"
     except Exception as e:
         print(f"[Whisper] Yuklenemedi: {e}")
-        return False
+        return None
 
 # ── SQLite ─────────────────────────────────────────────────────────────────
 def get_db():
@@ -87,9 +105,6 @@ def init_db():
     for row in [
         (str(uuid.uuid4()), 'admin',    h('admin123'),    'Yönetici',       'admin'),
         (str(uuid.uuid4()), 'ogretmen', h('ogretmen123'), 'Öğretmen Ahmet', 'admin'),
-        (str(uuid.uuid4()), 'ogrenci1', h('ogrenci123'),  'Ahmet Yılmaz',   'student'),
-        (str(uuid.uuid4()), 'ogrenci2', h('ogrenci456'),  'Ayşe Kaya',      'student'),
-        (str(uuid.uuid4()), 'ogrenci3', h('ogrenci789'),  'Mehmet Demir',   'student'),
     ]:
         conn.execute(
             "INSERT OR IGNORE INTO users (id,username,password_hash,full_name,role) VALUES (?,?,?,?,?)", row)
@@ -107,12 +122,25 @@ def init_db():
          "temizdi ve çiçekler her yerde açıyordu. Heidi bu güzellikleri çok seviyordu. "
          "Arkadaşı Klara onu ziyarete gelince birlikte oyun oynadılar.", 1),
 
+        ("Çirkin Ördek Yavrusu",
+         "Bir göl kenarında ördek yumurtaları çatlayıp açıldı. Bütün yavrular sarı "
+         "ve güzeldi ama biri farklıydı. O büyük ve gri görünüyordu. Diğer hayvanlar "
+         "onunla alay ettiler. Üzgün yavru yalnız başına yaşamaya başladı. Kış "
+         "geçti, ilkbahar geldi. Yavru suya bakınca gördü ki o artık güzel bir "
+         "kuğuya dönüşmüştü.", 1),
+
         ("Kaplumbağa ve Tavşan",
          "Bir ormanda kaplumbağa ile tavşan yarışmaya karar verdiler. Tavşan çok "
          "hızlıydı ve kaplumbağayla yarışmak ona komik geldi. Koşmaya başladılar. "
          "Tavşan hemen ileriye geçti ve kaplumbağa çok geride kaldı. Tavşan "
          "yorulunca bir ağacın altında uyudu. Kaplumbağa ise durmadan yavaş yavaş "
          "yürüdü. Tavşan uyandığında kaplumbağa çoktan bitişi geçmişti.", 2),
+
+        ("Ağustos Böceği ve Karınca",
+         "Yaz boyunca ağustos böceği şarkı söyleyip dans etti. Karınca ise durmadan "
+         "çalışarak kışa hazırlandı. Sonbahar gelince ağustos böceği karıncadan yiyecek "
+         "istedi. Karınca dedi ki yaz boyunca ne yaptın? Ağustos böceği utandı. "
+         "Bu masaldan şunu öğreniriz çalışmak her zaman gereklidir.", 2),
 
         ("Pinokyo'nun Maceraları",
          "Marangoz Geppetto ahşaptan bir kukla yaptı. Kuklanın adını Pinokyo koydu. "
@@ -135,24 +163,42 @@ def init_db():
          "bir gemi battı. Deniz kızı boğulmakta olan bir prens gördü. Onu kurtarıp "
          "kıyıya bıraktı ve denize geri döndü. Prensi hiç unutamadı.", 3),
 
-        ("Ağustos Böceği ve Karınca",
-         "Yaz boyunca ağustos böceği şarkı söyleyip dans etti. Karınca ise durmadan "
-         "çalışarak kışa hazırlandı. Sonbahar gelince ağustos böceği karıncadan yiyecek "
-         "istedi. Karınca dedi ki yaz boyunca ne yaptın? Ağustos böceği utandı. "
-         "Bu masaldan şunu öğreniriz çalışmak her zaman gereklidir.", 2),
+        ("Mevsimlerin Dansı",
+         "İlkbaharda çiçekler açar, ağaçlar yeşillenir. Çocuklar bahçede koşup oynar. "
+         "Yazın güneş erken doğar ve geç batar. Herkes denize, göle, ormana gider. "
+         "Sonbaharda yapraklar sarıya kızıla döner ve rüzgarda uçuşur. "
+         "Kışın kar yağar, her yer bembeyaz olur. Çocuklar kardan adam yapar, "
+         "karda oynar. Dört mevsim birbirini izler, doğa hiç durmadan değişir.", 1),
 
-        ("Çirkin Ördek Yavrusu",
-         "Bir göl kenarında ördek yumurtaları çatlayıp açıldı. Bütün yavrular sarı "
-         "ve güzeldi ama biri farklıydı. O büyük ve gri görünüyordu. Diğer hayvanlar "
-         "onunla alay ettiler. Üzgün yavru yalnız başına yaşamaya başladı. Kış "
-         "geçti, ilkbahar geldi. Yavru suya bakınca gördü ki o artık güzel bir "
-         "kuğuya dönüşmüştü.", 1),
+        ("İlk Uçuş",
+         "Kuşlar yuvada büyür ve bir gün uçmayı öğrenmek zorunda kalırlar. "
+         "Küçük serçe yuvadan baktı, aşağısı çok derin görünüyordu. Annesi yanında "
+         "durdu ve kanatlarını çırpmayı gösterdi. Serçe derin bir nefes aldı ve "
+         "yuvadan atladı. Kanatları titredi, biraz sendeledi ama uçuyordu. "
+         "Hava onu taşıyordu. Korkusu sevince dönüşmüştü.", 2),
+
+        ("Güneş Sistemi",
+         "Güneş sisteminde sekiz gezegen vardır. En büyüğü Jüpiter, en küçüğü Merkür'dür. "
+         "Dünya, Güneş'e üçüncü en yakın gezegendir. Dünya'nın bir uydusu vardır, adı Ay'dır. "
+         "Mars'a kırmızı gezegen denir çünkü toprağı kırmızımsı demir oksitten oluşur. "
+         "Satürn'ün çevresinde buz ve kayadan oluşan halkalar vardır. "
+         "Gezegenler milyonlarca yıldır Güneş'in etrafında dönmeye devam etmektedir.", 3),
+
+        ("Arkadaşlık",
+         "Arkadaşlık hayatın en güzel hediyelerinden biridir. İyi bir arkadaş zor "
+         "günlerde yanınızda olur. Sevincinizi paylaşır, üzüntünüzde sizi teselli eder. "
+         "Arkadaşlık vermek ve almak demektir. Sırlarınızı saklayan, sizi olduğunuz gibi "
+         "kabul eden insanlar gerçek arkadaşlardır. Bir arkadaşa iyi davranmak "
+         "ona verdiğiniz en büyük hediyedir.", 2),
     ]
     for title, content, level in texts:
         wc = len(content.split())
-        conn.execute(
-            "INSERT OR IGNORE INTO texts (id,title,content,level,word_count) VALUES (?,?,?,?,?)",
-            (str(uuid.uuid4()), title, content, level, wc))
+        # Aynı başlıkta metin varsa ekleme (sunucu yeniden başladığında tekrar eklenmesini önler)
+        exists = conn.execute("SELECT id FROM texts WHERE title=?", (title,)).fetchone()
+        if not exists:
+            conn.execute(
+                "INSERT INTO texts (id,title,content,level,word_count) VALUES (?,?,?,?,?)",
+                (str(uuid.uuid4()), title, content, level, wc))
 
     conn.commit()
     conn.close()
@@ -160,7 +206,7 @@ def init_db():
 
 
 # ── FastAPI ────────────────────────────────────────────────────────────────
-from fastapi import FastAPI, HTTPException, Depends, File, UploadFile, Header
+from fastapi import FastAPI, HTTPException, Depends, File, Form, UploadFile, Header
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -201,6 +247,39 @@ def require_admin(user=Depends(current_user)):
 class LoginReq(BaseModel):
     username: str
     password: str
+
+class RegisterReq(BaseModel):
+    username: str
+    password: str
+    full_name: str
+
+@app.post("/api/auth/register")
+def register(req: RegisterReq):
+    if len(req.username.strip()) < 3:
+        raise HTTPException(400, "Kullanıcı adı en az 3 karakter olmalı")
+    if len(req.password) < 6:
+        raise HTTPException(400, "Şifre en az 6 karakter olmalı")
+    if not req.full_name.strip():
+        raise HTTPException(400, "Ad Soyad boş olamaz")
+    ph = hashlib.sha256(req.password.encode()).hexdigest()
+    uid = str(uuid.uuid4())
+    conn = get_db()
+    try:
+        conn.execute(
+            "INSERT INTO users (id,username,password_hash,full_name,role) VALUES (?,?,?,?,?)",
+            (uid, req.username.strip().lower(), ph, req.full_name.strip(), 'student')
+        )
+        conn.commit()
+    except sqlite3.IntegrityError:
+        conn.close()
+        raise HTTPException(409, "Bu kullanıcı adı zaten alınmış, başka bir tane deneyin")
+    token = str(uuid.uuid4())
+    conn.execute("INSERT INTO tokens (token,user_id) VALUES (?,?)", (token, uid))
+    conn.commit(); conn.close()
+    return {"token": token, "user": {
+        "id": uid, "username": req.username.strip().lower(),
+        "full_name": req.full_name.strip(), "role": "student"
+    }}
 
 @app.post("/api/auth/login")
 def login(req: LoginReq):
@@ -272,6 +351,23 @@ def update_text(tid: str, req: TextReq, user=Depends(require_admin)):
     conn.commit(); conn.close()
     return {"ok": True}
 
+class StoryReq(BaseModel):
+    title: str = "Kendi Hikayem"
+    content: str
+
+@app.post("/api/story/start")
+def start_story(req: StoryReq, user=Depends(current_user)):
+    if not req.content.strip():
+        raise HTTPException(400, "Hikaye boş olamaz")
+    title = req.title.strip() or "Kendi Hikayem"
+    tid = str(uuid.uuid4())
+    wc = len(req.content.split())
+    conn = get_db()
+    conn.execute("INSERT INTO texts (id,title,content,level,word_count) VALUES (?,?,?,?,?)",
+                 (tid, title, req.content.strip(), 0, wc))
+    conn.commit(); conn.close()
+    return {"id": tid, "title": title, "content": req.content.strip(), "level": 0, "word_count": wc}
+
 @app.delete("/api/texts/{tid}")
 def delete_text(tid: str, user=Depends(require_admin)):
     conn = get_db()
@@ -281,11 +377,24 @@ def delete_text(tid: str, user=Depends(require_admin)):
 
 # ── Transcribe ─────────────────────────────────────────────────────────────
 @app.post("/api/transcribe")
-async def transcribe(audio: UploadFile = File(...), user=Depends(current_user)):
+async def transcribe(
+    audio: UploadFile = File(...),
+    text_id: Optional[str] = Form(None),
+    user=Depends(current_user)
+):
     import tempfile, subprocess
     audio_bytes = await audio.read()
     if not audio_bytes:
         raise HTTPException(400, "Ses verisi boş — kayıt düzgün çalışmadı")
+
+    # Referans metni initial_prompt olarak kullan (Türkçe karakter doğruluğunu artırır)
+    initial_prompt = None
+    if text_id:
+        conn = get_db()
+        text_row = conn.execute("SELECT content FROM texts WHERE id=?", (text_id,)).fetchone()
+        conn.close()
+        if text_row:
+            initial_prompt = text_row['content'][:200]  # İlk 200 karakter yeterli
 
     suffix = ".webm"
     if audio.filename and "." in audio.filename:
@@ -318,11 +427,21 @@ async def transcribe(audio: UploadFile = File(...), user=Depends(current_user)):
 
         duration = float(len(waveform)) / 16000.0
 
-        if load_whisper():
+        backend = load_whisper()
+        if backend == "faster":
+            segments, _ = _fw_model.transcribe(
+                wav_tmp or tmp, language="tr", task="transcribe",
+                initial_prompt=initial_prompt,
+                temperature=0.0,   # Greedy decoding — en tutarlı çıktı
+                beam_size=5,
+                vad_filter=True,   # Sessiz kısımları filtrele
+            )
+            transcript = " ".join(seg.text.strip() for seg in segments).strip()
+        elif backend == "transformers":
             import torch
             inputs = _processor(waveform, sampling_rate=16000, return_tensors="pt")
             device = next(_model.parameters()).device
-            dtype  = next(_model.parameters()).dtype  # float16 veya float32
+            dtype  = next(_model.parameters()).dtype
             feats  = inputs.input_features.to(device=device, dtype=dtype)
             with torch.no_grad():
                 ids = _model.generate(feats, language="tr", task="transcribe",
@@ -480,6 +599,87 @@ def get_stats(user=Depends(require_admin)):
     conn.close()
     return stats
 
+# ── Resimden Hikaye (Ollama llava) ─────────────────────────────────────────
+@app.post("/api/story/from-image")
+async def story_from_image(
+    image: UploadFile = File(...),
+    story: str = Form(...),
+    user=Depends(current_user)
+):
+    import base64, httpx
+
+    if not story.strip():
+        raise HTTPException(400, "Hikaye boş olamaz")
+
+    image_bytes = await image.read()
+    if not image_bytes:
+        raise HTTPException(400, "Resim yüklenemedi")
+
+    image_b64 = base64.standard_b64encode(image_bytes).decode()
+
+    ollama_url   = os.environ.get("OLLAMA_URL",   "http://localhost:11434")
+    ollama_model = os.environ.get("OLLAMA_MODEL", "llava")
+
+    prompt = (
+        "Bir çocuğun yazdığı hikayeyi ve bir resim görüyorsun.\n"
+        "Görevin: Bu hikayeyi resimle uyumlu, güzel bir Türkçe hikayeye dönüştür.\n"
+        "Kurallar:\n"
+        "- Tam olarak 2 paragraf yaz, ne eksik ne fazla\n"
+        "- Her paragraf en fazla 3 kısa ve basit cümle olsun\n"
+        "- Resimdeki unsurları (karakterler, mekân, renkler) hikayeye yansıt\n"
+        "- Çocuklara uygun, sade ve anlaşılır Türkçe kullan\n"
+        "- Orijinal hikayenin ana fikrini ve karakterlerini koru\n"
+        "- Sadece geliştirilmiş hikayeyi yaz, başka açıklama ekleme\n\n"
+        f"Çocuğun hikayesi:\n{story.strip()}\n\n"
+        "Geliştirilmiş hikaye:"
+    )
+
+    try:
+        import urllib.request as _req
+        import urllib.error as _uerr
+        import asyncio
+
+        payload = json.dumps({
+            "model":  ollama_model,
+            "prompt": prompt,
+            "images": [image_b64],
+            "stream": False,
+        }).encode()
+
+        def _call_ollama():
+            req = _req.Request(
+                f"{ollama_url}/api/generate",
+                data=payload,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            try:
+                with _req.urlopen(req, timeout=600) as resp:
+                    return json.loads(resp.read().decode())
+            except _uerr.HTTPError as he:
+                body = he.read().decode("utf-8", "replace")[:300]
+                raise RuntimeError(f"Ollama HTTP {he.code}: {body}")
+            except _uerr.URLError as ue:
+                raise RuntimeError(f"Ollama URL hatası: {ue.reason}")
+
+        loop = asyncio.get_running_loop()
+        body = await loop.run_in_executor(None, _call_ollama)
+        improved = body.get("response", "").strip()
+        if not improved:
+            raise HTTPException(500, "LLM boş yanıt döndü")
+    except HTTPException:
+        raise
+    except RuntimeError as e:
+        print(f"[story/from-image] RuntimeError: {e}", flush=True)
+        raise HTTPException(503, str(e))
+    except Exception as e:
+        import traceback
+        print(f"[story/from-image] {type(e).__name__}: {e}\n{traceback.format_exc()[-500:]}", flush=True)
+        raise HTTPException(500, f"LLM hatası: {type(e).__name__}: {str(e)[:300]}")
+
+    return {"improved": improved}
+
 # ── Entrypoint ─────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=False)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port, reload=False)

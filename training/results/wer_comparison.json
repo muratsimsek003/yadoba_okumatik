@@ -1,0 +1,58 @@
+[
+  {
+    "label": "Whisper Small (mevcut VPS, baseline)",
+    "category": "baseline",
+    "backend": "hf",
+    "model_id": "openai/whisper-small",
+    "wer": 16.58,
+    "cer": 4.01,
+    "word_precision": 84.59,
+    "word_recall": 84.56,
+    "word_f1": 84.52,
+    "n_samples": 200,
+    "eval_time_sec": 179.3,
+    "skipped": false
+  },
+  {
+    "label": "Whisper Medium (zero-shot)",
+    "category": "zero-shot",
+    "backend": "hf",
+    "model_id": "openai/whisper-medium",
+    "wer": 10.65,
+    "cer": 2.73,
+    "word_precision": 90.48,
+    "word_recall": 90.38,
+    "word_f1": 90.37,
+    "n_samples": 200,
+    "eval_time_sec": 535.5,
+    "skipped": false
+  },
+  {
+    "label": "Whisper Medium (YADOBA fine-tune)",
+    "category": "fine-tuned",
+    "backend": "ct2",
+    "model_id": "D:\\yadoba-training\\medium-tr-yadoba-ct2",
+    "wer": 407.5,
+    "cer": 160.16,
+    "word_precision": 6.5,
+    "word_recall": 2.97,
+    "word_f1": 3.98,
+    "n_samples": 200,
+    "eval_time_sec": 330.0,
+    "skipped": false
+  },
+  {
+    "label": "Whisper Large-v3 (LoRA fine-tune, chk-196)",
+    "category": "fine-tuned",
+    "backend": "ct2",
+    "model_id": "D:\\ct2_whisper_yadoba",
+    "wer": 125.51,
+    "cer": 82.05,
+    "word_precision": 4.39,
+    "word_recall": 4.69,
+    "word_f1": 4.52,
+    "n_samples": 200,
+    "eval_time_sec": 202.8,
+    "skipped": false
+  }
+]
