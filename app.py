@@ -599,14 +599,16 @@ def get_stats(user=Depends(require_admin)):
     conn.close()
     return stats
 
-# ── Resimden Hikaye (Ollama llava) ─────────────────────────────────────────
+# ── Resimden Hikaye (3-adımlı: llava denetle+tanı, qwen2 Türkçe yaz) ────────
 @app.post("/api/story/from-image")
 async def story_from_image(
     image: UploadFile = File(...),
     story: str = Form(...),
     user=Depends(current_user)
 ):
-    import base64, httpx
+    import base64, asyncio
+    import urllib.request as _req
+    import urllib.error as _uerr
 
     if not story.strip():
         raise HTTPException(400, "Hikaye boş olamaz")
@@ -617,56 +619,91 @@ async def story_from_image(
 
     image_b64 = base64.standard_b64encode(image_bytes).decode()
 
-    ollama_url   = os.environ.get("OLLAMA_URL",   "http://localhost:11434")
-    ollama_model = os.environ.get("OLLAMA_MODEL", "llava")
+    ollama_url        = os.environ.get("OLLAMA_URL",         "http://localhost:11434")
+    vision_model      = os.environ.get("OLLAMA_VISION_MODEL", "llava")
+    text_model        = os.environ.get("OLLAMA_TEXT_MODEL",   "qwen2:7b")
 
-    prompt = (
-        "Bir çocuğun yazdığı hikayeyi ve bir resim görüyorsun.\n"
-        "Görevin: Bu hikayeyi resimle uyumlu, güzel bir Türkçe hikayeye dönüştür.\n"
-        "Kurallar:\n"
-        "- Tam olarak 2 paragraf yaz, ne eksik ne fazla\n"
-        "- Her paragraf en fazla 3 kısa ve basit cümle olsun\n"
-        "- Resimdeki unsurları (karakterler, mekân, renkler) hikayeye yansıt\n"
-        "- Çocuklara uygun, sade ve anlaşılır Türkçe kullan\n"
-        "- Orijinal hikayenin ana fikrini ve karakterlerini koru\n"
-        "- Sadece geliştirilmiş hikayeyi yaz, başka açıklama ekleme\n\n"
-        f"Çocuğun hikayesi:\n{story.strip()}\n\n"
-        "Geliştirilmiş hikaye:"
-    )
+    def _ollama(model, prompt, images=None, max_tokens=300):
+        payload = {
+            "model":      model,
+            "prompt":     prompt,
+            "stream":     False,
+            "keep_alive": 0,          # RAM'den hemen boşalt
+            "options":    {"num_predict": max_tokens, "temperature": 0.7},
+        }
+        if images:
+            payload["images"] = images
+        data = json.dumps(payload).encode()
+        req  = _req.Request(
+            f"{ollama_url}/api/generate",
+            data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with _req.urlopen(req, timeout=180) as resp:
+                return json.loads(resp.read().decode()).get("response", "").strip()
+        except _uerr.HTTPError as he:
+            raise RuntimeError(f"Ollama HTTP {he.code}: {he.read().decode('utf-8','replace')[:200]}")
+        except _uerr.URLError as ue:
+            raise RuntimeError(f"Ollama bağlantı hatası: {ue.reason}")
+
+    loop = asyncio.get_running_loop()
 
     try:
-        import urllib.request as _req
-        import urllib.error as _uerr
-        import asyncio
+        # ── Adım 1: İçerik denetimi ──────────────────────────────────────────
+        safety_prompt = (
+            "You are a content moderator for a children's app.\n"
+            "Look at this image. Does it contain violence, nudity, adult content, "
+            "or anything inappropriate for children aged 6-12?\n"
+            "Reply with ONE word only: SAFE or UNSAFE."
+        )
+        safety = await loop.run_in_executor(
+            None, _ollama, vision_model, safety_prompt, [image_b64], 5
+        )
+        print(f"[story/from-image] safety check: {safety!r}", flush=True)
 
-        payload = json.dumps({
-            "model":  ollama_model,
-            "prompt": prompt,
-            "images": [image_b64],
-            "stream": False,
-        }).encode()
+        if "UNSAFE" in safety.upper():
+            raise HTTPException(400, "Bu görsel çocuklar için uygun değil. Lütfen farklı bir resim yükleyin.")
 
-        def _call_ollama():
-            req = _req.Request(
-                f"{ollama_url}/api/generate",
-                data=payload,
-                headers={"Content-Type": "application/json"},
-                method="POST",
-            )
-            try:
-                with _req.urlopen(req, timeout=600) as resp:
-                    return json.loads(resp.read().decode())
-            except _uerr.HTTPError as he:
-                body = he.read().decode("utf-8", "replace")[:300]
-                raise RuntimeError(f"Ollama HTTP {he.code}: {body}")
-            except _uerr.URLError as ue:
-                raise RuntimeError(f"Ollama URL hatası: {ue.reason}")
+        # ── Adım 2: Resmi İngilizce tanımla (llava bu işi iyi yapıyor) ───────
+        desc_prompt = (
+            "Describe what you see in this image in one sentence. "
+            "Mention: setting, main objects, colors, and mood."
+        )
+        description = await loop.run_in_executor(
+            None, _ollama, vision_model, desc_prompt, [image_b64], 80
+        )
+        print(f"[story/from-image] image desc: {description!r}", flush=True)
 
-        loop = asyncio.get_running_loop()
-        body = await loop.run_in_executor(None, _call_ollama)
-        improved = body.get("response", "").strip()
+        # ── Adım 3: qwen2 ile Türkçe hikaye ──────────────────────────────────
+        story_prompt = (
+            f"Resimde görülenler: {description}\n"
+            f"Çocuğun yazdığı hikaye: {story.strip()}\n\n"
+            "Yukarıdaki resim açıklamasını ve çocuğun hikayesini kullanarak "
+            "kısa bir Türkçe çocuk hikayesi yaz.\n\n"
+            "ZORUNLU KURALLAR:\n"
+            "1. TAM OLARAK 2 PARAGRAF yaz — ne eksik ne fazla\n"
+            "2. Her paragraf en fazla 3 kısa, basit cümle\n"
+            "3. Resimdeki unsurları hikayeye yansıt\n"
+            "4. Çocuklara uygun, sade Türkçe kullan\n"
+            "5. SADECE hikayeyi yaz — başka açıklama, giriş veya yorum ekleme\n\n"
+            "1. Paragraf:\n"
+        )
+        improved = await loop.run_in_executor(
+            None, _ollama, text_model, story_prompt, None, 300
+        )
+        print(f"[story/from-image] story generated ({len(improved)} chars)", flush=True)
+
+        # "1. Paragraf:" önekini modelin çıktısına ekledik, gerisi geldi
+        improved = ("1. Paragraf:\n" + improved).strip()
+        # Eğer model "1. Paragraf:" / "2. Paragraf:" etiketleri yazdıysa temizle
+        import re
+        improved = re.sub(r"^\d\.\s*Paragraf:\s*", "", improved, flags=re.MULTILINE).strip()
+
         if not improved:
             raise HTTPException(500, "LLM boş yanıt döndü")
+
     except HTTPException:
         raise
     except RuntimeError as e:
