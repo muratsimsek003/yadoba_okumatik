@@ -252,6 +252,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
       <button class="tab-btn" id="tabHistory" onclick="switchTab('history')">📋 Geçmişim</button>
       <button class="tab-btn" id="tabStory" onclick="switchTab('story')">✍️ Kendin Yaz</button>
       <button class="tab-btn" id="tabImage" onclick="switchTab('image')">🖼️ Resimden Hikaye</button>
+      <button class="tab-btn" id="tabProgress" onclick="switchTab('progress')">📈 Tespitten Gelişime</button>
     </div>
 
     <!-- Metinler -->
@@ -328,6 +329,27 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
             </button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Tespitten Gelişime -->
+    <div id="progressTab" style="display:none">
+      <div class="section-card" style="margin-bottom:14px" id="progSummaryCard">
+        <div class="section-head">📊 Genel Performans</div>
+        <div id="progSummary" style="color:var(--muted);font-size:14px">Yükleniyor…</div>
+      </div>
+
+      <div class="section-card" style="margin-bottom:14px" id="progErrorCard">
+        <div class="section-head">🔴 En Çok Hata Yapılan Kelimeler</div>
+        <div id="progErrorList" style="color:var(--muted);font-size:14px">Yükleniyor…</div>
+      </div>
+
+      <div class="section-card" style="margin-bottom:14px" id="progExCard">
+        <div class="section-head">✏️ Egzersizler</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:14px">
+          Hata yaptığın kelimeleri tek tek okuyarak alıştırma yap. Her kelimede mikrofonla sesi kaydet, doğruluğu anlık görürsün.
+        </div>
+        <div id="progExList"></div>
       </div>
     </div>
 
@@ -543,11 +565,12 @@ function qualClass(v,g,ok){ return v>=g?'col-good':v>=ok?'col-ok':'col-bad'; }
 
 // ── Tabs ───────────────────────────────────────────────────────────────────
 function switchTab(tab) {
-  ['texts','history','story','image'].forEach(t => {
+  ['texts','history','story','image','progress'].forEach(t => {
     document.getElementById(t+'Tab').style.display = tab===t ? '' : 'none';
     document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active', tab===t);
   });
-  if (tab==='history') loadHistory();
+  if (tab==='history')  loadHistory();
+  if (tab==='progress') loadProgress();
 }
 
 // ── Resimden Hikaye ────────────────────────────────────────────────────────
@@ -685,6 +708,247 @@ async function startStory() {
   } finally {
     btn.disabled = false; btn.textContent = '🎙 Okumaya Başla';
   }
+}
+
+// ── Tespitten Gelişime ──────────────────────────────────────────────────────
+let _progData = null;
+let _exMediaRec = null;
+let _exChunks   = [];
+let _exWord     = null;
+
+async function loadProgress() {
+  const summEl    = document.getElementById('progSummary');
+  const errorEl   = document.getElementById('progErrorList');
+  const exListEl  = document.getElementById('progExList');
+  summEl.innerHTML  = '<span style="color:var(--muted)">Yükleniyor…</span>';
+  errorEl.innerHTML = '<span style="color:var(--muted)">Yükleniyor…</span>';
+  exListEl.innerHTML = '';
+
+  try {
+    _progData = await apiJSON('/api/progress');
+  } catch(e) {
+    summEl.textContent = 'Yüklenemedi: ' + e.message;
+    return;
+  }
+
+  const { total_sessions, total_words, accuracy_avg, top_errors, error_type_counts } = _progData;
+
+  // ── Özet kartı
+  if (total_sessions === 0) {
+    summEl.innerHTML = '<p style="color:var(--muted)">Henüz hiç okuma kaydın yok. Bir metni okuyup analiz ettiğinde burası dolar.</p>';
+    errorEl.innerHTML = '';
+    return;
+  }
+
+  const typeLabel = { substitution:'Yanlış Kelime', mispronunciation:'Yanlış Telaffuz', omission:'Atlanan Kelime' };
+  const typeColor = { substitution:'#ef4444', mispronunciation:'#f59e0b', omission:'#8b5cf6' };
+
+  summEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+      <div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:24px;font-weight:800;color:var(--primary)">${total_sessions}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">OKUMA</div>
+      </div>
+      <div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:24px;font-weight:800;color:${accuracy_avg>=85?'#22c55e':accuracy_avg>=70?'#f59e0b':'#ef4444'}">${accuracy_avg}%</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">ORTALAMA DOĞRULUK</div>
+      </div>
+      <div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:24px;font-weight:800;color:var(--text)">${total_words}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">TOPLAM KELİME</div>
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px">HATA TÜRÜ DAĞILIMI</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      ${Object.entries(error_type_counts).filter(([,v])=>v>0).map(([k,v])=>`
+        <span style="background:${typeColor[k]||'#6b7280'}22;color:${typeColor[k]||'#6b7280'};
+          border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600">
+          ${typeLabel[k]||k}: ${v}
+        </span>`).join('')}
+    </div>`;
+
+  // ── Hata kelime listesi
+  if (top_errors.length === 0) {
+    errorEl.innerHTML = '<p style="color:#22c55e;font-weight:600">🎉 Henüz kayıtlı hata yok — harika gidiyorsun!</p>';
+    exListEl.innerHTML = '';
+    return;
+  }
+
+  errorEl.innerHTML = top_errors.map((e,i) => {
+    const mainType = Object.entries(e.types).sort((a,b)=>b[1]-a[1])[0];
+    const badge = mainType ? `<span style="font-size:11px;padding:2px 8px;border-radius:10px;
+      background:${typeColor[mainType[0]]||'#6b7280'}22;color:${typeColor[mainType[0]]||'#6b7280'};font-weight:600">
+      ${typeLabel[mainType[0]]||mainType[0]}</span>` : '';
+    const readAs = e.read_as.slice(0,2).map(w=>`"${w}"`).join(', ');
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;
+        border-bottom:1px solid var(--border);cursor:pointer"
+        onclick="scrollToExercise('ex_${e.word}')">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--primary);
+        color:#fff;display:flex;align-items:center;justify-content:center;
+        font-size:12px;font-weight:700;flex-shrink:0">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:15px">${e.word}</div>
+        ${readAs ? `<div style="font-size:11px;color:var(--muted)">→ şöyle okudun: ${readAs}</div>` : ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">${badge}
+        <span style="font-size:12px;color:var(--muted);white-space:nowrap">${e.count}× hata</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Egzersizler
+  exListEl.innerHTML = top_errors.map(e => buildExerciseCard(e)).join('');
+}
+
+function scrollToExercise(id) {
+  switchTab('progress');
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'center' });
+  }, 100);
+}
+
+function buildExerciseCard(err) {
+  const word = err.word;
+  const hint = getWordHint(word, err.types);
+  const sentences = getExerciseSentences(word);
+  return `
+    <div id="ex_${word}" style="border:1.5px solid var(--border);border-radius:14px;
+      padding:16px;margin-bottom:14px;background:var(--bg)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="font-size:22px;font-weight:800;color:var(--primary)">${word}</div>
+        <div style="font-size:12px;color:var(--muted);flex:1">${hint}</div>
+        <span id="ex_badge_${word}" style="font-size:12px;padding:3px 10px;border-radius:20px;
+          background:#f3f4f6;color:var(--muted)">Bekliyor</span>
+      </div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:10px;font-style:italic">
+        ${sentences.map(s => `<div style="margin-bottom:4px">• ${highlightWord(s, word)}</div>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button onclick="startWordExercise('${word}')" id="ex_btn_${word}"
+          style="background:var(--primary);color:#fff;border:none;border-radius:10px;
+            padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">
+          🎙 Kelimeyi Sesli Oku
+        </button>
+        <span id="ex_result_${word}" style="font-size:13px;font-weight:600"></span>
+      </div>
+    </div>`;
+}
+
+function getWordHint(word, types) {
+  const dominant = Object.entries(types||{}).sort((a,b)=>b[1]-a[1])[0]?.[0];
+  if (dominant === 'omission')        return '⚠️ Bu kelimeyi okurken atlıyorsun — dikkatli ol.';
+  if (dominant === 'substitution')    return '🔄 Bu kelimeyi başka bir kelimeyle değiştiriyorsun.';
+  if (dominant === 'mispronunciation')return '🗣️ Bu kelimeyi yanlış telaffuz ediyorsun.';
+  return '📌 Geçmiş okumalarında bu kelimede hata yaptın.';
+}
+
+function getExerciseSentences(word) {
+  // Kelimeyi içeren kısa örnek cümleler (hikaye metinlerinden alınmış)
+  const examples = {
+    'küçük':    ['Küçük bir çocuk ormanda oynadı.','O çok küçük bir taş buldu.'],
+    'büyük':    ['Büyük bir ağacın altında oturdu.','Büyük rüzgar yaprakları uçurdu.'],
+    'vardı':    ['Ormanda küçük bir ev vardı.','Masada kırmızı bir elma vardı.'],
+    'çıktı':    ['Güneş bulutların arasından çıktı.','Ali dışarı çıktı ve koştu.'],
+    'gördü':    ['Pencereden bakan çocuk denizi gördü.','Ali taşın üstünde bir kuş gördü.'],
+    'geldi':    ['İlkbahar geldi, çiçekler açtı.','Annesi yanına geldi ve sarıldı.'],
+    'başladı':  ['Yağmur yavaş yavaş başladı.','Müzik çalmaya başladı.'],
+    'çocuk':    ['Çocuk bahçede koşup oynadı.','Küçük çocuk güldü.'],
+    'ağaç':     ['Ağacın dalında kuşlar ötüyordu.','Büyük ağacın gölgesinde dinlendi.'],
+    'orman':    ['Ormanda tatlı sesler vardı.','Orman sabahları çok güzeldi.'],
+  };
+  if (examples[word]) return examples[word];
+  return [
+    `"${word}" kelimesini cümlede kullan.`,
+    `"${word}" — yüksek sesle birkaç kez tekrar et.`
+  ];
+}
+
+function highlightWord(sentence, word) {
+  const re = new RegExp(`(${word})`, 'gi');
+  return sentence.replace(re, '<strong style="color:var(--primary)">$1</strong>');
+}
+
+async function startWordExercise(word) {
+  const btn    = document.getElementById(`ex_btn_${word}`);
+  const result = document.getElementById(`ex_result_${word}`);
+  const badge  = document.getElementById(`ex_badge_${word}`);
+
+  if (_exMediaRec && _exMediaRec.state === 'recording') {
+    _exMediaRec.stop();
+    return;
+  }
+
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch {
+    toast('Mikrofon erişimi reddedildi.');
+    return;
+  }
+
+  _exWord   = word;
+  _exChunks = [];
+  _exMediaRec = new MediaRecorder(stream);
+  _exMediaRec.ondataavailable = e => { if (e.data.size) _exChunks.push(e.data); };
+  _exMediaRec.onstop = () => {
+    stream.getTracks().forEach(t => t.stop());
+    evaluateWordExercise(word, _exChunks);
+  };
+
+  _exMediaRec.start();
+  btn.textContent  = '⏹ Durdur';
+  btn.style.background = '#ef4444';
+  result.textContent   = '';
+  badge.textContent    = 'Kaydediliyor…';
+  badge.style.cssText  = 'font-size:12px;padding:3px 10px;border-radius:20px;background:#fef2f2;color:#ef4444';
+}
+
+async function evaluateWordExercise(word, chunks) {
+  const btn   = document.getElementById(`ex_btn_${word}`);
+  const result= document.getElementById(`ex_result_${word}`);
+  const badge = document.getElementById(`ex_badge_${word}`);
+
+  btn.textContent = '🎙 Kelimeyi Sesli Oku';
+  btn.style.background = 'var(--primary)';
+  badge.textContent = 'Analiz ediliyor…';
+
+  const blob = new Blob(chunks, { type: 'audio/webm' });
+  const fd   = new FormData();
+  fd.append('audio', blob, 'word.webm');
+  fd.append('language', 'tr');
+
+  try {
+    const data = await apiJSON('/api/transcribe', { method:'POST', body: fd });
+    const transcript = (data.transcript || '').trim().toLowerCase();
+    const correct    = word.toLowerCase();
+
+    const isOk = transcript === correct ||
+                 transcript.includes(correct) ||
+                 correct.includes(transcript) ||
+                 levenshtein(transcript, correct) <= 1;
+
+    if (isOk) {
+      badge.textContent = '✅ Doğru';
+      badge.style.cssText = 'font-size:12px;padding:3px 10px;border-radius:20px;background:#f0fdf4;color:#16a34a;font-weight:700';
+      result.innerHTML = `<span style="color:#16a34a">✅ "${transcript}" — doğru!</span>`;
+    } else {
+      badge.textContent = '❌ Tekrar Dene';
+      badge.style.cssText = 'font-size:12px;padding:3px 10px;border-radius:20px;background:#fef2f2;color:#ef4444;font-weight:700';
+      result.innerHTML = `<span style="color:#ef4444">Duyulan: "${transcript}" — tekrar dene</span>`;
+    }
+  } catch(e) {
+    badge.textContent = 'Hata';
+    result.textContent = 'Transkript alınamadı: ' + e.message;
+  }
+}
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({length:m+1}, (_,i) => Array.from({length:n+1}, (_,j) => i||j));
+  for (let i=1;i<=m;i++) for (let j=1;j<=n;j++)
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
 }
 
 // ── Load texts ─────────────────────────────────────────────────────────────

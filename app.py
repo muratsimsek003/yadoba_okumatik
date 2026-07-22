@@ -531,6 +531,74 @@ def get_session(sid: str, user=Depends(current_user)):
         r['analysis'] = json.loads(r['analysis_json'])
     return r
 
+# ── Tespitten Gelişime: Hata analizi ───────────────────────────────────────
+@app.get("/api/progress")
+def get_progress(user=Depends(current_user)):
+    conn = get_db()
+    rows = conn.execute(
+        """SELECT s.analysis_json, s.created_at, t.title
+           FROM sessions s JOIN texts t ON s.text_id=t.id
+           WHERE s.user_id=? AND s.analysis_json IS NOT NULL
+           ORDER BY s.created_at DESC""",
+        (user['id'],)
+    ).fetchall()
+    conn.close()
+
+    from collections import defaultdict
+    word_errors   = defaultdict(lambda: {"count": 0, "types": defaultdict(int), "read_as": []})
+    total_sessions = len(rows)
+    total_words    = 0
+    total_correct  = 0
+
+    for row in rows:
+        try:
+            data = json.loads(row["analysis_json"])
+        except Exception:
+            continue
+        tokens = data.get("tokens", [])
+        for t in tokens:
+            status = t.get("status", "")
+            ref    = (t.get("ref") or "").strip().lower()
+            hyp    = (t.get("hyp") or "").strip().lower()
+            if not ref:
+                continue
+            total_words += 1
+            if status == "correct":
+                total_correct += 1
+            elif status in ("substitution", "mispronunciation", "omission"):
+                word_errors[ref]["count"] += 1
+                word_errors[ref]["types"][status] += 1
+                if hyp and hyp not in word_errors[ref]["read_as"]:
+                    word_errors[ref]["read_as"].append(hyp)
+
+    # En sık hata yapılan kelimeleri sırala
+    sorted_errors = sorted(
+        [{"word": w, **v, "types": dict(v["types"])} for w, v in word_errors.items()],
+        key=lambda x: x["count"],
+        reverse=True
+    )[:20]
+
+    # Hata türü istatistikleri
+    type_counts = defaultdict(int)
+    for row in rows:
+        try:
+            data = json.loads(row["analysis_json"])
+        except Exception:
+            continue
+        for t in data.get("tokens", []):
+            if t.get("status") not in ("correct", "insertion", "repetition", "self_correction"):
+                type_counts[t.get("status", "")] += 1
+
+    return {
+        "total_sessions": total_sessions,
+        "total_words": total_words,
+        "total_correct": total_correct,
+        "accuracy_avg": round(total_correct / total_words * 100, 1) if total_words else 0,
+        "top_errors": sorted_errors,
+        "error_type_counts": dict(type_counts),
+    }
+
+
 # ── Users (admin) ──────────────────────────────────────────────────────────
 @app.get("/api/users")
 def list_users(user=Depends(require_admin)):
