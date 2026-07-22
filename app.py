@@ -621,7 +621,7 @@ async def story_from_image(
 
     ollama_url        = os.environ.get("OLLAMA_URL",         "http://localhost:11434")
     vision_model      = os.environ.get("OLLAMA_VISION_MODEL", "llava")
-    text_model        = os.environ.get("OLLAMA_TEXT_MODEL",   "qwen2:7b")
+    text_model        = os.environ.get("OLLAMA_TEXT_MODEL",   "aya:8b")
 
     def _ollama(model, prompt, images=None, max_tokens=300):
         payload = {
