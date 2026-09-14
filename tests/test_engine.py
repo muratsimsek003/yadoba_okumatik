@@ -78,3 +78,43 @@ if __name__ == "__main__":
             print(f"FAIL  {fn.__name__}"); traceback.print_exc()
     print(f"\n{ok}/{len(fns)} test geçti")
     sys.exit(0 if ok == len(fns) else 1)
+
+
+# ---------------------------------------------------------------------------
+# Ayirt edici fonetik ozellik temelli mesafe (ablation/ sonucu eklendi)
+# ---------------------------------------------------------------------------
+def test_feature_distance_orders_by_feature_similarity():
+    """b/p yalniz otumlulukte, b/k yer + otumlulukte farklidir; mesafe bunu yansitmali."""
+    from okumetrik.phonetics import phonetic_distance
+    d_voice_only = phonetic_distance("bal", "pal", mode="feature")
+    d_place_voice = phonetic_distance("bal", "kal", mode="feature")
+    assert d_voice_only < d_place_voice
+    # kaba sinif modeli bu iki durumu ayirt EDEMEZ (ikisi de ayni sinif ici)
+    assert phonetic_distance("bal", "pal", mode="class") == \
+           phonetic_distance("bal", "kal", mode="class")
+
+
+def test_feature_mode_threshold_is_active():
+    from okumetrik.phonetics import mispron_threshold, DISTANCE_MODE
+    import okumetrik.miscue as mc
+    assert DISTANCE_MODE == "feature"
+    assert mispron_threshold() == 0.20
+    assert mc.MISPRON_THRESHOLD == mispron_threshold()
+
+
+def test_changed_features_explanation():
+    """Fonem farki, ogretmene sunulabilir bicimde aciklanabilmeli (B.4 iddiasi)."""
+    from okumetrik.phonetics import mispronunciation_detail
+    det = mispronunciation_detail("kitabı", "kitapı")
+    assert det["changed"] == [("b", "p")]
+    assert "ötümlülük" in det["changed_features"][0]
+
+
+def test_mispronunciation_still_separated_from_substitution():
+    """Yeni esikle telaffuz sapmasi / sozcuk degistirme ayrimi korunuyor mu."""
+    from okumetrik.miscue import align, tokenize
+    ref = tokenize("küçük kırmızı balık denizde yüzüyordu")
+    hyp = tokenize("küçük kırmız kuş denizde yüzüyordu")
+    by_idx = {e.ref_idx: e.status for e in align(ref, hyp) if e.ref_idx is not None}
+    assert by_idx[1] == "mispronunciation"   # kırmızı -> kırmız
+    assert by_idx[2] == "substitution"       # balık -> kuş
