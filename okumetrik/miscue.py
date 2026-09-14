@@ -16,9 +16,12 @@ fonetik mesafeyle ağırlıklandırılır (telaffuz hatası vs. kelime değişti
 """
 
 from dataclasses import dataclass, field
-from .phonetics import phonetic_distance, mispronunciation_detail
+from .phonetics import phonetic_distance, mispronunciation_detail, mispron_threshold
 
-MISPRON_THRESHOLD = 0.34   # fonetik mesafe bu eşiğin altındaysa telaffuz hatası
+# Telaffuz sapması eşiği, aktif fonem mesafe modeline göre belirlenir.
+# "feature" modelinde 0.20, "class" modelinde 0.34 (bkz. phonetics.MISPRON_THRESHOLD).
+# Değer sabit değildir: İP3'te uzman etiketli kalibrasyon verisinden öğrenilecektir.
+MISPRON_THRESHOLD = mispron_threshold()
 _PUNC = ".,;:!?\"'()[]{}—–-…«»“”’"
 
 
